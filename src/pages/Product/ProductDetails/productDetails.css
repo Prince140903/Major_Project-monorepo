@@ -1,0 +1,177 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+.MuiChip-colorDefault {
+  background: var(--body_background) !important;
+  color: var(--sidebar_color) !important;
+  text-decoration: none !important;
+  padding: 10px !important;
+}
+
+.MuiBreadcrumbs-separator {
+  color: var(--sidebar_color) !important;
+}
+
+.MuiChip-colorDefault svg {
+  color: var(--sidebar_color) !important;
+}
+
+.MuiChip-colorDefault:hover {
+  color: #0858f7 !important;
+  transition: all 0.3s ease-in-out;
+}
+.MuiChip-colorDefault:hover svg {
+  color: #0858f7 !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.card .sliderWrapper .displayImg {
+  border-radius: 15px !important;
+  overflow: hidden;
+}
+
+.card .sliderWrapper .slick-slide {
+  padding: 0px 5px;
+}
+
+.card .sliderWrapper .item {
+  border-radius: 15px !important;
+  overflow: hidden;
+}
+
+.productInfo .icon {
+  width: 28%;
+  flex: 0 0 28%;
+}
+
+.productInfo .icon svg {
+  font-size: 22px !important;
+}
+
+.productInfo .name {
+  width: 72%;
+  flex: 0 0 72%;
+  font-weight: bold;
+}
+
+.productInfo span {
+  color: var(--sidebar_color) !important;
+  padding-left: 15px;
+}
+
+.productInfo .col-sm-9 {
+  color: var(--sidebar_color) !important;
+}
+
+.tags {
+  margin-bottom: 0px !important;
+}
+
+.tags li span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dropdown) !important;
+  border-radius: 5px !important;
+  font-size: 13px;
+  padding: 5px 5px;
+}
+
+.ratingSection {
+  width: 500px;
+}
+.ratingSection .ratingRow {
+  width: 100%;
+  margin-bottom: 15px !important;
+}
+
+:root {
+  --progress: #e4e4e4;
+  --progress-bar: #edb213;
+}
+
+[data-theme="dark"] {
+  --progress: #00031f;
+  --progress-bar: #edb213;
+}
+
+.ratingSection .ratingRow .progress {
+  height: 5px !important;
+  background-color: var(--progress) !important;
+}
+.ratingSection .ratingRow .progress .progress-bar {
+  background: var(--progress-bar) !important;
+}
+
+.ratingSection .ratingRow .col1 {
+  width: 15%;
+  flex: 0 0 15%;
+}
+.ratingSection .ratingRow .col2 {
+  width: 50%;
+  flex: 0 0 50%;
+}
+.ratingSection .ratingRow .col3 {
+  padding-left: 20px;
+  width: 35%;
+  flex: 0 0 35%;
+}
+
+.reviewSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewSection .reviewRow {
+  width: 100%;
+  height: auto;
+  background: var(--review-section);
+  padding: 35px;
+  border-radius: 10px;
+  margin: 15px 0px;
+}
+
+.reviewSection .reviewRow.reply {
+  width: 90%;
+  margin-left: auto;
+}
+
+.reviewSection .reviewRow .userInfo .info span {
+  color: var(--sidebar_color) !important;
+}
+
+.reviewForm textarea {
+  width: 100%;
+  height: 200px;
+  background: var(--dropdown);
+  border-radius: 10px;
+  border: none;
+  resize: none;
+  padding: 10px;
+  overflow: auto;
+  color: var(--sidebar_color);
+}
+
+.title {
+  align-items: center;
+  display: flex;
+  font-weight: 600;
+  gap: 10px;
+  justify-content: flex-start;
+  text-transform: capitalize;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.title:after {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background: var(--dropdown);
+}
+
+.card h5,
+h6 {
+  font-weight: bold;
+}
