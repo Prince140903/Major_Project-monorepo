@@ -1,0 +1,95 @@
+.homeProducts{
+    padding: 25px 0px;
+}
+.filterTab li{
+    margin-left:20px;
+    position: relative;
+}
+
+.filterTab li a{
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    font-weight: 600;
+}
+
+.filterTab li:hover a{
+    color: #3bb77e !important;
+    transform: translateY(-10px);
+ 
+}
+
+.homeProducts .productRow{ /*use for making boxes*/
+    display:flex;
+    padding: 30px 0px;
+    margin: 0px -15px;
+    flex-wrap: wrap;
+}
+
+.homeProducts .productRow .item{  /*use for makiing boxes which are needed 5 . check for cat slider for Ak*/
+    width:20%;
+    padding: 15px 15px;
+}
+
+.homeProductRow2 .productSlider .item{
+    padding: 15px 5px !important;
+
+    padding-right:25px !important;
+
+}
+
+.topProductsSection{
+    padding: 35px 0px;
+}
+
+
+.newsLetterSection{
+    width: 100%;
+    height: auto;
+}
+
+.newsLetterSection .box{
+    background: url(../../assets/banner10.png);
+    width: 100%;
+    height:auto;
+    padding: 80px 80px;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.newsLetterSection .box .info{
+    width: 55%;
+}
+
+.newsLetterSection .box .info h2{
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 70px;
+    opacity: 0.8;
+}
+
+
+.newsLetterSection .box .info p{
+    font-size: 22px;
+    opacity: 0.8;
+}
+
+.newsLetterSection .box .img{
+    width: 45%;
+    
+}
+.newsLetterSection .box .img img{
+    position: relative;
+   top:78px;;
+
+}
+
+
+.newsLetterSection .box .newsLetterBanner{
+    position: relative !important;
+    left: 0 !important;
+    bottom: inherit;
+
+}

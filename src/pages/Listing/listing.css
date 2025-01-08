@@ -1,0 +1,58 @@
+.listingPage {
+  width: 100%;
+  height: auto;
+  padding: 45px 0px;
+}
+
+.breadcrumb {
+  width: 100%;
+  height: auto;
+  padding: 45px 45px;
+  background: #d8f1e5;
+  border-radius: 20px;
+  margin-bottom: 30px;
+}
+
+.breadcrumb h1 {
+  color: #000;
+  opacity: 0.8;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.breadcrumb ul li {
+  margin-right: 20px !important;
+}
+
+.breadcrumb ul li a {
+  color: #000;
+  text-decoration: none;
+  font-size: 22px;
+}
+
+.rightContent .topStrip {
+  padding: 0px 25px;
+}
+
+.rightContent .topStrip p {
+  font-size: 20px;
+}
+
+.rightContent .topStrip .tab_ {
+  width: 200px;
+}
+
+.rightContent .topStrip .tab_ .btn_ {
+  background: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  padding: 10px 20px !important;
+  text-transform: capitalize !important;
+  color: rgba(0, 0, 0, 0.7) !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  width: 100% !important;
+}
+
+.rightContent .topStrip .tab_ .btn_ .dropdownMenu {
+  top: 100% !important;
+}

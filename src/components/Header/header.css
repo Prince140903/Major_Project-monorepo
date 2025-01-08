@@ -1,0 +1,148 @@
+header {
+  width: 100%;
+  height: 100px;
+  margin: auto;
+  padding: 22px 0px;
+}
+.headerWrapper{
+  transition: all 0.3s ease-in-out ;
+   background: #fff;
+   background: 0 8px 20px 0 rgba(0, 0, 0, 0.05);
+  top: -100px;
+  left: 0px;
+  width: 100%;
+  z-index: 10000;
+}
+
+.headerWrapper.fixed{
+  position: fixed;
+  top: -100px;
+  left: 0px;
+  width: 100%;
+  z-index: 10000;
+  background: #fff;
+ 
+}
+
+header .poki {
+  top: -18px;
+}
+
+header .headerSearch {
+  width: 100%;
+  height: 60px;
+  border: 1px solid #3bb77e;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+header .headerSearch .selectDropWrapper {
+  width: 35%;
+  font-size: 16px;
+  font-weight: 500;
+  position: relative;
+}
+
+header .headerSearch .selectDropWrapper:after {
+  content: "";
+  width: 1px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 5px;
+  right: 0px;
+}
+
+header .headerSearch .search {
+  width: 82%;
+  padding-left: 30px;
+  position: relative;
+}
+
+header .headerSearch .search input {
+  width: 100%;
+  height: 50px;
+  border: 0px;
+  outline: none !important;
+  font-size: 18px;
+}
+
+header .headerSearch .search .searchIcon {
+  position: absolute;
+  top: 12px;
+  right: 0px;
+  opacity: 0.5;
+  font-size: 30px !important;
+}
+
+.Logo {
+  height: 6rem;
+  width: 13rem;
+  position: relative;
+  top: -18px;
+}
+
+header .stateWrapper .selectDropWrapper {
+  width: 200px !important;
+  height: 50px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ececec;
+  -webkit-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+header .stateWrapper .selectDropWrapper .openSelect {
+  width: 100%;
+}
+
+header .stateWrapper .selectDropWrapper .selectDrop {
+  left: 0px !important;
+}
+
+header .headerTabs {
+  padding-left: 30px;
+}
+
+header .headerTabs li {
+  position: relative;
+  margin-left: 7px;
+}
+
+header .headerTabs li span {
+  font-size: 20px;
+  cursor: pointer;
+  padding-left: 20px;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  width: 200px;
+  height: auto;
+  background: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px rgba(0, 0, 0, 0.23);
+  padding: 10px 0px;
+  z-index: 100;
+  list-style: none;
+}
+
+.dropdownMenu li {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.dropdownMenu li button {
+  width: 100% !important;
+  color: #000 !important;
+  text-transform: capitalize !important;
+  font-size: 18px !important;
+  padding: 12px 15px !important;
+}
+
+.dropdownMenu li button:hover {
+  background-color: #f1f1f1 !important;
+}
+

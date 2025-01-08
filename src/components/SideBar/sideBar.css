@@ -1,0 +1,114 @@
+.sidebarWrapper {
+  max-width: 20%;
+  flex: 0 0 20%;
+}
+
+.rightContent {
+  max-width: 80%;
+  flex: 0 0 80%;
+}
+
+.sidebarWrapper h3 {
+  font-size: 30px;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.sidebarWrapper h3:after {
+  content: "";
+  width: 100%;
+  height: 3px;
+  background: #f0f0f0;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+}
+
+.sidebarWrapper h3:before {
+  content: "";
+  width: 20%;
+  height: 3px;
+  background: #b0e5c2;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  z-index: 10;
+}
+
+.sidebarWrapper .catList {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarWrapper .catList .catItem .img {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.sidebarWrapper .sidebar .btn {
+  width: 150px !important;
+}
+
+.sidebarWrapper .sidebar {
+  position: sticky;
+  top: 130px;
+}
+
+.sidebarWrapper .sidebar .card {
+  padding: 25px;
+  border-radius: 10px !important;
+}
+
+.sidebarWrapper .sidebar .card .catList .catItem {
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.01);
+  cursor: pointer;
+  margin: 10px 0px;
+  border-radius: 4px;
+}
+
+.sidebarWrapper .sidebar .card .catList .catItem h4 {
+  color: #000;
+  font-size: 18px;
+}
+
+.sidebarWrapper .sidebar .card .catList .catItem .rounded-circle {
+  background: #bce3c9;
+  width: 40px;
+  height: 40px;
+}
+
+.priceRange span {
+  font-size: 20px;
+}
+
+.filters {
+  padding: 25px 0px;
+}
+
+.filters h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.filters ul {
+  max-height: 200px;
+  overflow-y: scroll;
+  margin-left: -10px;
+}
+
+.filters ul::-webkit-scrollbar {
+  width: 10px !important;
+}
+.filters ul::-webkit-scrollbar-thumb {
+  background: #ccc !important;
+}
+
+.filters ul li {
+  width: 100%;
+  margin-bottom: 0px;
+  list-style: none;
+}
