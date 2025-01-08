@@ -1,0 +1,126 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  color: var(--body_color);
+  font-size: 13px;
+  font-weight: 800;
+  padding-top: 10px;
+}
+
+.form-group input {
+  color: var(--sidebar_color);
+  background: var(--dropdown);
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-group textarea {
+  color: var(--sidebar_color);
+  background: var(--dropdown);
+  border: none;
+  resize: none;
+  overflow: auto;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.select-dropdown {
+  background: var(--dropdown) !important;
+  color: var(--sidebar_color) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.FormControl .select-dropdown {
+  background-color: red !important;
+  padding: 10px;
+}
+
+.MuiPaper-root {
+  color: var(--sidebar_color) !important;
+  background: var(--dropdown) !important;
+}
+
+.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--sidebar_color) !important;
+  opacity: 0.7;
+  font-size: 10px;
+}
+
+.MuiInputBase-root {
+  height: 40px;
+  border-radius: 10px !important;
+}
+
+.MuiInputBase-root svg {
+  color: var(--sidebar_color) !important;
+}
+
+.imgUpload {
+  border: 2px dashed var(--dropdown);
+  border-radius: 8px;
+  background: var(--review-section);
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  flex-direction: column;
+  opacity: 0.7;
+}
+
+.imgUpload p {
+  color: var(--sidebar_color);
+}
+
+.imgUpload .imagebg {
+  color: var(--sidebar_color);
+  font-size: 50px;
+}
+
+.imgPreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.imgPreview .imgView:hover {
+  opacity: 0.7;
+}
+
+.imgPreview .imgView .remove {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.imgPreview .imgView .remove svg {
+  font-size: 45px;
+  color: red !important;
+}
+
+.imgPreview .imgView:hover .remove {
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+}

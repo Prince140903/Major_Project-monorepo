@@ -1,0 +1,123 @@
+.loginPattern {
+  width: 100%;
+  height: 100vh;
+  opacity: 0.1;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+}
+
+.loginSection {
+  width: 100%;
+  height: 100vh;
+  padding: 35px 25px;
+  background: var(--body_background);
+}
+
+.loginSection .loginBox {
+  width: 400px;
+  height: auto;
+  margin: auto;
+}
+
+.loginSection .loginBox .wrapper {
+  width: 100%;
+  height: auto;
+  background: var(--dropdown);
+  position: relative;
+}
+
+.loginSection .loginBox .wrapper .form-control {
+  background: var(--body_background) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  height: 45px;
+  padding-left: 40px;
+}
+
+.loginSection .loginBox .wrapper .form-control::placeholder {
+  color: var(--body_color) !important;
+}
+
+.loginSection .loginBox .wrapper .form-control:focus {
+  border: 1px solid #0858f7 !important;
+}
+
+.loginSection .loginBox .wrapper .form-group .icon {
+  position: absolute;
+  top: 13px;
+  left: 10px;
+  font-size: 24px;
+}
+
+.loginSection .loginBox .wrapper .form-control:focus .icon svg {
+  color: #0858f7 !important;
+}
+
+.loginSection .loginBox .wrapper .form-group .icon svg {
+  color: var(--body_color) !important;
+  opacity: 0.8;
+}
+
+.togglePassword {
+  position: absolute;
+  top: 20px;
+  right: 8px;
+  cursor: pointer;
+}
+
+.togglePassword .svg {
+  font-size: 22px;
+}
+
+.link {
+  font-size: 14px;
+  font-weight: 200;
+  /* color: #5e5d72; */
+  color: var(--body_color);
+}
+.link:hover {
+  color: #0858f7 !important;
+  text-decoration: none !important;
+}
+
+.loginSection .loginBox .wrapper .or span.line {
+  display: block;
+  width: 35%;
+  height: 1px;
+  background: var(--body_color);
+}
+
+.loginSection .loginBox .wrapper .or span.txt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  width: 50px;
+  height: 50px;
+  color: var(--body_color);
+}
+
+.color {
+  color: #0858f7;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.Google {
+  padding-top: 20px;
+}
+
+.Google button {
+  padding: 10px !important;
+}
+
+.tag {
+  color: var(--body_color);
+}
