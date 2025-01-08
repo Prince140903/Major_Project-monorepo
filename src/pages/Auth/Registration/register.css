@@ -1,0 +1,39 @@
+.register {
+  padding: 0px 0px !important;
+  height: auto !important;
+  background: var(--body_background) !important;
+}
+
+.register .loginBox {
+  background: var(--body_backgroundLight) !important;
+  position: relative;
+  width: 100% !important;
+  padding: 25px 25px !important;
+}
+
+.register .loginBox .wrapper {
+  border: 0px !important;
+  background: transparent !important;
+  padding-top: 10px !important;
+}
+
+.register .loginBox .wrapper svg {
+  color: var(--body_color) !important;
+}
+
+
+
+.register .part1 {
+  padding: 0px 100px;
+}
+
+.register .part1 h1 {
+  font-size: 50px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.register .part1 p {
+  font-size: 18px;
+  font-weight: 500;
+}
