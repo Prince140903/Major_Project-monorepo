@@ -1,0 +1,252 @@
+.main .content {
+  width: 80%;
+  flex: 0 0 80%;
+  transition: all 0.3s;
+}
+.main .content.toggle {
+  width: 100%;
+  flex: 0 0 100%;
+}
+
+.right-content {
+  padding: 90px 30px 0px 30px;
+}
+
+.boxWrapper {
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.boxWrapper .dashboardBox {
+  width: 48%;
+  height: 170px;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: left !important;
+  position: relative;
+  color: #fff;
+}
+
+.boxWrapper .dashboardBox .col1 h4 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.boxWrapper .dashboardBox .col1 span {
+  font-size: 40px !important;
+  font-weight: bold;
+  line-height: 45px;
+}
+
+.boxWrapper .dashboardBox .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.3)
+  );
+}
+
+.boxWrapper .dashboardBox .icon svg {
+  font-size: 30px;
+  opacity: 0.5;
+  color: #fff;
+}
+
+.boxWrapper .dashboardBox .toggleIcon {
+  font-size: 22px;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+}
+
+.boxWrapper .dashboardBox .chart {
+  opacity: 0.1;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.boxWrapper .dashboardBox .chart svg {
+  font-size: 110px;
+  color: #000;
+}
+
+.boxWrapper .dashboardBox .bottomEle {
+  position: relative;
+  top: 25px;
+}
+
+.boxRow .box {
+  width: 100%;
+  height: 100%;
+  background: #ccc;
+}
+
+.boxRow .graphBox {
+  background: #0858f7;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.boxRow .graphBox .bottomEle h6 {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.boxRow .graphBox .bottomEle h2 {
+  font-size: 35px;
+  font-weight: 700;
+}
+
+.card {
+  margin: 20px 0px;
+  border-radius: 10px;
+  background: var(--body_backgroundLight);
+}
+
+.card .hd {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--body_color);
+}
+
+.cardFilters h4 {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: capitalize;
+  color: var(--body_color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  color: var(--body_color);
+}
+
+.table .thead-dark th {
+  background-color: #1966ee !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  font-size: 13px !important;
+}
+
+.table tbody td {
+  font-size: 13px !important;
+  color: var(--body_color);
+  font-weight: 500;
+  border-color: var(--btn_hover) !important;
+}
+
+.table tbody .actions button {
+  min-width: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin: 0px 3px !important;
+}
+
+.table tbody .actions button.secondary {
+  background: rgba(203, 60, 231, 0.2) !important;
+}
+.table tbody .actions button.success {
+  background: rgba(26, 159, 83, 0.2) !important;
+}
+.table tbody .actions button.error {
+  background: rgba(241, 17, 51, 0.2) !important;
+}
+
+.table tbody .actions button svg {
+  font-size: 20px !important;
+}
+
+.table.v-align td {
+  vertical-align: middle !important;
+}
+
+.table td .old,
+.table td .new {
+  display: block;
+  width: 100%;
+}
+
+.table td .imgWrapper {
+  width: 20%;
+  flex: 0 0 20%;
+}
+
+.table td .info {
+  width: 65%;
+  flex: 0 0 65%;
+}
+
+.table td .info h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.table td .info p {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table.v-align td .productBox {
+  width: 200px;
+}
+
+.table.v-align td .productBox .info {
+  width: 100%;
+}
+
+.tableFooter {
+  padding-bottom: 20px;
+}
+
+.tableFooter p {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+
+.css-vs6a7b-MuiButtonBase-root-MuiPaginationItem-root {
+  background: var(--dropdown) !important;
+  color: var(--body_color) !important;
+}
+
+.Mui-selected {
+  background: #0858f7 !important;
+  color: #fff !important;
+}
+
+.css-btxnvc-MuiPaginationItem-root {
+  color: var(--body_color) !important;
+  height: 32px !important;
+  font-size: 1rem !important;
+  background: var(--dropdown) !important;
+}
+
+.cardFilters .drop {
+  background: var(--dropdown) !important;
+  color: var(--body_color) !important;
+}

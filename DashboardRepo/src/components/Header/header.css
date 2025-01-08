@@ -1,0 +1,152 @@
+header {
+  width: 100%;
+  height: 70px;
+  background: var(--body_backgroundLight);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+}
+
+header .logo {
+  text-decoration: none;
+}
+
+header .logo img {
+  width: 60px;
+}
+
+header .logo span {
+  color: var(--body_color);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+header button.rounded-circle {
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: var(--rounded_btn) !important;
+  color: var(--btn_blue) !important;
+}
+
+header button.rounded-circle:hover svg {
+  color: #0858f7 !important;
+}
+
+header button.rounded-circle svg {
+  transition: all 0.3s ease-in-out !important ;
+  font-size: 18px !important;
+  color: var(--sidebar_color) !important;
+}
+
+.searchBox {
+  width: 400px;
+  height: 40px;
+  background: var(--rounded_btn);
+  border-radius: 6px;
+  padding: 3px 15px;
+}
+.searchBox svg {
+  font-size: 18px;
+  color: var(--sidebar_color);
+}
+
+.searchBox input {
+  background: transparent;
+  outline: none;
+  border: 0px;
+  color: var(--sidebar_color);
+  font-size: 15px;
+}
+
+.searchBox input::-webkit-input-placeholder {
+  color: var(--sidebar_color);
+}
+
+.myAcc {
+  text-align: left !important;
+  color: var(--click) !important;
+  text-transform: capitalize !important;
+}
+
+.userImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--sidebar_color);
+  padding: 3px;
+  border-radius: 100%;
+}
+
+.rounded-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+}
+
+.rounded-circle img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.myAcc .userInfo {
+  padding-left: 10px;
+}
+
+.myAcc .userInfo h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sidebar_color);
+  margin-bottom: 0px;
+}
+
+.myAcc .userInfo p {
+  margin-top: 0px;
+  font-size: 12px;
+  color: var(--body_color);
+  opacity: 0.7;
+}
+
+.css-x6cj71-MuiPaper-root-MuiPopover-paper-MuiMenu-paper::before {
+  background: var(--dropdown) !important;
+}
+
+#account-menu li {
+  padding: 12px 15px !important;
+  color: var(--sidebar_color);
+}
+#account-menu li svg {
+  color: var(--sidebar_color);
+}
+
+#Notifications svg {
+  color: var(--sidebar_color);
+}
+
+#Notifications .MuiPaper-elevation {
+  right: 16.5% !important;
+  width: 250px !important;
+  left: auto !important;
+  top: 8% !important;
+  color: var(--sidebar_color) !important;
+}
+
+.btn-style {
+  border-radius: 30px !important;
+  padding: 5px 25px !important;
+}
+
+.userImg.sizeL {
+  height: 60px !important;
+  width: 60px !important;
+}

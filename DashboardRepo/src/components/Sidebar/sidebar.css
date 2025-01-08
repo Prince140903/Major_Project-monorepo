@@ -1,0 +1,216 @@
+.main .sidebarWrapper {
+  width: 20%;
+  flex: 0 0 20%;
+  transition: all 0.3s;
+}
+.main .sidebarWrapper.toggle {
+  width: 0%;
+  flex: 0 0 0%;
+}
+
+.main .sidebarWrapper .sidebar {
+  width: 20%;
+  height: 100vh;
+  max-height: calc(100% - 70px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-bottom: 40px;
+  position: fixed;
+  top: 70px;
+  left: 0px;
+  background: var(--body_backgroundLight);
+  transition: all 0.3s;
+}
+
+.main .sidebarWrapper.toggle .sidebar {
+  left: -100%;
+}
+
+.main .sidebarWrapper .sidebar::-webkit-scrollbar {
+  width: 3px !important;
+}
+.main .sidebarWrapper .sidebar::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+.main .sidebarWrapper:hover .sidebar::-webkit-scrollbar {
+  background: #0858f7 !important;
+}
+
+.main .sidebarWrapper .sidebar ul {
+  padding: 10px 15px;
+}
+
+.main .sidebarWrapper .sidebar ul li {
+  list-style: none;
+}
+
+.main .sidebarWrapper .sidebar ul li button {
+  text-align: left;
+  color: var(--body_color) !important;
+  color: var(--sidebar_color) !important;
+  justify-content: left;
+  border-radius: 10px !important;
+  padding: 12px 15px !important;
+  align-items: center;
+  text-transform: capitalize !important;
+  font-weight: 500 !important;
+  font-family: "Nunito", serif !important;
+}
+
+.main .sidebarWrapper .sidebar ul li button .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  width: 25px;
+  margin-right: 10px;
+}
+
+.main .sidebarWrapper .sidebar ul li button .icon svg {
+  color: var(--sidebar_color) !important;
+  opacity: 0.8;
+  font-size: 22px;
+}
+
+.main .sidebarWrapper .sidebar ul li button .arrow {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  transition: all 0.3s ease-in-out;
+}
+
+.main .sidebarWrapper .sidebar ul li button:hover {
+  background: var(--btn_hover) !important;
+}
+.main .sidebarWrapper .sidebar ul li button.active {
+  background: var(--btn_active) !important;
+  color: var(--btn_active-color) !important;
+}
+.main .sidebarWrapper .sidebar ul li button.active .icon svg {
+  color: #0858f7 !important;
+}
+
+.main .sidebarWrapper .sidebar ul li button.active .arrow {
+  transform: rotate(90deg);
+}
+
+.main .sidebarWrapper .sidebar ul .submenu {
+  padding: 0px 45px;
+  position: relative;
+  transition: all 0.3s;
+  height: 0px;
+}
+
+.main .sidebarWrapper .sidebar ul .submenu::before {
+  content: "";
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 27px;
+  background: var(--sidebar_color) !important;
+}
+
+.main .sidebarWrapper .sidebar ul .submenu li {
+  width: 100%;
+  list-style: none;
+}
+
+.main .sidebarWrapper .sidebar ul .submenu li a {
+  color: var(--sidebar_color) !important;
+  text-decoration: none;
+  display: block;
+  padding: 6px 0px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.main .sidebarWrapper .sidebar ul .submenu li a:hover {
+  color: #0858f7 !important;
+}
+
+.main .sidebarWrapper .sidebar ul .submenuWrapper {
+  transition: all 0.3s;
+  height: 0px;
+  overflow: hidden;
+}
+
+.main .sidebarWrapper .sidebar ul .submenuWrapper.colapsed .submenu {
+  opacity: 0;
+}
+
+.main .sidebarWrapper .sidebar ul .submenuWrapper.colapse {
+  height: auto;
+  overflow: inherit;
+  opacity: 1;
+  padding: 10px 0px;
+}
+
+.main .sidebarWrapper .sidebar ul .submenuWrapper.colapse .submenu {
+  opacity: 1;
+  height: auto;
+}
+
+.logoutWrapper {
+  padding: 0px 25px;
+}
+
+.logoutWrapper .logoutBox {
+  width: 100%;
+  height: 130px;
+  padding: 25px;
+  background: #bcd2fd;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.logoutWrapper .logoutBox::before {
+  content: "";
+  width: 70px;
+  height: 70px;
+  background: #0858f7;
+  border-radius: 100%;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  opacity: 0.5;
+}
+.logoutWrapper .logoutBox::after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  background: #0858f7;
+  border-radius: 100%;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  opacity: 0.5;
+}
+
+.logoutWrapper .logoutBox button {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.logoutWrapper .logoutBox button svg {
+  margin-right: 5px;
+  font-size: 18px !important;
+}
+
+.badge {
+  background: #0858f7;
+  color: var(--sidebar_color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}

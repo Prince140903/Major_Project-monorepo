@@ -1,0 +1,30 @@
+.badgeBg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.badgeBg.purple {
+  background: #f6caff;
+  color: #a808c3;
+}
+
+.badgeBg.blue {
+  background: #c1e1fc;
+  color: #2262d3;
+}
+
+.badgeBg.red {
+  background: #ffc4cd;
+  color: #e00b2b;
+}
+
+.badgeBg.green {
+  background: #bdf5d3;
+  color: #187d44;
+}
