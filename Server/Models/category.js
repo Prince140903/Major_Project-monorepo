@@ -6,15 +6,13 @@ const categorySchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    images: [
-      {
-        type: String,
-      },
-    ],
-    color: {
+    images: {
       type: String,
     },
-    parentId: {
+    subCategory: {
+      type: String,
+    },
+    link: {
       type: String,
     },
   },
