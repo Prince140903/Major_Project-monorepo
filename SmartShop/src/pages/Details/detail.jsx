@@ -70,12 +70,12 @@ const DetailsPage = () => {
   };
 
   const plus = () => {
-    setinputValue = inputValue + 1;
+    setinputValue(inputValue + 1);
   };
 
   const minus = () => {
     if (inputValue !== 0) {
-      setinputValue = inputValue - 1;
+      setinputValue(inputValue - 1);
     }
   };
 

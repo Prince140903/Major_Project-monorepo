@@ -15,6 +15,7 @@ import {
 } from "./pages";
 import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
+import { fetchDataFromApi } from "./utils/api";
 
 import { createContext, useEffect, useState } from "react";
 
@@ -22,6 +23,9 @@ const MyContext = createContext();
 
 function App() {
   const [isToggle, setIsToggle] = useState(false);
+
+  const [progress, setProgress] = useState(0);
+  const [catData, setCatData] = useState([]);
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
@@ -31,6 +35,18 @@ function App() {
     document.documentElement.setAttribute("data-theme", ThemeMode);
     localStorage.setItem("ThemeMode", ThemeMode);
   }, [ThemeMode]);
+
+  useEffect(() => {
+    fetchCategory();
+  });
+
+  const fetchCategory = () => {
+    setProgress(30);
+    fetchDataFromApi("/api/category").then((res) => {
+      setCatData(res);
+      setProgress(100);
+    });
+  };
 
   const values = {
     isToggle,
