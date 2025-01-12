@@ -38,11 +38,11 @@ const Box = (props) => {
             </div>
           </div>
 
-          <div className="d-flex align-items-center w-100 bottomEle">
+          <div className="d-flex align-items-center w-100 bottomEle mb-3">
             <h6 className="text-white mb-0 mt-0">Last Month</h6>
-            <Button className="ml-auto toggleIcon">
+            {/* <div className="ml-auto toggleIcon">
               <DynamicIcon iconName="MoreVert" />
-            </Button>
+            </div> */}
           </div>
         </Button>
       ) : (

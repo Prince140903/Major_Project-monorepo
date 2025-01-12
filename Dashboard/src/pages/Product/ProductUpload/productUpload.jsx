@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./productUpload.css";
 
 import {
@@ -10,31 +10,145 @@ import {
   MenuItem,
   Select,
   FormControl,
+  CircularProgress,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { DynamicIcon } from "../../../constants";
+import {
+  uploadImage,
+  fetchDataFromApi,
+  deleteImages,
+} from "../../../utils/api";
+import { MyContext } from "../../../App";
 
 const ProductUpload = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [formFields, setFormFields] = useState({
+    name: "",
+    images: [],
+    main_category: "",
+    sub_category: "",
+    actual_price: "",
+    discount_price: "",
+    extraData: "",
+  });
+
+  const context = useContext(MyContext);
+  const formData = new FormData();
+  const history = useNavigate();
+
+  const changeInput = (e) => {
+    setFormFields(() => ({
+      ...formFields,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  let img_arr = [];
+  let uniqueArray = [];
+  let selectedImages = [];
+
+  const [previews, setPreviews] = useState([]);
+
   const [userImages, setUserImages] = useState([]);
 
-  const handleImageUpload = (e) => {
-    const uploadedFiles = Array.from(e.target.files);
-    const imageUrls = uploadedFiles.map((file) => URL.createObjectURL(file));
-    setUserImages((prevImages) => [...prevImages, ...imageUrls]);
+  // const handleImageUpload = (e) => {
+  //   const uploadedFiles = Array.from(e.target.files);
+  //   const imageUrls = uploadedFiles.map((file) => URL.createObjectURL(file));
+  //   setUserImages((prevImages) => [...prevImages, ...imageUrls]);
+  // };
+
+  const onChangeFile = async (e, apiEndPoint) => {
+    try {
+      const files = e.target.files;
+      setUploading(true);
+
+      for (var i = 0; i < files.length; i++) {
+        //Validate files
+        if (files[i]) {
+          const file = files[i];
+          selectedImages.push(file);
+          formData.append("images", file);
+          // console.log(formData);
+        } else {
+          context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Please select a valid JPG or PNG image file",
+          });
+        }
+      }
+
+      formFields.images = selectedImages;
+    } catch (error) {
+      console.log(error);
+    }
+
+    uploadImage(apiEndPoint, formData).then((res) => {
+      fetchDataFromApi("/api/imageUpload").then((response) => {
+        if (response !== undefined && response !== null && response !== "") {
+          response.length !== 0 &&
+            response.map((item) => {
+              item?.images.length !== 0 &&
+                item?.images.map((img) => {
+                  img_arr.push(img);
+                });
+            });
+
+          uniqueArray = img_arr.filter(
+            (item, index) => img_arr.indexOf(item) === index
+          );
+
+          const appendArray = [...previews, ...uniqueArray];
+
+          setPreviews(appendArray);
+          setTimeout(() => {
+            setUploading(false);
+            img_arr = [];
+            context.setAlertBox({
+              open: true,
+              error: false,
+              msg: "Image uploaded!",
+            });
+          }, 200);
+        } else {
+          console.log(error);
+        }
+      });
+    });
   };
 
-  const handleRemoveImg = (index) => {
-    setUserImages(userImages.filter((_, i) => i !== index));
+  const [selectedValues, setSelectedValues] = useState({
+    select1: "option1",
+    select2: "option1",
+    select3: "option1",
+    select4: "option1",
+  });
+
+  const handleRemoveImg = async (index, imgUrl) => {
+    const imgIndex = previews.indexOf(imgUrl);
+
+    deleteImages(`/api/product/deleteImage?img=${imgUrl}`).then((res) => {
+      context.setAlertBox({
+        open: true,
+        error: false,
+        msg: "Image Deleted!",
+      });
+    });
+
+    if (imgIndex > -1) {
+      previews.splice(index, 1);
+    }
+
+    // setUserImages(userImages.filter((_, i) => i !== index));
   };
 
-  const [selectedValue, setSelectedValue] = useState("option1");
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-  const [selectedValue2, setSelectedValue2] = useState("option1");
-
-  const handleChange2 = (event) => {
-    setSelectedValue2(event.target.value);
+  const handleChange = (name) => (event) => {
+    setSelectedValues({
+      ...selectedValues,
+      [name]: event.target.value,
+    });
   };
 
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -89,7 +203,11 @@ const ProductUpload = () => {
               <form className="form">
                 <div className="form-group">
                   <label>TITLE</label>
-                  <input type="text" placeholder="Type here" />
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    onChange={changeInput}
+                  />
                 </div>
                 <div className="form-group">
                   <label>DESCRIPTION</label>
@@ -108,8 +226,8 @@ const ProductUpload = () => {
                       <FormControl fullWidth>
                         <Select
                           className="select-dropdown"
-                          value={selectedValue}
-                          onChange={handleChange}
+                          value={selectedValues.select1}
+                          onChange={handleChange("select1")}
                         >
                           <MenuItem value="option1">Option 1</MenuItem>
                           <MenuItem value="option2">Option 2</MenuItem>
@@ -124,8 +242,8 @@ const ProductUpload = () => {
                       <FormControl fullWidth>
                         <Select
                           className="select-dropdown"
-                          value={selectedValue2}
-                          onChange={handleChange2}
+                          value={selectedValues.select2}
+                          onChange={handleChange("select2")}
                         >
                           <MenuItem value="option1">Option 1</MenuItem>
                           <MenuItem value="option2">Option 2</MenuItem>
@@ -176,25 +294,39 @@ const ProductUpload = () => {
               <h5>Organization</h5>
               <form className="form">
                 <div className="row">
-                  <div className="col-md-9">
+                  <div className="col-md-12">
                     <div className="form-group">
                       <label>ADD CATEGORY</label>
-                      <input type="text" placeholder="Type here" />
+                      <FormControl fullWidth>
+                        <Select
+                          className="select-dropdown"
+                          value={selectedValues.select3}
+                          onChange={handleChange("select3")}
+                        >
+                          <MenuItem value="option1">Option 1</MenuItem>
+                          <MenuItem value="option2">Option 2</MenuItem>
+                          <MenuItem value="option3">Option 3</MenuItem>
+                        </Select>
+                      </FormControl>
                     </div>
-                  </div>
-                  <div className="col-md-3 d-flex align-items-center">
-                    <Button className="btn-blue p-2 mt-4 w-100">ADD</Button>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-9">
+                  <div className="col-md-12">
                     <div className="form-group">
-                      <label>ADD BRAND</label>
-                      <input type="text" placeholder="Type here" />
+                      <label>ADD SUB-CATEGORY</label>
+                      <FormControl fullWidth>
+                        <Select
+                          className="select-dropdown"
+                          value={selectedValues.select3}
+                          onChange={handleChange("select3")}
+                        >
+                          <MenuItem value="option1">Option 1</MenuItem>
+                          <MenuItem value="option2">Option 2</MenuItem>
+                          <MenuItem value="option3">Option 3</MenuItem>
+                        </Select>
+                      </FormControl>
                     </div>
-                  </div>
-                  <div className="col-md-3 d-flex align-items-center">
-                    <Button className="btn-blue p-2 mt-4 w-100">ADD</Button>
                   </div>
                 </div>
                 <div className="row">
@@ -232,50 +364,64 @@ const ProductUpload = () => {
           <div
             className="row d-flex p-4"
             style={{ alignItems: "flex-start", gap: "20px" }}
+            // onClick = {}
           >
-            <div
-              className="imgUpload"
-              onClick={() => document.getElementById("imageInput").click()}
-            >
-              <DynamicIcon iconName="Collections" className="imagebg" />
-              <p>Upload image</p>
-              <input
-                type="file"
-                className="p-4 img"
-                id="imageInput"
-                accept="image/*"
-                multiple
-                onChange={handleImageUpload}
-                style={{ display: "none" }}
-              />
-            </div>
+            {uploading === true ? (
+              <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
+                <CircularProgress />
+                <span style={{ color: "var(--sidebar_color)" }}>
+                  Uploading..
+                </span>
+              </div>
+            ) : (
+              <div className="imgUpload">
+                <DynamicIcon iconName="Collections" className="imagebg" />
+                <label htmlFor="imageInput" className="label-size">
+                  Upload image
+                </label>
+                <input
+                  type="file"
+                  className="p-4 img"
+                  id="imageInput"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => onChangeFile(e, "/api/products/upload")}
+                  name="images"
+                  style={{ display: "none" }}
+                />
+              </div>
+            )}
 
             {/*Preview Section*/}
             <div className="imgPreview">
-              {userImages.map((image, index) => (
-                <div
-                  key={index}
-                  style={{ position: "relative" }}
-                  className="imgView"
-                >
-                  <div
-                    className="remove"
-                    onClick={() => handleRemoveImg(index)}
-                  >
-                    <DynamicIcon iconName="Delete" />
-                  </div>
-                  <img
-                    src={image}
-                    alt={`Upload ${index}`}
-                    style={{
-                      width: "200px",
-                      height: "200px",
-                      objectFit: "cover",
-                      borderRadius: "5px",
-                    }}
-                  />
-                </div>
-              ))}
+              {previews?.length !== 0 &&
+                previews?.map((img, index) => {
+                  return (
+                    <div
+                      key={index}
+                      style={{ position: "relative" }}
+                      className="imgView"
+                    >
+                      <div
+                        className="remove"
+                        onClick={() => handleRemoveImg(index, img)}
+                      >
+                        <DynamicIcon iconName="Delete" />
+                      </div>
+                      <img
+                        src={img}
+                        effect="blur"
+                        alt={`Upload ${index}`}
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "cover",
+                          borderRadius: "5px",
+                        }}
+                      />
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
@@ -285,3 +431,23 @@ const ProductUpload = () => {
 };
 
 export default ProductUpload;
+
+// {userImages.map((image, index) => (
+{
+  /* <div key={index} style={{ position: "relative" }} className="imgView">
+  <div className="remove" onClick={() => handleRemoveImg(index)}>
+    <DynamicIcon iconName="Delete" />
+  </div>
+  <img
+    src={img}
+    alt={`Upload ${index}`}
+    style={{
+      width: "200px",
+      height: "200px",
+      objectFit: "cover",
+      borderRadius: "5px",
+    }}
+  />
+</div>; */
+}
+// ))}

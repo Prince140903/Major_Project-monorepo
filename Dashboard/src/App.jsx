@@ -15,48 +15,67 @@ import {
 } from "./pages";
 import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
-import { fetchDataFromApi } from "./utils/api";
 
 import { createContext, useEffect, useState } from "react";
+import { Snackbar, Alert } from "@mui/material";
 
 const MyContext = createContext();
 
 function App() {
   const [isToggle, setIsToggle] = useState(false);
 
-  const [progress, setProgress] = useState(0);
-  const [catData, setCatData] = useState([]);
-
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
   );
+
+  const [alertBox, setAlertBox] = useState({
+    msg: "",
+    error: false,
+    open: false,
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", ThemeMode);
     localStorage.setItem("ThemeMode", ThemeMode);
   }, [ThemeMode]);
 
-  useEffect(() => {
-    fetchCategory();
-  });
-
-  const fetchCategory = () => {
-    setProgress(30);
-    fetchDataFromApi("/api/category").then((res) => {
-      setCatData(res);
-      setProgress(100);
-    });
-  };
-
   const values = {
     isToggle,
     setIsToggle,
     ThemeMode,
     setThemeMode,
+    alertBox,
+    setAlertBox,
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertBox({
+      open: false,
+    });
   };
 
   return (
     <BrowserRouter>
+      <Snackbar
+        open={alertBox.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          autoHideDuration={6000}
+          severity={alertBox.error === false ? "success" : "error"}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertBox.msg}
+        </Alert>
+      </Snackbar>
+
       <Routes>
         {/* Auth Pages */}
         <Route path="/auth/" element={<AuthLayout />}>

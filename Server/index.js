@@ -16,6 +16,7 @@ App.use(express.json());
 
 const productRoutes = require("./Routes/products");
 
+App.use("/api/products/upload", productRoutes);
 App.use("/api/products", productRoutes);
 App.use("/:id", productRoutes);
 
