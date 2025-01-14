@@ -17,6 +17,7 @@ import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
 
 import { createContext, useEffect, useState } from "react";
+import { Snackbar, Alert } from "@mui/material";
 import { Password } from "@mui/icons-material";
 
 const MyContext = createContext();
@@ -29,6 +30,12 @@ function App() {
     () => localStorage.getItem("ThemeMode") || "light"
   );
 
+  const [alertBox, setAlertBox] = useState({
+    msg: "",
+    error: false,
+    open: false,
+  });
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", ThemeMode);
     localStorage.setItem("ThemeMode", ThemeMode);
@@ -39,10 +46,38 @@ function App() {
     setIsToggle,
     ThemeMode,
     setThemeMode,
+    alertBox,
+    setAlertBox,
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertBox({
+      open: false,
+    });
   };
 
   return (
     <BrowserRouter>
+      <Snackbar
+        open={alertBox.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          autoHideDuration={6000}
+          severity={alertBox.error === false ? "success" : "error"}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertBox.msg}
+        </Alert>
+      </Snackbar>
+
       <Routes>
         {/* Auth Pages */}
         <Route path="/auth/" element={<AuthLayout />}>

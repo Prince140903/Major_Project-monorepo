@@ -3,41 +3,37 @@ import "./login.css";
 
 import { DynamicIcon, Images } from "../../../constants";
 import { Button, CircularProgress } from "@mui/material";
-import { Link,useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import { Link, useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 // import {postData} from '../../utils/api'
 const Login = () => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [IsLoading, setIsLoading] = useState(false);
-    const context = useContext(MyContext);
+  const context = useContext(MyContext);
   const history = useNavigate();
 
-
-    const [formFields, setFromFields] = useState({
-      email: "",
-      Password: "",
-     
-      
-    });
-      const changeInput = (e) => {
-        setFromFields(() => ({
-          ...formFields,
-          [e.target.name]: e.target.value,
-        }));
+  const [formFields, setFromFields] = useState({
+    email: "",
+    Password: "",
+  });
+  const changeInput = (e) => {
+    setFromFields(() => ({
+      ...formFields,
+      [e.target.name]: e.target.value,
+    }));
   };
-  const signIn=(e) => {
+  const signIn = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    try {
 
+    try {
       if (formFields.email === "") {
-         MyContext.setAlertBox({
-           open: true,
-           error: true,
-           msg: "email can not be blank",
-         });
-         return false;
+        MyContext.setAlertBox({
+          open: true,
+          error: true,
+          msg: "email can not be blank",
+        });
+        return false;
       }
       if (formFields.Password === "") {
         MyContext.setAlertBox({
@@ -48,8 +44,6 @@ const Login = () => {
         return false;
       }
       postData("/api/user/signIn", formFields).then((res) => {
-
-
         if (res.user?.isAdmin) {
           localStorage.removeItem("user");
           localStorage.setItem("token", res?.token);
@@ -62,37 +56,29 @@ const Login = () => {
           };
           localStorage.setItem("user", JSON.stringify(user));
         }
-         if (res.error !== true) {
-           Context.setAlertBox({
-             open: true,
-             error: false,
-             msg: "Log In  Successfully!",
-           });
-           setTimeout(() => {
-             setIsLoading(false);
-             history("/");
-           }, 200);
-         }
-         else {
-           Context.setAlertBox({
-             open: true,
-             error: true,
-             msg: "you are not a admin",
-           });
-           setIsLoading(false);
-         }
-     
-       
-       
-
+        if (res.error !== true) {
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Log In  Successfully!",
+          });
+          setTimeout(() => {
+            setIsLoading(false);
+            history("/");
+          }, 200);
+        } else {
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "you are not a admin",
+          });
+          setIsLoading(false);
+        }
       });
-  
     } catch (error) {
       console.log(error);
     }
-
-  }
-
+  };
 
   return (
     <>
@@ -146,9 +132,10 @@ const Login = () => {
               </div>
 
               <div className="form-group mb-3 position-relative">
-                <Button  type="submit" className="btn-blue w-100"> {
-                                        isLoading === true ? <CircularProgress />: 'Sign In'
-                                      }</Button>
+                <Button type="submit" className="btn-blue w-100">
+                  {" "}
+                  {isLoading === true ? <CircularProgress /> : "Sign In"}
+                </Button>
               </div>
 
               <div className="form-group mb-3 position-relative text-center">

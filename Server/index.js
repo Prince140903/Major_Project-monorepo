@@ -14,13 +14,13 @@ App.use(bodyParser.json());
 App.use(express.json());
 
 //Routes
-const categoryRoutes = require("./Routes/categories");
 
-App.use("/Uploads", express.static("uploads"));
-App.use("/api/category", categoryRoutes);
+const productRoutes = require("./Routes/products");
+
+App.use("/api/products/upload", productRoutes);
+App.use("/api/products", productRoutes);
+App.use("/:id", productRoutes);
 App.use("/api/users", userRoutes);
-
-
 //Database
 mongoose
   .connect(process.env.CONNECTION_STRING)
