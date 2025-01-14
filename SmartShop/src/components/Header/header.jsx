@@ -5,6 +5,8 @@ import images from "../../constants/images.js";
 import { Select } from "../../components";
 import Button from "@mui/material/Button";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import { Cart } from "../../pages";
+import { Link } from "react-router-dom";
 
 import Nav from "./nav/nav.jsx";
 
@@ -131,13 +133,15 @@ const Header = () => {
                         </span>
                       </li>
                       <li className="list-inline-item">
-                        <span>
-                          <DynamicIcon
-                            iconName="ShoppingCartOutlined"
-                            className="Icon"
-                          />
-                          Cart
-                        </span>
+                        <Link to={"/cart"}>
+                          <Button>
+                            <DynamicIcon
+                              iconName="ShoppingCartOutlined"
+                              className="Icon"
+                            />
+                            Cart
+                          </Button>
+                        </Link>
                       </li>
                       <li className="list-inline-item">
                         <span

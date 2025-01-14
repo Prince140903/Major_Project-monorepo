@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv/config");
+const userRoutes = require("./Routes/users.js");
 
 App.use(cors());
 App.options("*", cors());
@@ -19,7 +20,7 @@ const productRoutes = require("./Routes/products");
 App.use("/api/products/upload", productRoutes);
 App.use("/api/products", productRoutes);
 App.use("/:id", productRoutes);
-
+App.use("/api/users", userRoutes);
 //Database
 mongoose
   .connect(process.env.CONNECTION_STRING)
