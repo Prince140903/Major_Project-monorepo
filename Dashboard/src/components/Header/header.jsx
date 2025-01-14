@@ -14,7 +14,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotify, setisOpenNotify] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
 
   const openAcc = Boolean(anchorEl);
   const openNotify = Boolean(isOpenNotify);

@@ -17,11 +17,13 @@ import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
 
 import { createContext, useEffect, useState } from "react";
+import { Password } from "@mui/icons-material";
 
 const MyContext = createContext();
 
 function App() {
   const [isToggle, setIsToggle] = useState(false);
+  // const [isLogin, setLogin] = useState(false);
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"

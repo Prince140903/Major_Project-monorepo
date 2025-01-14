@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv/config");
+const userRoutes = require("./Routes/users.js");
 
 App.use(cors());
 App.options("*", cors());
@@ -17,6 +18,8 @@ const categoryRoutes = require("./Routes/categories");
 
 App.use("/Uploads", express.static("uploads"));
 App.use("/api/category", categoryRoutes);
+App.use("/api/users", userRoutes);
+
 
 //Database
 mongoose
