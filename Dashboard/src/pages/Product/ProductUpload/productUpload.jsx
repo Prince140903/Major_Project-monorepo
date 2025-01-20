@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./productUpload.css";
 
 import {
@@ -18,6 +18,7 @@ import {
   uploadImage,
   fetchDataFromApi,
   deleteImages,
+  deleteData,
 } from "../../../utils/api";
 import { MyContext } from "../../../App";
 
@@ -38,6 +39,22 @@ const ProductUpload = () => {
   const formData = new FormData();
   const history = useNavigate();
 
+  useEffect(() => {
+    fetchDataFromApi("/api/imageUpload").then((res) => {
+      res?.map((item) => {
+        item?.images?.map((img) => {
+          deleteImages(`/api/products/deleteImages?img=${img}`).then((res) => {
+            deleteData("/api/imageUpload/deleteAllImages");
+          });
+        });
+      });
+    });
+  }, []);
+
+  const addProduct = (e) => {
+    e.preventDefault();
+  };
+
   const changeInput = (e) => {
     setFormFields(() => ({
       ...formFields,
@@ -51,7 +68,7 @@ const ProductUpload = () => {
 
   const [previews, setPreviews] = useState([]);
 
-  const [userImages, setUserImages] = useState([]);
+  // const [userImages, setUserImages] = useState([]);
 
   // const handleImageUpload = (e) => {
   //   const uploadedFiles = Array.from(e.target.files);
@@ -70,7 +87,8 @@ const ProductUpload = () => {
           const file = files[i];
           selectedImages.push(file);
           formData.append("images", file);
-          // console.log(formData);
+
+          // console.log(...formData);
         } else {
           context.setAlertBox({
             open: true,
@@ -87,6 +105,8 @@ const ProductUpload = () => {
 
     uploadImage(apiEndPoint, formData).then((res) => {
       fetchDataFromApi("/api/imageUpload").then((response) => {
+        console.log("Response", response);
+
         if (response !== undefined && response !== null && response !== "") {
           response.length !== 0 &&
             response.map((item) => {
@@ -113,7 +133,7 @@ const ProductUpload = () => {
             });
           }, 200);
         } else {
-          console.log(error);
+          console.log("Response not found");
         }
       });
     });
@@ -424,6 +444,11 @@ const ProductUpload = () => {
                 })}
             </div>
           </div>
+
+          <Button onClick={addProduct} className="btn-blue p-3">
+            <DynamicIcon iconName="CloudUpload" className="mr-2" />
+            Publish and View
+          </Button>
         </div>
       </div>
     </>

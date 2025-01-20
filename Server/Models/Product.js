@@ -27,10 +27,9 @@ const productSchema = mongoose.Schema(
     },
     link: {
       type: String,
-      required: true,
     },
-    image: {
-      type: String,
+    images: { 
+      type: [String],
     },
   },
   { timestamps: true, collection: "All Products" }
