@@ -1,12 +1,84 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./login.css";
 
 import { DynamicIcon, Images } from "../../../constants";
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
-
+import { Button, CircularProgress } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+// import {postData} from '../../utils/api'
 const Login = () => {
   const [ShowPassword, setShowPassword] = useState(false);
+  const [IsLoading, setIsLoading] = useState(false);
+  const context = useContext(MyContext);
+  const history = useNavigate();
+
+  const [formFields, setFromFields] = useState({
+    email: "",
+    Password: "",
+  });
+  const changeInput = (e) => {
+    setFromFields(() => ({
+      ...formFields,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const signIn = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      if (formFields.email === "") {
+        MyContext.setAlertBox({
+          open: true,
+          error: true,
+          msg: "email can not be blank",
+        });
+        return false;
+      }
+      if (formFields.Password === "") {
+        MyContext.setAlertBox({
+          open: true,
+          error: true,
+          msg: "password can not be blank",
+        });
+        return false;
+      }
+      postData("/api/user/signIn", formFields).then((res) => {
+        if (res.user?.isAdmin) {
+          localStorage.removeItem("user");
+          localStorage.setItem("token", res?.token);
+          const user = {
+            userName: res?.user?.name,
+            email: res?.user?.email,
+            userId: res.user?.id,
+            image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
+            isAdmin: res.user?.isAdmin,
+          };
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+        if (res.error !== true) {
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Log In  Successfully!",
+          });
+          setTimeout(() => {
+            setIsLoading(false);
+            history("/");
+          }, 200);
+        } else {
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "you are not a admin",
+          });
+          setIsLoading(false);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -19,7 +91,7 @@ const Login = () => {
           </div>
 
           <div className="wrapper mt-3 card p-4">
-            <form>
+            <form onSubmit={signIn}>
               <div className="form-group mb-3 position-relative">
                 <span className="icon">
                   <DynamicIcon iconName="Mail" />
@@ -28,6 +100,8 @@ const Login = () => {
                   type="text"
                   className="form-control"
                   placeholder="Enter Email"
+                  name="email"
+                  onChange={changeInput}
                   autoFocus
                 />
               </div>
@@ -39,6 +113,8 @@ const Login = () => {
                   type={`${ShowPassword === true ? "text" : "password"}`}
                   className="form-control"
                   placeholder="Enter Password"
+                  name="password"
+                  onChange={changeInput}
                 />
 
                 <span
@@ -56,7 +132,10 @@ const Login = () => {
               </div>
 
               <div className="form-group mb-3 position-relative">
-                <Button className="btn-blue w-100">Sign In</Button>
+                <Button type="submit" className="btn-blue w-100">
+                  {" "}
+                  {isLoading === true ? <CircularProgress /> : "Sign In"}
+                </Button>
               </div>
 
               <div className="form-group mb-3 position-relative text-center">

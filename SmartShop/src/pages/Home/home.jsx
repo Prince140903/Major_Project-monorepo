@@ -1,14 +1,14 @@
 import React from "react";
 import HomeSliderBanner from "./Slider/slider.jsx";
-import { CatSlider, Banners, Newsletter, Product  } from "../../components";
+import { CatSlider, Banners, Newsletter, Product } from "../../components";
 import "./home.css";
 import images from "../../constants/images";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 
 import TopProducts from "./TopProducts/top.jsx";
 import { Button } from "@mui/material";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
-
 
 const Home = () => {
   var settings = {
@@ -118,7 +118,6 @@ const Home = () => {
                   top: "30%",
                   left: "30px", // Adjust this value to move the button closer or farther from the edge
                   transform: "translateY(-50%)",
-                  
                 }}
               >
                 Shop Now
