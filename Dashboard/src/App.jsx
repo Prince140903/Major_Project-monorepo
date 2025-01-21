@@ -12,6 +12,7 @@ import {
   ProductUpload,
   ProductList,
   Orders,
+  
 } from "./pages";
 import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
@@ -22,9 +23,12 @@ import { Password } from "@mui/icons-material";
 
 const MyContext = createContext();
 
+
 function App() {
   const [isToggle, setIsToggle] = useState(false);
-  // const [isLogin, setLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [user, setUser] = useState();
+  
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
@@ -41,13 +45,29 @@ function App() {
     localStorage.setItem("ThemeMode", ThemeMode);
   }, [ThemeMode]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token !== "" && token !== undefined && token !== null) {
+      setIsLogin(true);
+      const userData = JSON.parse(localStorage.getItem("user"));
+      SetUser(userData)
+    } else {
+      setIsLogin(false);
+    }
+    
+  }, [isLogin]);
+
   const values = {
     isToggle,
     setIsToggle,
     ThemeMode,
+    isLogin,
     setThemeMode,
+    setIsLogin,
     alertBox,
     setAlertBox,
+    user,
+    
   };
 
   const handleClose = (event, reason) => {

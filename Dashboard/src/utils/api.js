@@ -34,6 +34,14 @@ export const deleteImages = async (url, image) => {
   );
   return res;
 };
+export const postData = async (url, formData) => {
+  const { res } = await axios.delete(
+    `${process.env.REACT_APP_BASE_URL}${url}`,
+    formData
+  );
+  return res;
+};
+
 
 // dotenv.config();
 

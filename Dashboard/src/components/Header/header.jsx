@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import "./header.css";
 
 import { UserImg } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Images, DynamicIcon } from "../../constants";
 import { Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
@@ -34,6 +34,17 @@ const Header = () => {
   const handleCloseNotify = () => {
     setisOpenNotify(false);
   };
+
+  const history = useNavigate();
+
+  const logout=() => {
+    setAnchorEl(null);
+    context.setIsLogin(false);
+    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    history("/login");
+
+  }
 
   const toggleTheme = () => {
     context.setThemeMode((prevTheme) =>
@@ -150,7 +161,7 @@ const Header = () => {
                 </Menu>
               </div>
 
-              {isLogin === false ? (
+              {isLogin === true ? (
                 <Link to={"/auth/login"}>
                   <Button className="btn-blue btn-style">Log In</Button>
                 </Link>
@@ -159,12 +170,17 @@ const Header = () => {
                   <Button
                     className="myAcc d-flex align-items-center"
                     onClick={handleOpenAcc}
-                  >
-                    <UserImg img={Images.userImg} width='40' />
+                    >
+                      {context?.user?.image !== "" ?
+                        <UserImg img={Images.userImg} width="40" />
+                        :
+                        context?.user?.userName.charAt(0)
+                       }
+                   
 
                     <div className="userInfo">
-                      <h4>Aaditya Revandkar</h4>
-                      <p className="mb-0">@Aaditya14</p>
+                      <h4>{context?.user?.userName}</h4>
+                      <p className="mb-0">{context?.user?.email}</p>
                     </div>
                   </Button>
                   <Menu
@@ -219,7 +235,7 @@ const Header = () => {
                       </ListItemIcon>
                       Settings
                     </MenuItem>
-                    <MenuItem onClick={handleCloseAcc}>
+                    <MenuItem onClick={logout}>
                       <ListItemIcon>
                         <DynamicIcon iconName="Logout" fontSize="small" />
                       </ListItemIcon>

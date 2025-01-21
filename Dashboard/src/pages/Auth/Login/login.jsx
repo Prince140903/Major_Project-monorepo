@@ -4,12 +4,14 @@ import "./login.css";
 import { DynamicIcon, Images } from "../../../constants";
 import { Button, CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
-// import {postData} from '../../utils/api'
+
+import { postData } from "../../../utils/api";
+import { MyContext } from "../../../App";
+
 const Login = () => {
   const [ShowPassword, setShowPassword] = useState(false);
-  const [IsLoading, setIsLoading] = useState(false);
-  const context = useContext(MyContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const Context = useContext(MyContext);
   const history = useNavigate();
 
   const [formFields, setFromFields] = useState({
@@ -27,16 +29,16 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      if (formFields.email === "") {
-        MyContext.setAlertBox({
+      if (formFields.email === undefined || "") {
+        Context.setAlertBox({
           open: true,
           error: true,
           msg: "email can not be blank",
         });
         return false;
       }
-      if (formFields.Password === "") {
-        MyContext.setAlertBox({
+      if (formFields.Password === undefined ||"") {
+        Context.setAlertBox({
           open: true,
           error: true,
           msg: "password can not be blank",
@@ -47,6 +49,7 @@ const Login = () => {
         if (res.user?.isAdmin) {
           localStorage.removeItem("user");
           localStorage.setItem("token", res?.token);
+          Context.setIsLogin(true);
           const user = {
             userName: res?.user?.name,
             email: res?.user?.email,
