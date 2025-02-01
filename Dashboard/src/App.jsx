@@ -12,13 +12,15 @@ import {
   ProductUpload,
   ProductList,
   Orders,
+  CategoryList,
+  SubcategoryList,
 } from "./pages";
 import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
 
 import { createContext, useEffect, useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
-import { Password } from "@mui/icons-material";
+// import { Password } from "@mui/icons-material";
 
 const MyContext = createContext();
 
@@ -112,6 +114,8 @@ function App() {
                     />
                     <Route path="/product-upload" element={<ProductUpload />} />
                     <Route path="/product-list" element={<ProductList />} />
+                    <Route path="/category-list" element={<CategoryList />} />
+                    <Route path="/subcategory-list" element={<SubcategoryList />} />
                     <Route path="/orders" element={<Orders />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>

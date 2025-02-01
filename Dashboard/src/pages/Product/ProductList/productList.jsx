@@ -39,7 +39,6 @@ const ProductList = () => {
   });
 
   const [products, setProducts] = useState([]);
-  // const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -49,44 +48,6 @@ const ProductList = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const data = await fetchDataFromApi(
-          `/api/products?page=${page}&limit=${limit}&company=${company}`
-        );
-        setProducts(data.products);
-        setTotalProducts(data.total);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    // const fetchSearchResults = async () => {
-    //   try {
-    //     const response = await fetchDataFromApi(
-    //       `/api/products/search?page=${page}&limit=${limit}&company=${company}&search=${searchQuery}&selection=${selection}`
-    //     );
-    //     const { products, total } = response;
-
-    //     if (!products || products.length === 0) {
-    //       setTotalProducts(0);
-    //       setProducts([]);
-    //       return;
-    //     }
-
-    //     setProducts(products); // Update products
-    //     setTotalProducts(total); // Update total count
-    //   } catch (error) {
-    //     if (error.response && error.response.status === 404) {
-    //       console.warn("API returned 404: Not Found.");
-    //       setProducts([]);
-    //       setTotalProducts(0);
-    //     } else {
-    //       console.error("Error fetching search results:", error);
-    //     }
-    //   }
-    // };
-
-    const fetchResults = async () => {
       try {
         console.log("fetch");
         const Sorted = await fetchDataFromApi(
@@ -114,29 +75,8 @@ const ProductList = () => {
       }
     };
 
-    // if (searchQuery) {
-    //   fetchResults();
-    // } else {
-    //   fetchProducts();
-    // }
-    fetchResults();
+    fetchProducts();
   }, [page, limit, company, searchQuery, selection]);
-
-  // useEffect(() => {
-  //   if (searchQuery) {
-  //     const results = products.filter((product) =>
-  //       product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  //     );
-
-  //     setFilteredProducts(results);
-  //     // setPage(1);
-  //   } else {
-  //     setFilteredProducts(products);
-  //     // setPage(1);
-  //   }
-  // }, [searchQuery, products]);
-
-  // const displayProducts = searchQuery ? filteredProducts : products;
 
   const handleSelection = (event) => {
     setSelection(event.target.value);
@@ -390,26 +330,14 @@ const ProductList = () => {
 
 export default ProductList;
 
-// useEffect(() => {
-//   const fetchProducts = async () => {
-//     try {
-//       const query = new URLSearchParams({
-//         page,
-//         limit,
-//         // search: searchQuery || "",
-//         // company: company || "All",
-//         // selection: selection || "Featured",
-//       }).toString();
-
-//       const data = await fetchDataFromApi(`/api/products?${query}`);
-//       setProducts(data.products);
-//       setTotalProducts(data.total);
-//     } catch (error) {
-//       console.error("Error fetching products:", error);
-//       setProducts([]);
-//       setTotalProducts(0);
-//     }
-//   };
-
-//   fetchProducts();
-// }, [page, limit, company, searchQuery, selection]);
+// const fetchProducts = async () => {
+//   try {
+//     const data = await fetchDataFromApi(
+//       `/api/products?page=${page}&limit=${limit}&company=${company}`
+//     );
+//     setProducts(data.products);
+//     setTotalProducts(data.total);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

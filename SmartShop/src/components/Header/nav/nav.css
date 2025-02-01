@@ -2,18 +2,17 @@
   width: 100%;
   height: 80px;
   margin: auto;
-  border-top: 1px solid rgba(0,0,0,0.1);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-.bg-g, .bg-success {
+.bg-g,
+.bg-success {
   background-color: #3bb77e;
 }
 
 .text-g {
   color: #3bb77e;
-} 
-
+}
 
 .nav.catTab {
   padding: 15px 20px !important;
@@ -22,28 +21,33 @@
   cursor: pointer;
 }
 
-.nav nav li{
-  position:relative;
+.nav nav li {
+  position: relative;
 }
 
-.nav  ul li button {
+.nav ul li button {
   text-transform: capitalize !important;
   padding: 15px 20px !important;
   color: #3bb77e !important;
   border-radius: 0px !important;
 }
+.nav nav ul li a button {
+  color: rgba(0, 0, 0, 0.8) !important;
+  text-decoration: none !important;
+  font-size: 21px !important;
+  font-weight: 400;
+}
 
 .nav nav ul li button a {
   text-decoration: none !important;
-  color: rgba(0,0,0,0.8) !important;
+  color: rgba(0, 0, 0, 0.8) !important;
   font-size: 21px !important;
 }
 
 .nav .part3 .phNo svg {
   font-size: 50px !important;
   opacity: 0.8;
-  
-} 
+}
 
 .nav .part3 .phNo h3 {
   font-size: 28px !important;
@@ -52,7 +56,6 @@
 .nav .part3 .phNo p {
   font-size: 15px !important;
   opacity: 0.8;
-  
 }
 
 .nav nav .dropdown_menu {
@@ -67,8 +70,7 @@
   z-index: 100;
   opacity: 0;
   visibility: hidden;
-  transition:all 0.3s ease-in-out;
-
+  transition: all 0.3s ease-in-out;
 }
 
 .nav .dropdown_menu li {
@@ -94,14 +96,14 @@
   font-weight: 400 !important;
 }
 
- .nav nav li:hover .dropdown_menu {
+.nav nav li:hover .dropdown_menu {
   top: 100%;
   opacity: 1;
   visibility: inherit;
 }
 
 .megaMenu {
-  position:static;
+  position: static;
   height: auto !important;
   width: 100px;
   padding: 40px 45px !important;

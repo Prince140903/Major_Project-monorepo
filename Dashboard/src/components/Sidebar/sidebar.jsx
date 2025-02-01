@@ -4,17 +4,12 @@ import "./sidebar.css";
 import { Button } from "@mui/material";
 import { DynamicIcon } from "../../constants";
 import { Link } from "react-router-dom";
-import { MyContext } from "../../App";
 
 const Sidebar = () => {
-  const [isActive, setisActive] = useState(0);
-  const [isToggle, setIsToggle] = useState(false);
-
-  const context = useContext(MyContext);
+  const [isActive, setIsActive] = useState(null);
 
   const isOpenSM = (index) => {
-    setisActive(index);
-    setIsToggle(!isToggle);
+    setIsActive((prevActive) => (prevActive === index ? null : index));
   };
 
   return (
@@ -23,9 +18,7 @@ const Sidebar = () => {
         <li>
           <Link to="/">
             <Button
-              className={`w-100 ${
-                isActive === 0 && isToggle === true ? "active" : ""
-              }`}
+              className={`w-100 ${isActive === 0 ? "active" : ""}`}
               onClick={() => isOpenSM(0)}
             >
               <span className="icon">
@@ -37,9 +30,7 @@ const Sidebar = () => {
         </li>
         <li>
           <Button
-            className={`w-100 ${
-              isActive === 1 && isToggle === true ? "active" : ""
-            }`}
+            className={`w-100 ${isActive === 1 ? "active" : ""}`}
             onClick={() => isOpenSM(1)}
           >
             <span className="icon">
@@ -52,7 +43,7 @@ const Sidebar = () => {
           </Button>
           <div
             className={`submenuWrapper ${
-              isActive === 1 && isToggle === true ? "colapse" : "colapsed"
+              isActive === 1 ? "colapse" : "colapsed"
             }`}
           >
             <ul className="submenu">
@@ -70,9 +61,7 @@ const Sidebar = () => {
         </li>
         <li>
           <Button
-            className={`w-100 ${
-              isActive === 2 && isToggle === true ? "active" : ""
-            }`}
+            className={`w-100 ${isActive === 2 ? "active" : ""}`}
             onClick={() => isOpenSM(2)}
           >
             <span className="icon">
@@ -85,7 +74,7 @@ const Sidebar = () => {
           </Button>
           <div
             className={`submenuWrapper ${
-              isActive === 2 && isToggle === true ? "colapse" : "colapsed"
+              isActive === 2 ? "colapse" : "colapsed"
             }`}
           >
             <ul className="submenu">
@@ -102,28 +91,55 @@ const Sidebar = () => {
           </div>
         </li>
         <li>
+          <Button
+            className={`w-100 ${isActive === 3 ? "active" : ""}`}
+            onClick={() => isOpenSM(3)}
+          >
+            <span className="icon">
+              <DynamicIcon iconName="Layers" />
+            </span>
+            Category
+            <span className="arrow">
+              <DynamicIcon iconName="KeyboardArrowRight" />
+            </span>
+          </Button>
+          <div
+            className={`submenuWrapper ${
+              isActive === 3 ? "colapse" : "colapsed"
+            }`}
+          >
+            <ul className="submenu">
+              <li>
+                <Link to={"/category-list"}>Category List</Link>
+              </li>
+              {/* <li>
+                <Link to={"/product-details"}>Product View</Link>
+              </li>
+              <li>
+                <Link to={"/product-upload"}>Product Upload</Link>
+              </li> */}
+            </ul>
+          </div>
+        </li>
+        <li>
           <Link to={"/orders"}>
             <Button
-              className={`w-100 ${
-                isActive === 3 && isToggle === true ? "active" : ""
-              }`}
-              onClick={() => isOpenSM(3)}
+              className={`w-100 ${isActive === 4 ? "active" : ""}`}
+              onClick={() => isOpenSM(4)}
             >
               <span className="icon">
                 <DynamicIcon iconName="ShoppingCart" />
               </span>
               Orders
-              <span className="ml-auto badge">3</span>
+              <span className="ml-auto badge">4</span>
             </Button>
           </Link>
         </li>
         <li>
           <Link to={"/"}>
             <Button
-              className={`w-100 ${
-                isActive === 4 && isToggle === true ? "active" : ""
-              }`}
-              onClick={() => isOpenSM(4)}
+              className={`w-100 ${isActive === 5 ? "active" : ""}`}
+              onClick={() => isOpenSM(5)}
             >
               <span className="icon">
                 <DynamicIcon iconName="Message" />
@@ -138,10 +154,8 @@ const Sidebar = () => {
         <li>
           <Link to={"/"}>
             <Button
-              className={`w-100 ${
-                isActive === 5 && isToggle === true ? "active" : ""
-              }`}
-              onClick={() => isOpenSM(5)}
+              className={`w-100 ${isActive === 6 ? "active" : ""}`}
+              onClick={() => isOpenSM(6)}
             >
               <span className="icon">
                 <DynamicIcon iconName="Notifications" />

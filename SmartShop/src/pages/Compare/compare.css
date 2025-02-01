@@ -1,0 +1,101 @@
+.compareWrapper {
+  padding: 25px 0px;
+}
+
+.compareWrapper .searchSection {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.compareWrapper .searchSection .searchBar {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  width: 400px;
+}
+
+.compareWrapper .filterSection {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.compareWrapper .filterSection .row {
+  display: flex;
+  justify-content: center;
+}
+
+.drop {
+  width: 500px !important;
+}
+
+.productCompare {
+  /* background: gray; */
+  height: auto;
+}
+
+.line {
+  width: 2px;
+  height: auto;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.line .imgWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  border: 1px solid gray;
+}
+
+.line .imgWrap img {
+  object-fit: cover;
+  width: 120px;
+  height: 100px;
+  clip-path: circle(70%);
+  transform: scale(1.8);
+}
+
+.compareWrapper .productCompare .ProductWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: px; */
+  border: 1px solid #000;
+}
+
+.compareWrapper .productCompare .products {
+  min-height: 40rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 20px; */
+  background: #9f9f9f;
+  width: 800px;
+  color: #fff;
+}
+
+.col-custom {
+  flex: 0 0 45.83%;
+  max-width: 45.83%;
+}
+
+.col-small {
+  flex: 0 0 8.33%;
+  max-width: 8.33%;
+}

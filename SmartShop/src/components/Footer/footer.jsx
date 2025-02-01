@@ -1,9 +1,8 @@
 import React from "react";
 import "./footer.css";
 
-import images from "../../constants/images.js";
+import { images, DynamicIcon } from "../../constants";
 import { Link } from "react-router-dom";
-import DynamicIcon from "../../constants/icons.jsx";
 
 const Footer = () => {
   return (

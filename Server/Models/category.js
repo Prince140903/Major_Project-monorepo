@@ -9,10 +9,13 @@ const categorySchema = mongoose.Schema(
     images: {
       type: String,
     },
+    color: {
+      type: String,
+    },
     subCategory: {
       type: String,
     },
-    link: {
+    parentId: {
       type: String,
     },
   },
