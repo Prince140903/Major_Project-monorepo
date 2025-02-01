@@ -6,7 +6,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const multer = require("multer");
+const multer = require("multer"); //for image upload
 const fs = require("fs");
 
 const { error } = require("console");

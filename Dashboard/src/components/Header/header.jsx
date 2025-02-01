@@ -2,19 +2,20 @@ import React, { useContext, useState } from "react";
 import "./header.css";
 
 import { UserImg } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Images, DynamicIcon } from "../../constants";
 import { Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { MyContext } from "../../App";
+import { Login } from "@mui/icons-material";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotify, setisOpenNotify] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
 
   const openAcc = Boolean(anchorEl);
   const openNotify = Boolean(isOpenNotify);
@@ -33,6 +34,21 @@ const Header = () => {
   };
   const handleCloseNotify = () => {
     setisOpenNotify(false);
+  };
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    setAnchorEl(null);
+    console.log("he;llo");
+
+    context.setIsLogin(false);
+    // setIsLogin(false);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    // console.log(Login);
+    navigate("/login");
   };
 
   const toggleTheme = () => {
@@ -137,7 +153,7 @@ const Header = () => {
                   </MenuItem>
                   <MenuItem onClick={handleCloseNotify}>
                     <ListItemIcon>
-                      <DynamicIcon iconName="Settings" fontSize="small" />
+                      <DynamicIcon iconName="Settings" fontSize="tmall" />
                     </ListItemIcon>
                     Settings
                   </MenuItem>
@@ -150,7 +166,7 @@ const Header = () => {
                 </Menu>
               </div>
 
-              {isLogin === false ? (
+              {context.isLogin === true ? (
                 <Link to={"/auth/login"}>
                   <Button className="btn-blue btn-style">Log In</Button>
                 </Link>
@@ -160,11 +176,15 @@ const Header = () => {
                     className="myAcc d-flex align-items-center"
                     onClick={handleOpenAcc}
                   >
-                    <UserImg img={Images.userImg} width='40' />
+                    {context?.user?.image !== "" ? (
+                      <UserImg img={Images.userImg} width="40" />
+                    ) : (
+                      context?.user?.userName.charAt(0)
+                    )}
 
                     <div className="userInfo">
-                      <h4>Aaditya Revandkar</h4>
-                      <p className="mb-0">@Aaditya14</p>
+                      <h4>{context?.user?.userName}</h4>
+                      <p className="mb-0">{context?.user?.email}</p>
                     </div>
                   </Button>
                   <Menu
@@ -219,7 +239,7 @@ const Header = () => {
                       </ListItemIcon>
                       Settings
                     </MenuItem>
-                    <MenuItem onClick={handleCloseAcc}>
+                    <MenuItem onClick={logout}>
                       <ListItemIcon>
                         <DynamicIcon iconName="Logout" fontSize="small" />
                       </ListItemIcon>

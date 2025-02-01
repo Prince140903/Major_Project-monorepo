@@ -13,17 +13,19 @@ const Login = () => {
   const Context = useContext(MyContext);
   const history = useNavigate();
 
-  const [formFields, setFromFields] = useState({
+  const [formFields, setFormFields] = useState({
     email: "",
-    Password: "",
+    password: "",
   });
+
   const changeInput = (e) => {
-    setFromFields(() => ({
-      ...formFields,
+    setFormFields((prevFields) => ({
+      ...prevFields,
       [e.target.name]: e.target.value,
     }));
   };
-  const signIn = (e) => {
+
+  const signIn = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -63,16 +65,21 @@ const Login = () => {
       // });
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      <img src={Images.Pattern} className="loginPattern" />
+      <img
+        src={Images.Pattern}
+        className="loginPattern"
+        alt="Background Pattern"
+      />
       <div className="loginSection">
         <div className="loginBox">
           <div className="logo text-center">
-            <img src={Images.Logo} alt="logo" width="60px" />
+            <img src={Images.Logo} alt="Logo" width="60px" />
             <h5 className="font-weight-bold">Login to CupCake</h5>
           </div>
 
@@ -97,21 +104,18 @@ const Login = () => {
                   <DynamicIcon iconName="Lock" />
                 </span>
                 <input
-                  type={`${ShowPassword === true ? "text" : "password"}`}
+                  type={showPassword ? "text" : "password"}
                   className="form-control"
                   placeholder="Enter Password"
                   name="password"
                   onChange={changeInput}
                   required
                 />
-
                 <span
                   className="togglePassword"
-                  onClick={() => {
-                    setShowPassword(!ShowPassword);
-                  }}
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  {ShowPassword === true ? (
+                  {showPassword ? (
                     <DynamicIcon iconName="VisibilityOff" />
                   ) : (
                     <DynamicIcon iconName="Visibility" />
@@ -121,13 +125,12 @@ const Login = () => {
 
               <div className="form-group mb-3 position-relative">
                 <Button type="submit" className="btn-blue w-100">
-                  {" "}
-                  {isLoading === true ? <CircularProgress /> : "Sign In"}
+                  {isLoading ? <CircularProgress size={24} /> : "Sign In"}
                 </Button>
               </div>
 
               <div className="form-group mb-3 position-relative text-center">
-                <Link to={"/auth/forget-password"} className="link">
+                <Link to="/auth/forget-password" className="link">
                   FORGOT PASSWORD
                 </Link>
                 <div className="d-flex align-items-center justify-content-center or mt-3">
@@ -135,10 +138,9 @@ const Login = () => {
                   <span className="txt">or</span>
                   <span className="line"></span>
                 </div>
-
                 <div className="Google">
                   <Button variant="outlined" className="w-100 btn-blue">
-                    &nbsp; Sign in With Google
+                    Sign in With Google
                   </Button>
                 </div>
               </div>
@@ -148,7 +150,7 @@ const Login = () => {
           <div className="wrapper mt-3 card p-3 text-center">
             <span className="tag">
               Don't have an account?
-              <Link to={"/auth/register"} className="link color ml-2">
+              <Link to="/auth/register" className="link color ml-2">
                 Register
               </Link>
             </span>
