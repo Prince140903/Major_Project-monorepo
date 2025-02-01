@@ -1,14 +1,18 @@
-import React from "react";
-import HomeSliderBanner from "./Slider/slider.jsx";
-import { CatSlider, Banners, Newsletter, Product } from "../../components";
+import React, { useEffect, useState } from "react";
 import "./home.css";
-import images from "../../constants/images";
+import HomeSliderBanner from "./Slider/slider.jsx";
+import {
+  CatSlider,
+  Banners,
+  Newsletter,
+  Product,
+  TopProducts,
+} from "../../components";
+import { images } from "../../constants";
 import Slider from "react-slick";
-import { Link } from "react-router-dom";
 
-import TopProducts from "./TopProducts/top.jsx";
-import { Button } from "@mui/material";
-import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import { Tab, Tabs, Box } from "@mui/material";
+import { fetchDataFromApi } from "../../utils/api.js";
 
 const Home = () => {
   var settings = {
@@ -19,6 +23,67 @@ const Home = () => {
     slidesToScroll: 1,
     fade: false,
     arrows: true,
+  };
+
+  const [products, setProducts] = useState([]);
+  const [selection, setSelection] = useState("Featured");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const Prods = await fetchDataFromApi(
+          `/api/products/filter?selection=Popular`
+        );
+
+        const { products, total } = Prods;
+
+        if (!products || products.length === 0) {
+          setProducts([]);
+          return;
+        }
+
+        setProducts(products);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          console.warn("API returned 404: Not Found.");
+          setProducts([]);
+        } else {
+          console.error("Error fetching search results:", error);
+        }
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchFilteredProducts = async () => {
+      try {
+        const Prods = await fetchDataFromApi(
+          `/api/products/filter?selection=${selection}`
+        );
+
+        const { products, total } = Prods;
+
+        if (!products || products.length === 0) {
+          setProducts([]);
+          return;
+        }
+
+        setProducts(products);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          console.warn("API returned 404: Not Found.");
+          setProducts([]);
+        } else {
+          console.error("Error fetching search results:", error);
+        }
+      }
+    };
+    fetchFilteredProducts();
+  }, [selection]);
+
+  const handleSelection = (event) => {
+    setSelection(event.target.value);
   };
 
   return (
@@ -53,48 +118,27 @@ const Home = () => {
           </div>
 
           <div className="productRow">
-            <div className="item">
-              <Product tag="sale" />
-            </div>
-
-            <div className="item">
-              <Product tag="sale" />
-            </div>
-
-            <div className="item">
-              <Product tag="new" />
-            </div>
-
-            <div className="item">
-              <Product tag="new" />
-            </div>
-
-            <div className="item">
-              <Product />
-            </div>
-            <div className="item">
-              <Product tag="best" />
-            </div>
-            <div className="item">
-              <Product tag="hot" />
-            </div>
-            <div className="item">
-              <Product tag="hot" />
-            </div>
-            <div className="item">
-              <Product />
-            </div>
-            <div className="item">
-              <Product />
-            </div>
+            {/* {console.log(products[0])} */}
+            {products.map((product) => (
+              <div className="item">
+                <Product
+                  tag={product.company}
+                  image={product.images[0]}
+                  name={product.name}
+                  ratings={product.ratings}
+                  actual_price={product.actual_price}
+                  discount_price={product.discount_price}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
       <section className="homeProducts homeProductRow2 pt-0">
         <div className="container-fluid">
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center ml-auto">
             <h2 className="hd mb-0 mt-0">Daily Best Sells</h2>
-            <ul className="list list-inline ml-auto filterTab mb-0">
+            {/* <ul className="list list-inline ml-auto filterTab mb-0">
               <li className="list list-inline-item">
                 <a className="cursor">Feature</a>
               </li>
@@ -104,47 +148,43 @@ const Home = () => {
               <li className="list list-inline-item">
                 <a className="cursor">New Added</a>
               </li>
-            </ul>
+            </ul> */}
+            <Box sx={{ width: "100%" }}>
+              <Tabs
+                value={selection}
+                onChange={handleSelection}
+                textColor="secondary"
+                indicatorColor="secondary"
+                aria-label="secondary tabs example"
+              >
+                <Tab value="Featured" label="Featured" />
+                <Tab value="Popular" label="Popular" />
+                <Tab value="Low->High" label="Price: Low to High" />
+                <Tab value="High->Low" label="Price: High to Low" />
+              </Tabs>
+            </Box>
           </div>
           <br />
           <br />
           <div className="row">
             <div className="col-md-3 pr-5 ">
               <img src={images.banner4} className="w-100" />
-              <Button
-                className="btn-g d-flex align-items-center "
-                style={{
-                  position: "absolute",
-                  top: "30%",
-                  left: "30px", // Adjust this value to move the button closer or farther from the edge
-                  transform: "translateY(-50%)",
-                }}
-              >
-                Shop Now
-                <ArrowForwardOutlinedIcon />
-              </Button>
             </div>
 
             <div className="col-md-9">
               <Slider {...settings} className="productSlider">
-                <div className="item">
-                  <Product tag="sale" />
-                </div>
-                <div className="item">
-                  <Product tag="hot" />
-                </div>
-                <div className="item">
-                  <Product tag="new" />
-                </div>
-                <div className="item">
-                  <Product tag="sale" />
-                </div>
-                <div className="item">
-                  <Product tag="sale" />
-                </div>
-                <div className="item">
-                  <Product tag="best" />
-                </div>
+                {products.map((product) => (
+                  <div className="item">
+                    <Product
+                      tag={product.company}
+                      image={product.images[0]}
+                      name={product.name}
+                      ratings={product.ratings}
+                      actual_price={product.actual_price}
+                      discount_price={product.discount_price}
+                    />
+                  </div>
+                ))}
               </Slider>
             </div>
           </div>
@@ -183,7 +223,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
     </>
   );
 };

@@ -2,14 +2,11 @@ const { Category } = require("../Models/category");
 const { ImageUpload } = require("../Models/imageUpload");
 const express = require("express");
 const router = express.Router();
-const slugify = require("slugify"); //changes by akshay
 const multer = require("multer");
 const fs = require("fs");
-const { console } = require("inspector");
 
 const cloudinary = require("cloudinary").v2;
 
-/*akshay*/
 cloudinary.config({
   cloud_name: process.env.cloudinary_Config_Name,
   api_key: process.env.cloudinary_Config_api_key,
@@ -18,6 +15,7 @@ cloudinary.config({
 });
 
 var imagesArr = [];
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "Uploads");
@@ -26,6 +24,7 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}_${file.originalname}`);
   },
 });
+
 const upload = multer({ storage: storage });
 
 router.post("/upload", upload.array("images"), async (req, res) => {
@@ -44,13 +43,14 @@ router.post("/upload", upload.array("images"), async (req, res) => {
         options,
         function (error, result) {
           imagesArr.push(result.secure_url);
-          fs.unlinkSync(`Uploads/${req.files[i].filename}`); //to not mae kheavy webiste
+          fs.unlinkSync(`Uploads/${req.files[i].filename}`);
         }
       );
 
       let imagesUploaded = new ImageUpload({
         images: imagesArr,
       });
+
       imagesUploaded = await imagesUploaded.save();
       return res.status(200).json(imagesArr);
     }
@@ -60,57 +60,63 @@ router.post("/upload", upload.array("images"), async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  let catobj = {};
+  let catObj = {};
+
   if (imagesArr.length > 0) {
-    catobj = {
+    catObj = {
       name: req.body.name,
       images: imagesArr,
       color: req.body.color,
-      slug: req.body.name,
     };
   } else {
-    catobj = {
+    catObj = {
       name: req.body.name,
-      slug: req.body.name,
     };
   }
+
   if (req.body.parentId) {
-    catobj.parentId = req.body.parentId;
+    catObj.parentId = req.body.parentId;
   }
-  let category = new Category(catobj);
+
+  let category = new Category(catObj);
+
   if (!category) {
     res.status(500).json({
       error: err,
       success: false,
     });
   }
+
   category = await category.save();
   imagesArr = [];
 
   res.status(201).json(category);
 });
 
-const createCategories = (categories) => {
-  const categoryList = [];
-  let category;
+const createCategories = (categories, parentId = null, visited = new Set()) => {
+  const filteredCategories = categories.filter((cat) =>
+    parentId ? cat.parentId === parentId : !cat.parentId
+  );
 
-  if (parentId == null) {
-    category = categories.filter((cat) => cat.parentId == undefined);
-  } else {
-    category = categories.filter((cat) => cat.parentId == parentId);
-  }
+  if (filteredCategories.length === 0) return [];
 
-  for (let cat of category) {
-    categoryList.push({
+  // Build category list
+  return filteredCategories.map((cat) => {
+    if (visited.has(cat._id)) {
+      throw new Error(`Circular reference detected for category ${cat._id}`);
+    }
+
+    // Add the current category ID to the visited set
+    visited.add(cat._id);
+
+    return {
       _id: cat._id,
       name: cat.name,
-      images: cat.image,
-      subCategory: cat.sub_category,
-      link: cat.link,
-      children: createCategories(categories, cat._id),
-    });
-  }
-  return categoryList;
+      images: cat.images,
+      color: cat.color,
+      children: createCategories(categories, cat._id, new Set(visited)), // Pass a new Set to avoid mutation
+    };
+  });
 };
 
 router.get("/", async (req, res) => {
@@ -189,6 +195,7 @@ router.delete("/deleteImage", async (req, res) => {
       console.log(error, result);
     }
   );
+
   if (response) {
     res.status(200).send(response);
   }
@@ -222,38 +229,55 @@ router.delete("/:id", async (req, res) => {
     success: true,
     message: "Category deleted",
   });
+
+  return res.status(200).send(category);
 });
 
+router.put("/:id", async (req, res) => {
+  const category = await Category.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name,
+      images: req.body.images,
+      color: req.body.color,
+    },
+    { new: true }
+  );
 
+  if (!category) {
+    return res.status(500).json({
+      message: "The category with the givern Id was not found.",
+      success: false,
+    });
+  }
 
- router.put("/:id", async (req, res) => {
-   const category = await Category.findByIdAndUpdate(
-     req.params.id,
-     {
-       name: req.body.name,
-       images: req.body.images,
-       color: req.body.color,
-     },
-     { new: true }
-   );
+  imagesArr = [];
 
-   if (!category) {
-     return res.status(500).json({
-       message: "The category with the givern Id was not found.",
-       success: false,
-     });
-   }
+  res.send(category);
+});
 
-   imagesArr = [];
-
-   res.send(category);
- });
-
-
-/*akshay*/
-/* add this in index.js  46.00
-const categoryRoutes = require("./Routes/categories");
-
-App.use(`/api/category`,categoryRoutes);
-*/
 module.exports = router;
+
+// const categoryList = [];
+// let category;
+// if (parentId == null) {
+//   // category = categories.filter(
+//   //   (cat) => cat.parentId == null || cat.parentId === undefined
+//   // );
+//   category = categories.filter((cat) => !cat.parentId);
+//   console.log("No parentId: ", category);
+// } else {
+//   category = categories.filter((cat) => cat.parentId === parentId);
+//   console.log("parentId: ", category);
+// }
+
+// for (let cat of category) {
+//   categoryList.push({
+//     _id: cat._id,
+//     name: cat.name,
+//     images: cat.images,
+//     color: cat.color,
+//     children: createCategories(categories, cat._id),
+//   });
+// }
+// return categoryList;

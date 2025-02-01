@@ -55,45 +55,11 @@ router.post("/upload", upload.array("images"), async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  const { company, page = 1, limit = 20 } = req.query; //defaults: page 1, 10 products
-  const query = company && company !== "All" ? { company } : {};
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-
-  try {
-    const products = await Product.find(query)
-      .skip(startIndex)
-      .limit(Number(limit));
-
-    const total = await Product.countDocuments(query);
-    if (!products || products.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No products found" });
-    }
-
-    // const CategoryData = createCategory(products);
-
-    return res.status(200).json({ products, total });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-// router.get("/search", async (req, res) => {
-//   const {
-//     search = "",
-//     page = 1,
-//     limit = 10,
-//     company = "All",
-//     selection = "Featured",
-//   } = req.query;
-
-//   const query = search ? { name: { $regex: search, $options: "i" } } : {};
-
+// router.get("/", async (req, res) => {
+//   const { company, page = 1, limit = 20 } = req.query; //defaults: page 1, 10 products
+//   const query = company && company !== "All" ? { company } : {};
 //   const startIndex = (page - 1) * limit;
+//   const endIndex = page * limit;
 
 //   try {
 //     const products = await Product.find(query)
@@ -101,12 +67,13 @@ router.get("/", async (req, res) => {
 //       .limit(Number(limit));
 
 //     const total = await Product.countDocuments(query);
-
 //     if (!products || products.length === 0) {
 //       return res
 //         .status(404)
 //         .json({ success: false, message: "No products found" });
 //     }
+
+//     // const CategoryData = createCategory(products);
 
 //     return res.status(200).json({ products, total });
 //   } catch (error) {
@@ -116,7 +83,6 @@ router.get("/", async (req, res) => {
 // });
 
 router.get("/filter", async (req, res) => {
-  console.log("hello");
   const {
     search = "",
     page = 1,
@@ -134,25 +100,17 @@ router.get("/filter", async (req, res) => {
   let sortOption = {};
   if (selection === "Low->High") {
     sortOption.discount_price = 1; // Ascending order
-    console.log(sortOption);
   } else if (selection === "High->Low") {
     sortOption.discount_price = -1; // Descending order
-    console.log(sortOption);
   } else if (selection === "Featured") {
     sortOption.ratings = -1; // Descending order
-    console.log(sortOption);
   } else if (selection === "Popular") {
     sortOption.no_of_ratings = -1;
-    console.log(sortOption);
-    console.log("Popular");
   }
 
   const startIndex = (page - 1) * limit;
 
-  console.log("Hey");
-
   try {
-    console.log("Fetch filtered and sorted products");
     const products = await Product.find(query)
       .sort(sortOption)
       .skip(startIndex)

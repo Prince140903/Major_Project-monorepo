@@ -1,16 +1,17 @@
 import React, { useContext, useState } from "react";
 import "./login.css";
+
+import { MyContext } from "../../../App";
 import { DynamicIcon, Images } from "../../../constants";
 import { Button, CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { postData } from "../../../utils/api";
-import { MyContext } from "../../../App";
+// import { postData } from "../../utils/api";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [ShowPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const Context = useContext(MyContext);
-  const navigate = useNavigate();
+  const history = useNavigate();
 
   const [formFields, setFormFields] = useState({
     email: "",
@@ -29,59 +30,39 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      if (!formFields.email) {
-        Context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "Email cannot be blank",
-        });
-        setIsLoading(false);
-        return;
-      }
-      if (!formFields.password) {
-        Context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "Password cannot be blank",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      const res = await postData("/api/user/signIn", formFields);
-
-      if (res.user?.isAdmin) {
-        localStorage.removeItem("user");
-        localStorage.setItem("token", res?.token);
-        Context.setIsLogin(true);
-        const user = {
-          userName: res?.user?.name,
-          email: res?.user?.email,
-          userId: res.user?.id,
-          image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
-          isAdmin: res.user?.isAdmin,
-        };
-        localStorage.setItem("user", JSON.stringify(user));
-      }
-
-      if (res.error !== true) {
-        Context.setAlertBox({
-          open: true,
-          error: false,
-          msg: "Login Successful!",
-        });
-        setTimeout(() => {
-          setIsLoading(false);
-          navigate("/");
-        }, 200);
-      } else {
-        Context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "You are not an admin",
-        });
-        setIsLoading(false);
-      }
+      /*Add postData first *(by Aaditya) */
+      // postData("/api/user/signIn", formFields).then((res) => {
+      //   if (res.user?.isAdmin) {
+      //     localStorage.removeItem("user");
+      //     localStorage.setItem("token", res?.token);
+      //     const user = {
+      //       userName: res?.user?.name,
+      //       email: res?.user?.email,
+      //       userId: res.user?.id,
+      //       image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
+      //       isAdmin: res.user?.isAdmin,
+      //     };
+      //     localStorage.setItem("user", JSON.stringify(user));
+      //   }
+      //   if (res.error !== true) {
+      //     Context.setAlertBox({
+      //       open: true,
+      //       error: false,
+      //       msg: "Log In  Successfully!",
+      //     });
+      //     setTimeout(() => {
+      //       setIsLoading(false);
+      //       history("/");
+      //     }, 200);
+      //   } else {
+      //     Context.setAlertBox({
+      //       open: true,
+      //       error: true,
+      //       msg: "you are not a admin",
+      //     });
+      //     setIsLoading(false);
+      //   }
+      // });
     } catch (error) {
       console.log(error);
       setIsLoading(false);
@@ -115,6 +96,7 @@ const Login = () => {
                   name="email"
                   onChange={changeInput}
                   autoFocus
+                  required
                 />
               </div>
               <div className="form-group mb-3 position-relative">
@@ -127,6 +109,7 @@ const Login = () => {
                   placeholder="Enter Password"
                   name="password"
                   onChange={changeInput}
+                  required
                 />
                 <span
                   className="togglePassword"

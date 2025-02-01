@@ -191,8 +191,8 @@ p {
 }
 
 .table td .info {
-  width: 65%;
-  flex: 0 0 65%;
+  width: 70%;
+  flex: 0 0 70%;
 }
 
 .table td .info h6 {
@@ -216,7 +216,7 @@ p {
 }
 
 .table.v-align td .productBox .info {
-  width: 100%;
+  width: 90%;
 }
 
 .tableFooter {

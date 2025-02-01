@@ -15,8 +15,11 @@ App.use(express.json());
 
 //Routes
 // const categoryRoutes = require("./Routes/categories");
+
+const userRoutes = require("./Routes/users");
 const productRoutes = require("./Routes/products");
 const imageUploadRoutes = require("./Helper/imageUpload");
+const categoryRoutes = require("./Routes/categories");
 
 // App.use("/api/products/upload", productRoutes);
 
@@ -25,6 +28,7 @@ App.use("/uploads", express.static("uploads"));
 App.use("/api/products/upload", productRoutes);
 App.use("/api/products", productRoutes);
 App.use("/api/products/filter", productRoutes);
+App.use("/api/category", categoryRoutes);
 // App.use("/products", productRoutes);
 // App.use("/api/products/search", productRoutes);
 App.use("/api/imageUpload", imageUploadRoutes);

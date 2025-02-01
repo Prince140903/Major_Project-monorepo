@@ -22,9 +22,9 @@ const Nav = () => {
             <nav>
               <ul className="list list-inline mb-0">
                 <li className="list-inline-item">
-                  <Button>
-                    <Link>Home</Link>
-                  </Button>
+                  <Link to="/">
+                    <Button>Home</Button>
+                  </Link>
                 </li>
 
                 <li className="list-inline-item">
