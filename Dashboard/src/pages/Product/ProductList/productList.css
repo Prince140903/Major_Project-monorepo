@@ -30,3 +30,15 @@
   z-index: 1;
   font-size: 50px;
 }
+
+tbody tr td .imgWrapper {
+  /* display: flex; */
+  flex: 0 0 40% !important;
+  width: 40% !important;
+}
+
+tbody tr td .info {
+  /* flex: 0 0 60% !important;
+  width: 60% !important; */
+  padding-left: 10px !important;
+}

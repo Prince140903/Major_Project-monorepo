@@ -9,12 +9,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { MyContext } from "../../App";
+import { Login } from "@mui/icons-material";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotify, setisOpenNotify] = useState(false);
 
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
 
   const openAcc = Boolean(anchorEl);
   const openNotify = Boolean(isOpenNotify);
@@ -35,16 +36,20 @@ const Header = () => {
     setisOpenNotify(false);
   };
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
-  const logout=() => {
+  const logout = () => {
     setAnchorEl(null);
-    context.setIsLogin(false);
-    localStorage.removeItem('user');
-    localStorage.removeItem("token");
-    history("/login");
+    console.log("he;llo");
 
-  }
+    context.setIsLogin(false);
+    // setIsLogin(false);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    // console.log(Login);
+    navigate("/login");
+  };
 
   const toggleTheme = () => {
     context.setThemeMode((prevTheme) =>
@@ -148,7 +153,7 @@ const Header = () => {
                   </MenuItem>
                   <MenuItem onClick={handleCloseNotify}>
                     <ListItemIcon>
-                      <DynamicIcon iconName="Settings" fontSize="small" />
+                      <DynamicIcon iconName="Settings" fontSize="tmall" />
                     </ListItemIcon>
                     Settings
                   </MenuItem>
@@ -161,7 +166,7 @@ const Header = () => {
                 </Menu>
               </div>
 
-              {isLogin === true ? (
+              {context.isLogin === true ? (
                 <Link to={"/auth/login"}>
                   <Button className="btn-blue btn-style">Log In</Button>
                 </Link>
@@ -170,13 +175,12 @@ const Header = () => {
                   <Button
                     className="myAcc d-flex align-items-center"
                     onClick={handleOpenAcc}
-                    >
-                      {context?.user?.image !== "" ?
-                        <UserImg img={Images.userImg} width="40" />
-                        :
-                        context?.user?.userName.charAt(0)
-                       }
-                   
+                  >
+                    {context?.user?.image !== "" ? (
+                      <UserImg img={Images.userImg} width="40" />
+                    ) : (
+                      context?.user?.userName.charAt(0)
+                    )}
 
                     <div className="userInfo">
                       <h4>{context?.user?.userName}</h4>

@@ -44,7 +44,7 @@ router.post("/upload", upload.array("images"), async (req, res) => {
         options,
         function (error, result) {
           imagesArr.push(result.secure_url);
-          fs.unlinkSync(`Uploads/${req.files[i].filename}`); //to not make heavy webiste
+          fs.unlinkSync(`Uploads/${req.files[i].filename}`); //to not mae kheavy webiste
         }
       );
 

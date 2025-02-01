@@ -3,8 +3,8 @@ const App = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv/config");
-const userRoutes = require("./Routes/users.js");
+require("dotenv").config();
+// const userRoutes = require("./Routes/users.js");
 
 App.use(cors());
 App.options("*", cors());
@@ -14,13 +14,24 @@ App.use(bodyParser.json());
 App.use(express.json());
 
 //Routes
-const categoryRoutes = require("./Routes/categories");
+// const categoryRoutes = require("./Routes/categories");
 const productRoutes = require("./Routes/products");
-App.use(`/api/category`, categoryRoutes);
+const imageUploadRoutes = require("./Helper/imageUpload");
+
+// App.use("/api/products/upload", productRoutes);
+
+App.use("/uploads", express.static("uploads"));
+// App.use(`/api/category`, categoryRoutes);
 App.use("/api/products/upload", productRoutes);
 App.use("/api/products", productRoutes);
+App.use("/api/products/filter", productRoutes);
+// App.use("/products", productRoutes);
+// App.use("/api/products/search", productRoutes);
+App.use("/api/imageUpload", imageUploadRoutes);
+// App.use("/:id", productRoutes);
+
 App.use("/:id", productRoutes);
-App.use("/api/users", userRoutes);
+// App.use("/api/users", userRoutes);
 
 //Database
 mongoose
