@@ -4,3 +4,4 @@ export { default as Listing } from "./Listing/listing";
 export { default as NotFound } from "./NotFound/notFound";
 export { default as DetailsPage } from "./Details/detail";
 export { default as Cart } from "./Cart/cart";
+export { default as Compare } from "./Compare/compare";

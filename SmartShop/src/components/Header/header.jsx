@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./header.css";
-import DynamicIcon from "../../constants/icons.jsx";
-import images from "../../constants/images.js";
+import { DynamicIcon, images } from "../../constants";
 import { Select } from "../../components";
 import Button from "@mui/material/Button";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { Cart } from "../../pages";
 import { Link } from "react-router-dom";
 
 import Nav from "./nav/nav.jsx";
@@ -15,17 +13,7 @@ const Header = () => {
 
   const headerRef = useRef();
 
-  const [categories, setcategories] = useState([
-    "Milks & Dairies",
-    "Wines & Drinks",
-    "Clothing & Beauty",
-    "Fresh Seafood",
-    "Petfoods & toys",
-    "Fast Food",
-    "Baking Material",
-    "Fruits & Vegetables",
-    "Bread & Juice",
-  ]);
+  const [categories, setcategories] = useState([]);
 
   const stateList = [
     "Andhra Pradesh",
@@ -115,13 +103,17 @@ const Header = () => {
                   >
                     <ul className="list list-inline mb-0 headerTabs">
                       <li className="list-inline-item">
-                        <span>
-                          <DynamicIcon
-                            iconName="LoopOutlined"
-                            className="Icon"
-                          />
-                          Compare
-                        </span>
+                        <Link to="/compare">
+                          <Button>
+                            <span>
+                              <DynamicIcon
+                                iconName="LoopOutlined"
+                                className="Icon"
+                              />
+                              Compare
+                            </span>
+                          </Button>
+                        </Link>
                       </li>
                       <li className="list-inline-item">
                         <span>
@@ -135,11 +127,13 @@ const Header = () => {
                       <li className="list-inline-item">
                         <Link to={"/cart"}>
                           <Button>
-                            <DynamicIcon
-                              iconName="ShoppingCartOutlined"
-                              className="Icon"
-                            />
-                            Cart
+                            <span>
+                              <DynamicIcon
+                                iconName="ShoppingCartOutlined"
+                                className="Icon"
+                              />
+                              Cart
+                            </span>
                           </Button>
                         </Link>
                       </li>

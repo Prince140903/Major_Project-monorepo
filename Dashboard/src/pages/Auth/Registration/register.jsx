@@ -1,110 +1,108 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./register.css";
 
 import { DynamicIcon, Images } from "../../../constants";
-import { Button, Checkbox, CircularProgress, FormControlLabel } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { Phone } from "@mui/icons-material";
+import { MyContext } from "../../../App";
 // import { postData } from "../../utils/api";
 
 const Register = () => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ShowPassword2, setShowPassword2] = useState(false);
-  const [IsLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const history = useNavigate();
+  const Context = useContext(MyContext);
 
   const [formFields, setFromFields] = useState({
     name: "",
     email: "",
-    Phone:"",
-    Password: "",
-    confirmPassword:'',
-    isAdmmin:true,
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    isAdmmin: true,
   });
-    const changeInput = (e) => {
-      setFromFields(() => ({
-        ...formFields,
-        [e.target.name]: e.target.value,
-      }));
+  const changeInput = (e) => {
+    setFromFields(() => ({
+      ...formFields,
+      [e.target.name]: e.target.value,
+    }));
   };
 
- 
-  
   const submitForm = (e) => {
     e.preventDefault();
-    try
-    {
-          if (formFields.name === "") {
-      Context.setAlertBox({
-        open: true,
-        error: true,
-        msg: "Name Blank",
-      });
-      return false;
-    }
-     if (formFields.email === "") {
-       Context.setAlertBox({
-         open: true,
-         error: true,
-         msg: "@mail Blank",
-       });
-       return false;
-    }
-      if (formFields.password === "") {
+    try {
+      if (formFields.name === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Name Blank",
+        });
+        return false;
+      }
+      if (formFields.email === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "@mail Blank",
+        });
+        return false;
+      }
+      if (formFields.password === "" || undefined) {
         Context.setAlertBox({
           open: true,
           error: true,
           msg: "passwaord Blank",
         });
         return false;
-    }
-    if (formFields.confirmPassword==="") {
-      Context.setAlertBox({
-        open: true,
-        error: true,
-        msg: "confirmPassword Blank",
-      });
-      return false;
-    }
-      if (formFields.confirmPassword!== formFields.password) {
+      }
+      if (formFields.confirmPassword === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "confirmPassword Blank",
+        });
+        return false;
+      }
+      if (formFields.confirmPassword !== formFields.password) {
         Context.setAlertBox({
           open: true,
           error: true,
           msg: "passward and confirmPassword not match",
         });
         return false;
-    }
-    
-  setIsLoading(true);
-  postData("/api/user/signup", formFields).then((res) => {
-    if (res.error !== true) {
-      Context.setAlertBox({
-        open: true,
-        error: false,
-        msg: "Register  Successfully!",
+      }
+
+      setIsLoading(true);
+      postData("/api/user/signup", formFields).then((res) => {
+        if (res.error !== true) {
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Register  Successfully!",
+          });
+          setTimeout(() => {
+            setIsLoading(true);
+            history("/login");
+          }, 200);
+        } else {
+          setIsLoading(false);
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: res.msg,
+          });
+        }
       });
-      setTimeout(() => {
-        setIsLoading(true);
-        history("/login");
-      }, 200);
-    }
-    else {
-      setIsLoading(false);
-      Context.setAlertBox({
-        open: true,
-        error: true,
-        msg: res.msg,
-      });
-    }
-  });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
-
-  }
-
-
+  };
 
   return (
     <>
@@ -172,7 +170,7 @@ const Register = () => {
                       type="Number"
                       className="form-control"
                       placeholder="Enter Phone"
-                      name="Phone"
+                      name="phone"
                       onChange={changeInput}
                     />
                   </div>
@@ -237,9 +235,7 @@ const Register = () => {
 
                   <div className="form-group mb-3 position-relative">
                     <Button type="submit" className="btn-blue w-100">
-                      {
-                        isLoading === true ? <CircularProgress />: 'Sign Up'
-                      }
+                      {isLoading === true ? <CircularProgress /> : "Sign Up"}
                     </Button>
                   </div>
 

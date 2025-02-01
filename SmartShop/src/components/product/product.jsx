@@ -2,66 +2,74 @@ import React from "react";
 import "./product.css";
 import Rating from "@mui/material/Rating";
 
-import images from "../../constants/images";
-import { Value } from "sass";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import LazyLoad from "react-lazyload";
 
 const Product = (props) => {
   return (
     <div className="productThumb">
-      {props.tag !== null && props.tag !== undefined && (
-        <span className={`badge ${props.tag}`}>{props.tag}</span>
-      )}
+      {/* {props.tag !== null && props.tag !== undefined && ( */}
+      <span className={`badge ${props.tag}`}>{props.tag}</span>
+      {/* )} */}
 
-      <Link>
-        <div className="imgWrapper">
-          <img src={images.product21} className="w-100" />
+      <div className="imgWrapper d-flex justify-content-center h-100">
+        <LazyLoad>
+          <img
+            src={props.image}
+            className="prod-image"
+            onError={(e) =>
+              (e.target.src = "https://i.ibb.co/GQmxxNg/images.png")
+            }
+          />
+        </LazyLoad>
 
-          <div className="overlay transition">
-            <ul className="list list-inline mb-0">
-              <li className="list-inline-item">
-                <a className="cursor" tooltip="Add to Wishlist ">
-                  <FavoriteBorderIcon />
-                </a>
-              </li>
-
-              <li className="list-inline-item">
-                <a className="cursor" tooltip="Compare">
-                  <CompareArrowsIcon />
-                </a>
-              </li>
-              <li className="list-inline-item">
-                <a className="cursor" tooltip="Quick View">
-                  <VisibilityIcon />
-                </a>
-              </li>
-            </ul>
-          </div>
+        <div className="overlay transition">
+          <ul className="list list-inline mb-0">
+            <li className="list-inline-item">
+              <a className="cursor" tooltip="Add to Wishlist ">
+                <FavoriteBorderIcon />
+              </a>
+            </li>
+            <li className="list-inline-item">
+              <a className="cursor" tooltip="Compare">
+                <CompareArrowsIcon />
+              </a>
+            </li>
+            <li className="list-inline-item">
+              <a className="cursor" tooltip="Quick View">
+                <VisibilityIcon />
+              </a>
+            </li>
+          </ul>
         </div>
-      </Link>
+      </div>
+
       <div className="info">
-        <span className="d-block catName">Camera</span>
+        {/* <span className="d-block catName"></span> */}
         <h4 className="title">
-          <Link>Best camera ever , Best branded Camera</Link>
+          {/* <Link>Best camera ever , Best branded Camera</Link> */}
+          {props.name}
         </h4>
         <Rating
           name="half-rating-read"
-          defaultValue={4.5}
+          defaultValue={props.ratings}
           precision={0.5}
           readOnly
         />
-        <span className="brand d-block text-g">
+        {/* <span className="brand d-block text-g">
           By <Link className="text-g">Sony</Link>
-        </span>
+        </span> */}
         <div className="d-flex align-items-center">
           <div className="d-flex align-items-center">
-            <span className="price text-g font-weight-bold ">₹8.85</span>
-            <span className="oldPrice">₹29.8</span>
+            <span className="price text-g font-weight-bold ">
+              ₹ {props.actual_price}
+            </span>
+            <span className="oldPrice">₹ {props.discount_price}</span>
           </div>
 
           <Button className=" btn-g  ml-5 transition">
