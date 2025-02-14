@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import React, { useState, useContext } from "react";
 import "./register.css";
 
 import { DynamicIcon, Images } from "../../../constants";
@@ -9,26 +8,16 @@ import {
   CircularProgress,
   FormControlLabel,
 } from "@mui/material";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  CircularProgress,
-} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../../App";
-// import { postData } from "../../utils/api";
-import { Phone } from "@mui/icons-material";
 import { postData } from "../../../utils/api";
-import { MyContext } from "../../../App";
 
 const Register = () => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ShowPassword2, setShowPassword2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [checked, setChecked] = useState(false);
   const history = useNavigate();
-  const Context = useContext(MyContext);
   const Context = useContext(MyContext);
 
   const [formFields, setFromFields] = useState({
@@ -37,24 +26,23 @@ const Register = () => {
     phone: "",
     password: "",
     confirmPassword: "",
-    isAdmmin: true,
-    Phone: "",
-    password: "",
-    confirmPassword: "",
-    isAdmmin: true,
+    isAdmin: true,
+    checkBox: false,
   });
+
   const changeInput = (e) => {
-    setFromFields(() => ({
-      ...formFields,
-      [e.target.name]: e.target.value,
-    }));
-  const changeInput = (e) => {
-    setFromFields(() => ({
-      ...formFields,
-      [e.target.name]: e.target.value,
+    const { name, type, value, checked } = e.target;
+
+    // setFromFields(() => ({
+    //   ...formFields,
+    //   [e.target.name]: e.target.value,
+    // }));
+
+    setFromFields((prevFields) => ({
+      ...prevFields,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
-
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -75,22 +63,11 @@ const Register = () => {
         });
         return false;
       }
-      if (formFields.password === "" || undefined) {
-    try {
-      console.log(formFields);
-      if (formFields.name === "" || undefined) {
+      if (formFields.phone === "" || undefined) {
         Context.setAlertBox({
           open: true,
           error: true,
-          msg: "Name Blank",
-        });
-        return false;
-      }
-      if (formFields.email === "" || undefined) {
-        Context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "@mail Blank",
+          msg: "Phone Blank",
         });
         return false;
       }
@@ -98,7 +75,7 @@ const Register = () => {
         Context.setAlertBox({
           open: true,
           error: true,
-          msg: "passwaord Blank",
+          msg: "Password Blank",
         });
         return false;
       }
@@ -106,77 +83,64 @@ const Register = () => {
         Context.setAlertBox({
           open: true,
           error: true,
-          msg: "confirmPassword Blank",
+          msg: "Confirm-Password Blank",
         });
         return false;
       }
       if (formFields.confirmPassword !== formFields.password) {
-      }
-      if (formFields.confirmPassword === "" || undefined) {
         Context.setAlertBox({
           open: true,
           error: true,
-          msg: "confirmPassword Blank",
+          msg: "Password and Confirm-Password not match",
         });
         return false;
       }
-      if (formFields.confirmPassword !== formFields.password || undefined) {
+      if (formFields.checkBox === false) {
         Context.setAlertBox({
           open: true,
           error: true,
-          msg: "password and confirmPassword not match",
+          msg: "Checkbox not checked",
         });
         return false;
       }
 
       setIsLoading(true);
-      postData("/api/user/signup", formFields).then((res) => {
-        if (res.error !== true) {
-          Context.setAlertBox({
-            open: true,
-            error: false,
-            msg: "Register  Successfully!",
-          });
-          setTimeout(() => {
-            setIsLoading(true);
-            history("/login");
-          }, 200);
-        } else {
-          setIsLoading(false);
-          Context.setAlertBox({
-            open: true,
-            error: true,
-            msg: res.msg,
-          });
-        }
-      });
-      }
 
-      setIsLoading(true);
-      postData("/api/user/signup", formFields).then((res) => {
-        if (res.error !== true) {
-          Context.setAlertBox({
-            open: true,
-            error: false,
-            msg: "Register  Succsesfully!",
-          });
-          setTimeout(() => {
+      postData("/api/users/signup", formFields)
+        .then((res) => {
+          if (res.error !== true) {
+            Context.setAlertBox({
+              open: true,
+              error: false,
+              msg: "Register  Successfully!",
+            });
+
             setIsLoading(true);
-            history("/login");
-          }, 200);
-        } else {
+
+            setTimeout(() => {
+              history("/auth/login");
+            }, 200);
+          } else {
+            setIsLoading(false);
+            Context.setAlertBox({
+              open: true,
+              error: true,
+              msg: res.msg,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
           setIsLoading(false);
           Context.setAlertBox({
             open: true,
             error: true,
-            msg: res.msg,
+            msg: "Something went wrong during registration.",
           });
-        }
-      });
+        });
     } catch (error) {
       console.log(error);
     }
-  };
   };
 
   return (
@@ -186,7 +150,7 @@ const Register = () => {
         <div className="row">
           <div className="col-md-8 d-flex align-items-center flex-column part1 justify-content-center">
             <h1>
-              SmartShop E-commerce Dashboard & Admin Panel -{" "}
+              SmartShop E-commerce Dashboard & Admin Panel -
               <span className="text-sky">CupCake</span>
             </h1>
             <p>
@@ -242,7 +206,7 @@ const Register = () => {
                       <DynamicIcon iconName="Phone" />
                     </span>
                     <input
-                      type="Number"
+                      type="number"
                       className="form-control"
                       placeholder="Enter Phone"
                       name="phone"
@@ -303,15 +267,19 @@ const Register = () => {
                   </div>
 
                   <FormControlLabel
-                    required
-                    control={<Checkbox />}
+                    control={
+                      <Checkbox
+                        name="checkBox"
+                        checked={formFields.checkBox}
+                        onChange={changeInput}
+                      />
+                    }
                     style={{ color: "var(--body_color)" }}
                     label="I agree to all Terms and Conditions"
                   />
 
                   <div className="form-group mb-3 position-relative">
                     <Button type="submit" className="btn-blue w-100">
-                      {isLoading === true ? <CircularProgress /> : "Sign Up"}
                       {isLoading === true ? <CircularProgress /> : "Sign Up"}
                     </Button>
                   </div>

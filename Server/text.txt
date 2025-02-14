@@ -1,6 +1,0 @@
-for server run 
-npx nodemon index.js 
-
-for all; 
-npm run dev
-

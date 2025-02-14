@@ -5,10 +5,10 @@ import { MyContext } from "../../../App";
 import { DynamicIcon, Images } from "../../../constants";
 import { Button, CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-// import { postData } from "../../utils/api";
+import { postData } from "../../../utils/api";
 
 const Login = () => {
-  const [ShowPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const Context = useContext(MyContext);
   const history = useNavigate();
@@ -31,38 +31,38 @@ const Login = () => {
 
     try {
       /*Add postData first *(by Aaditya) */
-      // postData("/api/user/signIn", formFields).then((res) => {
-      //   if (res.user?.isAdmin) {
-      //     localStorage.removeItem("user");
-      //     localStorage.setItem("token", res?.token);
-      //     const user = {
-      //       userName: res?.user?.name,
-      //       email: res?.user?.email,
-      //       userId: res.user?.id,
-      //       image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
-      //       isAdmin: res.user?.isAdmin,
-      //     };
-      //     localStorage.setItem("user", JSON.stringify(user));
-      //   }
-      //   if (res.error !== true) {
-      //     Context.setAlertBox({
-      //       open: true,
-      //       error: false,
-      //       msg: "Log In  Successfully!",
-      //     });
-      //     setTimeout(() => {
-      //       setIsLoading(false);
-      //       history("/");
-      //     }, 200);
-      //   } else {
-      //     Context.setAlertBox({
-      //       open: true,
-      //       error: true,
-      //       msg: "you are not a admin",
-      //     });
-      //     setIsLoading(false);
-      //   }
-      // });
+      postData("/api/user/signIn", formFields).then((res) => {
+        if (res.user?.isAdmin) {
+          localStorage.removeItem("user");
+          localStorage.setItem("token", res?.token);
+          const user = {
+            userName: res?.user?.name,
+            email: res?.user?.email,
+            userId: res.user?.id,
+            image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
+            isAdmin: res.user?.isAdmin,
+          };
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+        if (res.error !== true) {
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Log In  Successfully!",
+          });
+          setTimeout(() => {
+            setIsLoading(false);
+            history("/");
+          }, 200);
+        } else {
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "you are not a admin",
+          });
+          setIsLoading(false);
+        }
+      });
     } catch (error) {
       console.log(error);
       setIsLoading(false);

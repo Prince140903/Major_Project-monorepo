@@ -3,7 +3,6 @@ import "./product.css";
 import Rating from "@mui/material/Rating";
 
 import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
@@ -13,7 +12,6 @@ import LazyLoad from "react-lazyload";
 const Product = (props) => {
   return (
     <div className="productThumb">
-      {/* {props.tag !== null && props.tag !== undefined && ( */}
       <span className={`badge ${props.tag}`}>{props.tag}</span>
       {/* )} */}
 
@@ -50,20 +48,16 @@ const Product = (props) => {
       </div>
 
       <div className="info">
-        {/* <span className="d-block catName"></span> */}
         <h4 className="title">
-          {/* <Link>Best camera ever , Best branded Camera</Link> */}
           {props.name}
         </h4>
+        {/* {console.log(props.ratings)} */}
         <Rating
           name="half-rating-read"
-          defaultValue={props.ratings}
+          defaultValue={Math.round(parseFloat(props.ratings) * 2) / 2}
           precision={0.5}
           readOnly
         />
-        {/* <span className="brand d-block text-g">
-          By <Link className="text-g">Sony</Link>
-        </span> */}
         <div className="d-flex align-items-center">
           <div className="d-flex align-items-center">
             <span className="price text-g font-weight-bold ">

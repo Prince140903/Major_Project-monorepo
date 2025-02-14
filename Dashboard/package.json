@@ -25,6 +25,7 @@
     "react-lazyload": "^3.2.1",
     "react-router-dom": "^7.1.1",
     "react-slick": "^0.30.3",
+    "react-top-loading-bar": "^3.0.2",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.13"
   },

@@ -23,7 +23,7 @@ import {
 import { MyContext } from "../../../App";
 
 const ProductUpload = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [formFields, setFormFields] = useState({
     name: "",
@@ -222,10 +222,11 @@ const ProductUpload = () => {
               <h5>Basic Information</h5>
               <form className="form">
                 <div className="form-group">
-                  <label>TITLE</label>
+                  <label>PRODUCT NAME</label>
                   <input
                     type="text"
                     placeholder="Type here"
+                    value={formFields.name}
                     onChange={changeInput}
                   />
                 </div>
@@ -236,6 +237,8 @@ const ProductUpload = () => {
                     placeholder="Type here"
                     rows={5}
                     cols={10}
+                    onChange={changeInput}
+                    value={formFields.description}
                   />
                 </div>
 
@@ -458,21 +461,20 @@ const ProductUpload = () => {
 export default ProductUpload;
 
 // {userImages.map((image, index) => (
-{
-  /* <div key={index} style={{ position: "relative" }} className="imgView">
-  <div className="remove" onClick={() => handleRemoveImg(index)}>
-    <DynamicIcon iconName="Delete" />
-  </div>
-  <img
-    src={img}
-    alt={`Upload ${index}`}
-    style={{
-      width: "200px",
-      height: "200px",
-      objectFit: "cover",
-      borderRadius: "5px",
-    }}
-  />
-</div>; */
-}
+
+//   <div key={index} style={{ position: "relative" }} className="imgView">
+//   <div className="remove" onClick={() => handleRemoveImg(index)}>
+//     <DynamicIcon iconName="Delete" />
+//   </div>
+//   <img
+//     src={img}
+//     alt={`Upload ${index}`}
+//     style={{
+//       width: "200px",
+//       height: "200px",
+//       objectFit: "cover",
+//       borderRadius: "5px",
+//     }}
+//   />
+// </div>;
 // ))}

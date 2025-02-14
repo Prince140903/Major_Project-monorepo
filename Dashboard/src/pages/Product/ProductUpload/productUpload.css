@@ -51,8 +51,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .MuiPaper-root {
-  color: var(--sidebar_color) !important;
-  background: var(--dropdown) !important;
+  color: var(--sidebar_color);
+  background: var(--dropdown);
 }
 
 .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
