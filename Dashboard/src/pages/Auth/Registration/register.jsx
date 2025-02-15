@@ -26,17 +26,12 @@ const Register = () => {
     phone: "",
     password: "",
     confirmPassword: "",
-    isAdmin: true,
+    isAdmin: false,
     checkBox: false,
   });
 
   const changeInput = (e) => {
     const { name, type, value, checked } = e.target;
-
-    // setFromFields(() => ({
-    //   ...formFields,
-    //   [e.target.name]: e.target.value,
-    // }));
 
     setFromFields((prevFields) => ({
       ...prevFields,
@@ -106,7 +101,7 @@ const Register = () => {
 
       setIsLoading(true);
 
-      postData("/api/users/signup", formFields)
+      postData("/api/users/signUp", formFields)
         .then((res) => {
           if (res.error !== true) {
             Context.setAlertBox({

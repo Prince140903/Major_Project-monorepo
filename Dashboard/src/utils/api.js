@@ -47,14 +47,13 @@ export const postData = async (url, formData) => {
     return res.data;
   } catch (error) {
     if (error.response) {
-      console.error("Error response:", error.response.data);
-      return error.response.data;
+      return { error: true, msg: error.response.data.message };
     } else if (error.request) {
       console.error("No response received:", error.request);
-      throw new Error("No response received from the server.");
+      return { error: true, msg: "No response received from the server." };
     } else {
       console.error("Request setup error:", error.message);
-      throw new Error("Error setting up the request.");
+      return { error: true, msg: "Error setting up the request." };
     }
   }
 };

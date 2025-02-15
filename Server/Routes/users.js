@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer"); //for image upload
 const fs = require("fs");
 const { error } = require("console");
+const { match } = require("assert");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -63,7 +64,7 @@ router.post(`/upload`, upload.array("images"), async (req, res) => {
   }
 });
 
-router.post(`/signup`, async (req, res) => {
+router.post(`/signUp`, async (req, res) => {
   const { name, phone, email, password, isAdmin } = req.body;
   try {
     const existingUser = await User.findOne({ email: email });
@@ -96,22 +97,24 @@ router.post(`/signup`, async (req, res) => {
   }
 });
 
-router.post(`/signin`, async (req, res) => {
+router.post(`/signIn`, async (req, res) => {
+  console.log("Sign in");
   const { email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email: email });
+
     if (!existingUser) {
-      res.status(404).json({ error: true, msg: "User Not Found!" });
+      return res.status(404).json({ error: true, msg: "User Not Found!" });
     }
     const matchPassword = await bcrypt.compare(password, existingUser.password);
     if (!matchPassword) {
+      console.log("are you here?");
       return res.status(400).json({ error: true, msg: "Incorrect Password" });
     }
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
-      process.env.JSON_WEB_SECRET_KEY,
-      { expiresIn: "1h" }
+      process.env.JSON_WEB_TOKEN_SECRET_KEY,
     );
     return res.status(200).send({
       user: existingUser,
@@ -119,7 +122,7 @@ router.post(`/signin`, async (req, res) => {
       msg: "User Login Successfully!",
     });
   } catch (error) {
-    res.status(500).json({ error: true, msg: "Something Went Wrong" });
+    return res.status(500).json({ error: true, msg: "Something Went Wrong" });
   }
 });
 

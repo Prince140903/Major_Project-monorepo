@@ -30,41 +30,68 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      if (formFields.email === "") {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Email Blank",
+        });
+        return false;
+      }
+      if (formFields.password === "") {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Password Blank",
+        });
+        return false;
+      }
+
       /*Add postData first *(by Aaditya) */
-      postData("/api/user/signIn", formFields).then((res) => {
-        if (res.user?.isAdmin) {
-          localStorage.removeItem("user");
-          localStorage.setItem("token", res?.token);
-          const user = {
-            userName: res?.user?.name,
-            email: res?.user?.email,
-            userId: res.user?.id,
-            image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
-            isAdmin: res.user?.isAdmin,
-          };
-          localStorage.setItem("user", JSON.stringify(user));
-        }
-        if (res.error !== true) {
-          Context.setAlertBox({
-            open: true,
-            error: false,
-            msg: "Log In  Successfully!",
-          });
-          setTimeout(() => {
+      postData("/api/users/signIn", formFields)
+        .then((res) => {
+          if (res.error) {
             setIsLoading(false);
-            history("/");
-          }, 200);
-        } else {
+            Context.setAlertBox({
+              open: true,
+              error: true,
+              msg: res.msg || "Check for Incorrect Email or Password",
+            });
+          } else {
+            if (res.user?.isAdmin) {
+              localStorage.removeItem("user");
+              localStorage.setItem("token", res?.token);
+              const user = {
+                userName: res?.user?.name,
+                email: res?.user?.email,
+                userId: res.user?.id,
+                image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
+                isAdmin: res.user?.isAdmin,
+              };
+              localStorage.setItem("user", JSON.stringify(user));
+            }
+            Context.setAlertBox({
+              open: true,
+              error: false,
+              msg: "Login Successful!",
+            });
+            setIsLoading(false);
+            setTimeout(() => {
+              history("/");
+            }, 200);
+          }
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+          setIsLoading(false);
           Context.setAlertBox({
             open: true,
             error: true,
-            msg: "you are not a admin",
+            msg: "Something went wrong during Login.",
           });
-          setIsLoading(false);
-        }
-      });
+        });
     } catch (error) {
-      console.log(error);
+      console.log("Errror:", error);
       setIsLoading(false);
     }
   };
@@ -96,7 +123,6 @@ const Login = () => {
                   name="email"
                   onChange={changeInput}
                   autoFocus
-                  required
                 />
               </div>
               <div className="form-group mb-3 position-relative">
@@ -109,7 +135,6 @@ const Login = () => {
                   placeholder="Enter Password"
                   name="password"
                   onChange={changeInput}
-                  required
                 />
                 <span
                   className="togglePassword"
