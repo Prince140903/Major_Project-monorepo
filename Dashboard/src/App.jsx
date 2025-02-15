@@ -24,12 +24,10 @@ import { Snackbar, Alert } from "@mui/material";
 
 const MyContext = createContext();
 
-
 function App() {
   const [isToggle, setIsToggle] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState();
-  
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
@@ -48,14 +46,14 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log(token);
     if (token !== "" && token !== undefined && token !== null) {
       setIsLogin(true);
       const userData = JSON.parse(localStorage.getItem("user"));
-      SetUser(userData)
+      setUser(userData);
     } else {
       setIsLogin(false);
     }
-    
   }, [isLogin]);
 
   const values = {
@@ -68,7 +66,6 @@ function App() {
     alertBox,
     setAlertBox,
     user,
-    
   };
 
   const handleClose = (event, reason) => {
@@ -134,7 +131,10 @@ function App() {
                     <Route path="/product-upload" element={<ProductUpload />} />
                     <Route path="/product-list" element={<ProductList />} />
                     <Route path="/category-list" element={<CategoryList />} />
-                    <Route path="/subcategory-list" element={<SubcategoryList />} />
+                    <Route
+                      path="/subcategory-list"
+                      element={<SubcategoryList />}
+                    />
                     <Route path="/orders" element={<Orders />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
