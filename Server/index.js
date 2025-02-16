@@ -35,7 +35,7 @@ App.use("/api/imageUpload", imageUploadRoutes);
 // App.use("/:id", productRoutes);
 
 App.use("/:id", productRoutes);
-// App.use("/api/users", userRoutes);
+App.use("/api/users", userRoutes);
 
 //Database
 mongoose

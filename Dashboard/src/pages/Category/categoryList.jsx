@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 
+import { fetchDataFromApi } from "../../utils/api";
+import { MyContext } from "../../App";
 import { DynamicIcon } from "../../constants";
 import { Breadcrumbs, styled, emphasize, Chip, Button } from "@mui/material";
 
 const CategoryList = () => {
+  const [catData, setCatData] = useState([]);
+
+  const context = useContext(MyContext);
+
+  useEffect(() => {
+    context.setProgress(20);
+    fetchDataFromApi("/api/category").then((res) => {
+      setCatData(res);
+      context.setProgress(100);
+    });
+  });
+
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === "light"
@@ -41,7 +55,9 @@ const CategoryList = () => {
               href="/category-list"
               label="Category"
             />
-            <Button className="btn-blue mr-4 ml-2 p-2 w-100">ADD CATEGORY</Button>
+            <Button className="btn-blue mr-4 ml-2 p-2 w-100">
+              ADD CATEGORY
+            </Button>
           </Breadcrumbs>
         </div>
 

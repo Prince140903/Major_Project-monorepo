@@ -10,13 +10,11 @@ const userSchema = mongoose.Schema({
     required: true,
     unique:true,
   },
-
   email: {
     type: String,
     required: true,
     unique: true,
   },
-
   password: {
     type: String,
   },
@@ -36,5 +34,6 @@ const userSchema = mongoose.Schema({
  userSchema.set("toJSon", {
    virtual: true,
  });
+ 
 exports.User = mongoose.model('User', userSchema);
 exports.userSchema = userSchema;

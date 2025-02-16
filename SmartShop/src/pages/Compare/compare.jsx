@@ -8,51 +8,47 @@ import { Product } from "../../components";
 import { fetchDataFromApi } from "../../utils/api";
 
 const Compare = () => {
-  const [products1, setProducts1] = useState([]);
+  const [products, setProducts] = useState([]);
   const [products2, setProducts2] = useState([]);
   const [limit, setLimit] = useState(10);
   const [company, setCompany] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selection, setSelection] = useState("Featured");
-  const [activePoduct, setActiveProduct] = useState(1);
+  const [activePoduct1, setActiveProduct1] = useState(0);
+  const [activePoduct2, setActiveProduct2] = useState(0);
 
   useEffect(() => {
-    const fetchProducts1 = async () => {
+    const fetchProducts = async () => {
       try {
         const Prods = await fetchDataFromApi(
-          `/api/products/filter?search=${searchQuery}&company=Amazon`
+          `/api/products/filter?search=${searchQuery}&company=Amazon&limit=5&selection=${selection}`
         );
 
         const { products, total } = Prods;
 
         if (!products || products.length === 0) {
-          setProducts1([]);
+          setProducts([]);
           return;
         }
-
-        setProducts1(products);
-        console.log("Amazon Products: ", products1);
+        setProducts(products);
       } catch (error) {
         if (error.response && error.response.status === 404) {
           console.warn("API returned 404: Not Found.");
-          setProducts1([]);
+          setProducts([]);
         } else {
           console.error("Error fetching search results:", error);
         }
       }
     };
-    fetchProducts1();
-  }, [searchQuery]);
-
-  useEffect(() => {
-    console.log("Amazon Products Updated: ", products1);
-  }, [products1]);
+    fetchProducts();
+  }, [searchQuery, selection]);
 
   useEffect(() => {
     const fetchProducts2 = async () => {
       try {
+        console.log(selection);
         const Prods = await fetchDataFromApi(
-          `/api/products/filter?search=${searchQuery}&company=Flipkart`
+          `/api/products/filter?search=${searchQuery}&company=Flipkart&limit=5&selection=${selection}`
         );
 
         const { products, total } = Prods;
@@ -62,7 +58,6 @@ const Compare = () => {
           return;
         }
 
-        console.log("Products: ", products);
         setProducts2(products);
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -74,34 +69,32 @@ const Compare = () => {
       }
     };
     fetchProducts2();
-  }, [searchQuery]);
+  }, [searchQuery, selection]);
 
   var settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 3,
     slidesToScroll: 1,
-    arrows: false,
+    arrows: true,
   };
 
-  const productSlider = (index) => {
-    setActiveProduct(index);
+  const productSlider1 = (index) => {
+    setActiveProduct1(index);
+  };
+  const productSlider2 = (index) => {
+    setActiveProduct2(index);
   };
 
   const handleSelection = (event) => {
     setSelection(event.target.value);
-    // setPage(1);
   };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
     // setPage(1);
   };
-
-  //   const handlePageChange = (event, value) => {
-  //     setPage(value);
-  //   };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -191,56 +184,48 @@ const Compare = () => {
           <div className="productCompare mt-4">
             <div className="row">
               <div className="col-custom ProductWrapper">
-                {products1.length !== 0 ? (
-                  <div>
-                    {console.log("Product1: ", products1)}
-                    {products1.map((product) => (
-                      <div className="productTab">
-                        <div className="displayProduct">
-                          <div className="item">
-                            {activePoduct ? (
-                              <Product
-                                // tag={product[activePoduct].company}
-                                tag="Product"
-                                image={product[activePoduct].images[0]}
-                                name={product[activePoduct].name}
-                                ratings={product[activePoduct].ratings}
-                                actual_price={
-                                  product[activePoduct].actual_price
-                                }
-                                discount_price={
-                                  product[activePoduct].discount_price
-                                }
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </div>
-                        <div className="ProductsSlider">
-                          <Slider {...settings} className="mb-2">
-                            <div
-                              className="item"
-                              onClick={() => productSlider(index)}
-                            >
-                              <Product
-                                // tag={product.company}
-                                tag="Amazon Products"
-                                image={product.images[0]}
-                                name={product.name}
-                                ratings={product.ratings}
-                                actual_price={product.actual_price}
-                                discount_price={product.discount_price}
-                              />
-                            </div>
-                          </Slider>
-                        </div>
+                {products.length !== 0 ? (
+                  <div className="productTab">
+                    <div className="displayProduct">
+                      <div className="item">
+                        {products[activePoduct1] && (
+                          <Product
+                            tag="Amazon"
+                            image={products[activePoduct1].images[0]}
+                            name={products[activePoduct1].name}
+                            ratings={products[activePoduct1].ratings}
+                            actual_price={products[activePoduct1].actual_price}
+                            discount_price={
+                              products[activePoduct1].discount_price
+                            }
+                          />
+                        )}
                       </div>
-                    ))}
+                    </div>
+                    <div className="Products-Slider">
+                      <Slider {...settings} className="mb-2">
+                        {products.map((product, index) => (
+                          <div
+                            key={index}
+                            className="item"
+                            onClick={() => productSlider1(index)}
+                          >
+                            <Product
+                              tag="Amazon"
+                              image={product.images[0]}
+                              name={product.name}
+                              ratings={product.ratings}
+                              actual_price={product.actual_price}
+                              discount_price={product.discount_price}
+                            />
+                          </div>
+                        ))}
+                      </Slider>
+                    </div>
                   </div>
                 ) : (
                   <div className="products">
-                    <h2>Search for Results</h2>
+                    <h2>Product not found</h2>
                   </div>
                 )}
               </div>
@@ -256,54 +241,47 @@ const Compare = () => {
               </div>
               <div className="col-custom ProductWrapper">
                 {products2.length !== 0 ? (
-                  <div>
-                    {/* {console.log("Product2: ", products2)} */}
-                    {products2.map((product) => (
-                      <div className="productTab">
-                        <div className="displayProduct">
-                          <div className="item">
-                            {activePoduct ? (
-                              <Product
-                                // tag={product[activePoduct].company}
-                                tag="Product"
-                                image={product[activePoduct].images[0]}
-                                name={product[activePoduct].name}
-                                ratings={product[activePoduct].ratings}
-                                actual_price={
-                                  product[activePoduct].actual_price
-                                }
-                                discount_price={
-                                  product[activePoduct].discount_price
-                                }
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </div>
-                        <div className="ProductsSlider">
-                          <Slider {...settings} className="mb-2">
-                            <div
-                              className="item"
-                              onClick={() => productSlider(index)}
-                            >
-                              <Product
-                                tag="Flipkart Products"
-                                image={product.images[0]}
-                                name={product.name}
-                                ratings={product.ratings}
-                                actual_price={product.actual_price}
-                                discount_price={product.discount_price}
-                              />
-                            </div>
-                          </Slider>
-                        </div>
+                  <div className="productTab">
+                    <div className="displayProduct">
+                      <div className="item">
+                        {products2[activePoduct2] && (
+                          <Product
+                            tag="Flipkart"
+                            image={products2[activePoduct2].images[0]}
+                            name={products2[activePoduct2].name}
+                            ratings={products2[activePoduct2].ratings}
+                            actual_price={products2[activePoduct2].actual_price}
+                            discount_price={
+                              products2[activePoduct2].discount_price
+                            }
+                          />
+                        )}
                       </div>
-                    ))}
+                    </div>
+                    <div className="Products-Slider">
+                      <Slider {...settings} className="mb-2 produtSlider">
+                        {products2.map((product, index) => (
+                          <div
+                            key={index}
+                            className="item"
+                            onClick={() => productSlider2(index)}
+                          >
+                            <Product
+                              tag="Flipkart"
+                              image={product.images[0]}
+                              name={product.name}
+                              ratings={product.ratings}
+                              actual_price={product.actual_price}
+                              discount_price={product.discount_price}
+                            />
+                          </div>
+                        ))}
+                      </Slider>
+                    </div>
                   </div>
                 ) : (
                   <div className="products">
-                    <h2>Search for Results</h2>
+                    <h2>Product not found</h2>
                   </div>
                 )}
               </div>

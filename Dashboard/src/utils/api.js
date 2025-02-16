@@ -40,15 +40,20 @@ export const deleteImages = async (url, image) => {
   const { res } = await axios.delete(`${baseUrl}${url}`, image);
   return res;
 };
+
 export const postData = async (url, formData) => {
-  const { res } = await axios.delete(
-    `${process.env.REACT_APP_BASE_URL}${url}`,
-    formData
-  );
-  return res;
+  try {
+    const res = await axios.post(`${baseUrl}${url}`, formData);
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return { error: true, msg: error.response.data.message };
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+      return { error: true, msg: "No response received from the server." };
+    } else {
+      console.error("Request setup error:", error.message);
+      return { error: true, msg: "Error setting up the request." };
+    }
+  }
 };
-
-
-// dotenv.config();
-
-// const BASE_URL = process.env.REACT_APP_BASE_URL || "";

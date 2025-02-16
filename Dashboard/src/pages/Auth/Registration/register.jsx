@@ -12,14 +12,14 @@ import {
 
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../../App";
-import { postData } from "../../../utils/api"
+import { postData } from "../../../utils/api";
 
 const Register = () => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ShowPassword2, setShowPassword2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
+  // const [checked, setChecked] = useState(false);
+  const history = useNavigate();
   const Context = useContext(MyContext);
 
   const [formFields, setFromFields] = useState({
@@ -28,224 +28,188 @@ const Register = () => {
     phone: "",
     password: "",
     confirmPassword: "",
-    isAdmmin: true,
-    Phone: "",
-    password: "",
-    confirmPassword: "",
-    isAdmmin: true,
+    isAdmin: false,
+    checkBox: false,
   });
-  const changeInput = (e) => {
-    setFromFields(() => ({
-      ...formFields,
-      [e.target.name]: e.target.value,
-    }));
-    const changeInput = (e) => {
-      setFromFields(() => ({
-        ...formFields,
-        [e.target.name]: e.target.value,
-      }));
-    };
 
-    const submitForm = (e) => {
-      e.preventDefault();
-      try {
-        if (formFields.name === "" || undefined) {
-          Context.setAlertBox({
-            open: true,
-            error: true,
-            msg: "Name Blank",
-          });
-          return false;
-        }
-        if (formFields.email === "" || undefined) {
-          Context.setAlertBox({
-            open: true,
-            error: true,
-            msg: "@mail Blank",
-          });
-          return false;
-        }
-        if (formFields.password === "" || undefined) {
-          try {
-            console.log(formFields);
-            if (formFields.name === "" || undefined) {
-              Context.setAlertBox({
-                open: true,
-                error: true,
-                msg: "Name Blank",
-              });
-              return false;
-            }
-            if (formFields.email === "" || undefined) {
-              Context.setAlertBox({
-                open: true,
-                error: true,
-                msg: "@mail Blank",
-              });
-              return false;
-            }
-            if (formFields.password === "" || undefined) {
-              Context.setAlertBox({
-                open: true,
-                error: true,
-                msg: "passwaord Blank",
-              });
-              return false;
-            }
-            if (formFields.confirmPassword === "" || undefined) {
-              Context.setAlertBox({
-                open: true,
-                error: true,
-                msg: "confirmPassword Blank",
-              });
-              return false;
-            }
-            if (formFields.confirmPassword !== formFields.password) {
-            }
-            if (formFields.confirmPassword === "" || undefined) {
-              Context.setAlertBox({
-                open: true,
-                error: true,
-                msg: "confirmPassword Blank",
-              });
-              return false;
-            }
-            if (
-              formFields.confirmPassword !== formFields.password ||
-              undefined
-            ) {
-              Context.setAlertBox({
-                open: true,
-                error: true,
-                msg: "password and confirmPassword not match",
-              });
-              return false;
-            }
+  const changeInput = (e) => {
+    const { name, type, value, checked } = e.target;
+
+    setFromFields((prevFields) => ({
+      ...prevFields,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    try {
+      if (formFields.name === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Name Blank",
+        });
+        return false;
+      }
+      if (formFields.email === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "@mail Blank",
+        });
+        return false;
+      }
+      if (formFields.phone === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Phone Blank",
+        });
+        return false;
+      }
+      if (formFields.password === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Password Blank",
+        });
+        return false;
+      }
+      if (formFields.confirmPassword === "" || undefined) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Confirm-Password Blank",
+        });
+        return false;
+      }
+      if (formFields.confirmPassword !== formFields.password) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Password and Confirm-Password not match",
+        });
+        return false;
+      }
+      if (formFields.checkBox === false) {
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Checkbox not checked",
+        });
+        return false;
+      }
+
+      setIsLoading(true);
+
+      postData("/api/users/signUp", formFields)
+        .then((res) => {
+          if (res.error !== true) {
+            Context.setAlertBox({
+              open: true,
+              error: false,
+              msg: "Register  Successfully!",
+            });
 
             setIsLoading(true);
-            postData("/api/user/signup", formFields).then((res) => {
-              if (res.error !== true) {
-                Context.setAlertBox({
-                  open: true,
-                  error: false,
-                  msg: "Register  Successfully!",
-                });
-                setTimeout(() => {
-                  setIsLoading(true);
-                  navigate("/login");
-                }, 200);
-              } else {
-                setIsLoading(false);
-                Context.setAlertBox({
-                  open: true,
-                  error: true,
-                  msg: res.msg,
-                });
-              }
+
+            setTimeout(() => {
+              history("/auth/login");
+            }, 200);
+          } else {
+            setIsLoading(false);
+            Context.setAlertBox({
+              open: true,
+              error: true,
+              msg: res.msg,
             });
-          } catch (error) {
-            console.log(error);
           }
-          setIsLoading(true);
-          // postData("/api/user/signup", formFields).then((res) => {
-          //   if (res.error !== true) {
-          //     Context.setAlertBox({
-          //       open: true,
-          //       error: false,
-          //       msg: "Register  Succsesfully!",
-          //     });
-          //     setTimeout(() => {
-          //       setIsLoading(true);
-          //       navigate("/login");
-          //     }, 200);
-          //   } else {
-          //     setIsLoading(false);
-          //     Context.setAlertBox({
-          //       open: true,
-          //       error: true,
-          //       msg: res.msg,
-          //     });
-          //   }
-          // });
-          // } catch (error) {
-          //   console.log(error);
-          // }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+          setIsLoading(false);
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Something went wrong during registration.",
+          });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    return (
-      <>
-        <img src={Images.Pattern} className="loginPattern" />
-        <section className="loginSection  register">
-          <div className="row">
-            <div className="col-md-8 d-flex align-items-center flex-column part1 justify-content-center">
-              <h1>
-                SmartShop E-commerce Dashboard & Admin Panel -{" "}
-                <span className="text-sky">CupCake</span>
-              </h1>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-                non, ipsa tempore repellat perspiciatis vero harum obcaecati
-                similique quae nisi. Odio qui explicabo molestiae itaque quaerat
-                maxime ex odit molestias doloremque, quisquam sint quod.
-              </p>
-              <div className="w-100 mt-4">
-                <Link to="/">
-                  <Button className="btn-blue p-3">
-                    <DynamicIcon iconName="Home" /> Go to Home
-                  </Button>
-                </Link>
-              </div>
+  return (
+    <>
+      <img src={Images.Pattern} className="loginPattern" />
+      <section className="loginSection  register">
+        <div className="row">
+          <div className="col-md-8 d-flex align-items-center flex-column part1 justify-content-center">
+            <h1>
+              SmartShop E-commerce Dashboard & Admin Panel -
+              <span className="text-sky">CupCake</span>
+            </h1>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
+              non, ipsa tempore repellat perspiciatis vero harum obcaecati
+              similique quae nisi. Odio qui explicabo molestiae itaque quaerat
+              maxime ex odit molestias doloremque, quisquam sint quod.
+            </p>
+            <div className="w-100 mt-4">
+              <Link to="/">
+                <Button className="btn-blue p-3">
+                  <DynamicIcon iconName="Home" /> Go to Home
+                </Button>
+              </Link>
             </div>
-            <div className="col-md-4 pr-0">
-              <div className="loginBox">
-                <div className="logo text-center">
-                  <img src={Images.Logo} alt="logo" width="60px" />
-                  <h5 className="font-weight-bold">Register a new account</h5>
-                </div>
+          </div>
+          <div className="col-md-4 pr-0">
+            <div className="loginBox">
+              <div className="logo text-center">
+                <img src={Images.Logo} alt="logo" width="60px" />
+                <h5 className="font-weight-bold">Register a new account</h5>
+              </div>
 
-                <div className="wrapper mt-3 border p-4">
-                  <form onSubmit={submitForm}>
-                    <div className="form-group mb-3 position-relative">
-                      <span className="icon">
-                        <DynamicIcon iconName="AccountCircle" />
-                      </span>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter Name"
-                        name="name"
-                        autoFocus
-                        onChange={changeInput}
-                      />
-                    </div>
-                    <div className="form-group mb-3 position-relative">
-                      <span className="icon">
-                        <DynamicIcon iconName="Mail" />
-                      </span>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter Email"
-                        name="email"
-                        onChange={changeInput}
-                      />
-                    </div>
-                    <div className="form-group mb-3 position-relative">
-                      <span className="icon">
-                        <DynamicIcon iconName="Phone" />
-                      </span>
-                      <input
-                        type="Number"
-                        className="form-control"
-                        placeholder="Enter Phone"
-                        name="phone"
-                        onChange={changeInput}
-                      />
-                    </div>
+              <div className="wrapper mt-3 border p-4">
+                <form onSubmit={submitForm}>
+                  <div className="form-group mb-3 position-relative">
+                    <span className="icon">
+                      <DynamicIcon iconName="AccountCircle" />
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Name"
+                      name="name"
+                      autoFocus
+                      onChange={changeInput}
+                    />
+                  </div>
+                  <div className="form-group mb-3 position-relative">
+                    <span className="icon">
+                      <DynamicIcon iconName="Mail" />
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Email"
+                      name="email"
+                      onChange={changeInput}
+                    />
+                  </div>
+                  <div className="form-group mb-3 position-relative">
+                    <span className="icon">
+                      <DynamicIcon iconName="Phone" />
+                    </span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Enter Phone"
+                      name="phone"
+                      onChange={changeInput}
+                    />
+                  </div>
 
                     <div className="form-group mb-3 position-relative">
                       <span className="icon">
@@ -299,19 +263,23 @@ const Register = () => {
                       </span>
                     </div>
 
-                    <FormControlLabel
-                      required
-                      control={<Checkbox />}
-                      style={{ color: "var(--body_color)" }}
-                      label="I agree to all Terms and Conditions"
-                    />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="checkBox"
+                        checked={formFields.checkBox}
+                        onChange={changeInput}
+                      />
+                    }
+                    style={{ color: "var(--body_color)" }}
+                    label="I agree to all Terms and Conditions"
+                  />
 
-                    <div className="form-group mb-3 position-relative">
-                      <Button type="submit" className="btn-blue w-100">
-                        {isLoading === true ? <CircularProgress /> : "Sign Up"}
-                        {isLoading === true ? <CircularProgress /> : "Sign Up"}
-                      </Button>
-                    </div>
+                  <div className="form-group mb-3 position-relative">
+                    <Button type="submit" className="btn-blue w-100">
+                      {isLoading === true ? <CircularProgress /> : "Sign Up"}
+                    </Button>
+                  </div>
 
                     <div className="form-group mb-3 position-relative text-center">
                       <div className="d-flex align-items-center justify-content-center or">
@@ -343,5 +311,4 @@ const Register = () => {
       </>
     );
   };
-};
 export default Register;

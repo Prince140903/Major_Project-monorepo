@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createContext, useEffect, useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -17,17 +18,18 @@ import {
 } from "./pages";
 import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
+import LoadingBar from "react-top-loading-bar";
 
-import { createContext, useEffect, useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
-// import { Password } from "@mui/icons-material";
+import { fetchDataFromApi } from "./utils/api";
 
-const MyContext = createContext();
+export const MyContext = createContext();
 
 function App() {
   const [isToggle, setIsToggle] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState();
+  const [progress, setProgress] = useState(0);
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
@@ -38,6 +40,14 @@ function App() {
     error: false,
     open: false,
   });
+
+  const fetchCategory = () => {
+    setProgress(30);
+    fetchDataFromApi("/api/category").then((res) => {
+      setCatData(res);
+      setProgress(100);
+    });
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", ThemeMode);
@@ -63,9 +73,11 @@ function App() {
     isLogin,
     setThemeMode,
     setIsLogin,
-    alertBox,
+    // alertBox,
     setAlertBox,
     user,
+    progress,
+    setProgress,
   };
 
   const handleClose = (event, reason) => {
@@ -80,76 +92,88 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Snackbar
-        open={alertBox.open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
+      <MyContext.Provider value={values}>
+        <Snackbar
+          open={alertBox.open}
           autoHideDuration={6000}
-          severity={alertBox.error === false ? "success" : "error"}
-          variant="filled"
-          sx={{ width: "100%" }}
+          onClose={handleClose}
         >
-          {alertBox.msg}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={handleClose}
+            severity={alertBox.error === false ? "success" : "error"}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertBox.msg}
+          </Alert>
+        </Snackbar>
 
-      <Routes>
-        {/* Auth Pages */}
-        <Route path="/auth/" element={<AuthLayout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Registration />} />
-          <Route path="forget-password" element={<ForgetPassword />} />
+        <Routes>
+          {/* Auth Pages */}
+          <Route path="/auth/" element={<AuthLayout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Registration />} />
+            <Route path="forget-password" element={<ForgetPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+
+          {/* Main App */}
+          <Route
+            path="/*"
+            element={
+              <>
+                <LoadingBar
+                  color="#f11946"
+                  progress={progress}
+                  onLoaderFinished={() => setProgress(0)}
+                  className="topLoadingBar"
+                />
+                <Header />
+
+                <div className="main d-flex">
+                  <div
+                    className={`sidebarWrapper ${
+                      isToggle === true ? "toggle" : ""
+                    }`}
+                  >
+                    <Sidebar />
+                  </div>
+
+                  <div
+                    className={`content ${isToggle === true ? "toggle" : ""}`}
+                  >
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route
+                        path="/product-details"
+                        element={<ProductDetails />}
+                      />
+                      <Route
+                        path="/product-upload"
+                        element={<ProductUpload />}
+                      />
+                      <Route path="/product-list" element={<ProductList />} />
+                      <Route path="/category-list" element={<CategoryList />} />
+                      <Route
+                        path="/subcategory-list"
+                        element={<SubcategoryList />}
+                      />
+                      <Route path="/orders" element={<Orders />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    <Footer />
+                  </div>
+                </div>
+              </>
+            }
+          />
+
           <Route path="*" element={<NotFound />} />
-        </Route>
-
-        {/* Main App */}
-        <Route
-          path="/*"
-          element={
-            <MyContext.Provider value={values}>
-              <Header />
-
-              <div className="main d-flex">
-                <div
-                  className={`sidebarWrapper ${
-                    isToggle === true ? "toggle" : ""
-                  }`}
-                >
-                  <Sidebar />
-                </div>
-
-                <div className={`content ${isToggle === true ? "toggle" : ""}`}>
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route
-                      path="/product-details"
-                      element={<ProductDetails />}
-                    />
-                    <Route path="/product-upload" element={<ProductUpload />} />
-                    <Route path="/product-list" element={<ProductList />} />
-                    <Route path="/category-list" element={<CategoryList />} />
-                    <Route
-                      path="/subcategory-list"
-                      element={<SubcategoryList />}
-                    />
-                    <Route path="/orders" element={<Orders />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                  <Footer />
-                </div>
-              </div>
-            </MyContext.Provider>
-          }
-        />
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </MyContext.Provider>
     </BrowserRouter>
   );
 }
 
 export default App;
-export { MyContext };
+// export { MyContext };

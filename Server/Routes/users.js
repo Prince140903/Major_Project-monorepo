@@ -1,4 +1,4 @@
-const { Users } = require("../models/users");
+const { User } = require("../Models/user");
 const { ImageUpload } = require("../Models/imageUpload");
 
 const express = require("express");
@@ -8,8 +8,8 @@ const jwt = require("jsonwebtoken");
 
 const multer = require("multer"); //for image upload
 const fs = require("fs");
-
 const { error } = require("console");
+const { match } = require("assert");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -32,6 +32,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
 router.post(`/upload`, upload.array("images"), async (req, res) => {
   imagesArr = [];
 
@@ -52,37 +53,41 @@ router.post(`/upload`, upload.array("images"), async (req, res) => {
       );
     }
 
-    let imageUploaded = new imageUploadSchema({
+    let imagesUploaded = new ImageUpload({
       images: imagesArr,
     });
-    imageUploaded = await imageUploaded.save();
+
+    imagesUploaded = await imagesUploaded.save();
     return res.status(200).json(imagesArr);
   } catch (error) {
     console.log(error);
   }
 });
 
-router.post(`/signup`, async (req, res) => {
+router.post(`/signUp`, async (req, res) => {
   const { name, phone, email, password, isAdmin } = req.body;
   try {
     const existingUser = await User.findOne({ email: email });
-    const existingUserByph = await User.findOne({ phone: phone });
-    if (existingUser) {
+    const existingUserByPh = await User.findOne({ phone: phone });
+
+    if (existingUser || existingUserByPh) {
       res.status(400).json({ error: true, msg: "user already exist!" });
     } else {
       const hashPassword = await bcrypt.hash(password, 10);
-      const result = await User.creat({
+      const result = await User.create({
         name: name,
-        phone:phone,
+        phone: phone,
         email: email,
         password: hashPassword,
         isAdmin: isAdmin,
       });
+
       const token = jwt.sign(
-        { email: result.email, id: result.id },
+        { email: result.email, id: result._id },
         process.env.JSON_WEB_TOKEN_SECRET_KEY
       );
       res.status(200).json({
+        error: false,
         user: result,
         token: token,
       });
@@ -92,33 +97,32 @@ router.post(`/signup`, async (req, res) => {
   }
 });
 
-router.post(`/signin`, async (req, res) => {
+router.post(`/signIn`, async (req, res) => {
+  console.log("Sign in");
   const { email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email: email });
+
     if (!existingUser) {
-      res.status(404).json({ error: true, msg: "User Not Found!" });
-    } else {
-      const matchPassword = await bcrypt.compare(
-        password,
-        existingUser.password
-      );
-      if (!matchPassword) {
-        return res.status(400).json({ error: true, msg: "Password wrong" });
-      }
-      const token = jwt.sign(
-        { email: existingUser.email, id: existingUser.id },
-        process.env.JSON_WEB_SECRET_KEY
-      );
-      return res.status(200).send({
-        user: existingUser,
-        token: token,
-        msg: "User Login Successfully!",
-      });
+      return res.status(404).json({ error: true, msg: "User Not Found!" });
     }
+    const matchPassword = await bcrypt.compare(password, existingUser.password);
+    if (!matchPassword) {
+      console.log("are you here?");
+      return res.status(400).json({ error: true, msg: "Incorrect Password" });
+    }
+    const token = jwt.sign(
+      { email: existingUser.email, id: existingUser._id },
+      process.env.JSON_WEB_TOKEN_SECRET_KEY,
+    );
+    return res.status(200).send({
+      user: existingUser,
+      token: token,
+      msg: "User Login Successfully!",
+    });
   } catch (error) {
-    res.status(500).json({ error: true, msg: "Something Went Wrong" });
+    return res.status(500).json({ error: true, msg: "Something Went Wrong" });
   }
 });
 
