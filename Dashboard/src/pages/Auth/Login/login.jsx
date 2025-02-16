@@ -58,9 +58,24 @@ const Login = () => {
               msg: res.msg || "Check for Incorrect Email or Password",
             });
           } else {
-            if (res.user?.isAdmin) {
+            if (res.user?.isAdmin === true) {
               localStorage.removeItem("user");
               localStorage.setItem("token", res?.token);
+              Context.setIsLogin(true);
+
+              const user = {
+                userName: res?.user?.name,
+                email: res?.user?.email,
+                userId: res.user?.id,
+                image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
+                isAdmin: res.user?.isAdmin,
+              };
+              localStorage.setItem("user", JSON.stringify(user));
+            } else {
+              localStorage.removeItem("user");
+              localStorage.setItem("token", res?.token);
+              Context.setIsLogin(true);
+
               const user = {
                 userName: res?.user?.name,
                 email: res?.user?.email,

@@ -21,7 +21,7 @@ import AuthLayout from "./Layouts/AuthLayouts";
 import LoadingBar from "react-top-loading-bar";
 
 import { Snackbar, Alert } from "@mui/material";
-import { fetchDataFromApi } from "./utils/api";
+// import { fetchDataFromApi } from "./utils/api";
 
 export const MyContext = createContext();
 
@@ -41,13 +41,13 @@ function App() {
     open: false,
   });
 
-  const fetchCategory = () => {
-    setProgress(30);
-    fetchDataFromApi("/api/category").then((res) => {
-      setCatData(res);
-      setProgress(100);
-    });
-  };
+  // const fetchCategory = () => {
+  //   setProgress(30);
+  //   fetchDataFromApi("/api/category").then((res) => {
+  //     setCatData(res);
+  //     setProgress(100);
+  //   });
+  // };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", ThemeMode);
@@ -175,4 +175,3 @@ function App() {
 }
 
 export default App;
-// export { MyContext };

@@ -3,13 +3,27 @@ import "./sidebar.css";
 
 import { Button } from "@mui/material";
 import { DynamicIcon } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 
 const Sidebar = () => {
   const [isActive, setIsActive] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const Context = useContext(MyContext);
 
   const isOpenSM = (index) => {
     setIsActive((prevActive) => (prevActive === index ? null : index));
+  };
+
+  const logout = () => {
+    setAnchorEl(null);
+
+    Context.setIsLogin(false);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/auth/login");
   };
 
   return (
@@ -183,7 +197,7 @@ const Sidebar = () => {
 
       <div className="logoutWrapper">
         <div className="logoutBox">
-          <Button variant="contained">
+          <Button variant="contained" onClick={logout}>
             <DynamicIcon iconName="LogoutOutlined" />
             Logout
           </Button>

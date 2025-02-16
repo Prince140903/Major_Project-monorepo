@@ -60,7 +60,7 @@ const Dashboard = () => {
       }
     };
 
-    fetchProducts();
+    // fetchProducts();
   }, [page, limit, company, searchQuery, selection]);
 
   const handleSelection = (event) => {
@@ -88,7 +88,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="right-content w-100 ">
+      <div className="right-content w-100 "> 
         <div className="row boxRow">
           <div className="col-md-8">
             <div className="boxWrapper d-flex">
