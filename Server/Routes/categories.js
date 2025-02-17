@@ -43,7 +43,7 @@ router.post("/upload", upload.array("images"), async (req, res) => {
         options,
         function (error, result) {
           imagesArr.push(result.secure_url);
-          fs.unlinkSync(`Uploads/${req.files[i].filename}`);
+          fs.unlinkSync(`uploads/${req.files[i].filename}`);
         }
       );
 
@@ -93,30 +93,27 @@ router.post("/create", async (req, res) => {
   res.status(201).json(category);
 });
 
-const createCategories = (categories, parentId = null, visited = new Set()) => {
-  const filteredCategories = categories.filter((cat) =>
-    parentId ? cat.parentId === parentId : !cat.parentId
-  );
+const createCategories = (categories, parentId = null) => {
+  const categoryList = [];
 
-  if (filteredCategories.length === 0) return [];
+  let category;
+  if (parentId == null) {
+    category = categories.filter((cat) => cat.parentId === undefined);
+  } else {
+    category = categories.filter((cat) => String(cat.parentId) === String(parentId));
+  }
 
-  // Build category list
-  return filteredCategories.map((cat) => {
-    if (visited.has(cat._id)) {
-      throw new Error(`Circular reference detected for category ${cat._id}`);
-    }
-
-    // Add the current category ID to the visited set
-    visited.add(cat._id);
-
-    return {
+  for (let cat of category) {
+    categoryList.push({
       _id: cat._id,
       name: cat.name,
       images: cat.images,
       color: cat.color,
-      children: createCategories(categories, cat._id, new Set(visited)), // Pass a new Set to avoid mutation
-    };
-  });
+      children: createCategories(categories, cat._id),
+    });
+  }
+
+  return categoryList;
 };
 
 router.get("/", async (req, res) => {
@@ -150,7 +147,7 @@ router.get("/get/count", async (req, res) => {
 });
 
 router.get("/subCat/get/count", async (req, res) => {
-  const category = await Category.fing();
+  const category = await Category.find();
 
   if (!category) {
     res.status(500).json({ success: false });
@@ -257,27 +254,3 @@ router.put("/:id", async (req, res) => {
 });
 
 module.exports = router;
-
-// const categoryList = [];
-// let category;
-// if (parentId == null) {
-//   // category = categories.filter(
-//   //   (cat) => cat.parentId == null || cat.parentId === undefined
-//   // );
-//   category = categories.filter((cat) => !cat.parentId);
-//   console.log("No parentId: ", category);
-// } else {
-//   category = categories.filter((cat) => cat.parentId === parentId);
-//   console.log("parentId: ", category);
-// }
-
-// for (let cat of category) {
-//   categoryList.push({
-//     _id: cat._id,
-//     name: cat.name,
-//     images: cat.images,
-//     color: cat.color,
-//     children: createCategories(categories, cat._id),
-//   });
-// }
-// return categoryList;

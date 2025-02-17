@@ -126,20 +126,45 @@ const Sidebar = () => {
               <li>
                 <Link to={"/category-list"}>Category List</Link>
               </li>
-              {/* <li>
-                <Link to={"/product-details"}>Product View</Link>
+              <li>
+                <Link to={"/category-upload"}>Category Upload</Link>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <Button
+            className={`w-100 ${isActive === 4 ? "active" : ""}`}
+            onClick={() => isOpenSM(4)}
+          >
+            <span className="icon">
+              <DynamicIcon iconName="Layers" />
+            </span>
+            Subcategory
+            <span className="arrow">
+              <DynamicIcon iconName="KeyboardArrowRight" />
+            </span>
+          </Button>
+          <div
+            className={`submenuWrapper ${
+              isActive === 4 ? "colapse" : "colapsed"
+            }`}
+          >
+            <ul className="submenu">
+              <li>
+                <Link to={"/subcategory-list"}>Subcategory List</Link>
               </li>
               <li>
-                <Link to={"/product-upload"}>Product Upload</Link>
-              </li> */}
+                <Link to={"/subcategory-upload"}>Subcategory Upload</Link>
+              </li>
             </ul>
           </div>
         </li>
         <li>
           <Link to={"/orders"}>
             <Button
-              className={`w-100 ${isActive === 4 ? "active" : ""}`}
-              onClick={() => isOpenSM(4)}
+              className={`w-100 ${isActive === 5 ? "active" : ""}`}
+              onClick={() => isOpenSM(5)}
             >
               <span className="icon">
                 <DynamicIcon iconName="ShoppingCart" />
@@ -152,8 +177,8 @@ const Sidebar = () => {
         <li>
           <Link to={"/"}>
             <Button
-              className={`w-100 ${isActive === 5 ? "active" : ""}`}
-              onClick={() => isOpenSM(5)}
+              className={`w-100 ${isActive === 6 ? "active" : ""}`}
+              onClick={() => isOpenSM(6)}
             >
               <span className="icon">
                 <DynamicIcon iconName="Message" />
@@ -168,8 +193,8 @@ const Sidebar = () => {
         <li>
           <Link to={"/"}>
             <Button
-              className={`w-100 ${isActive === 6 ? "active" : ""}`}
-              onClick={() => isOpenSM(6)}
+              className={`w-100 ${isActive === 7 ? "active" : ""}`}
+              onClick={() => isOpenSM(7)}
             >
               <span className="icon">
                 <DynamicIcon iconName="Notifications" />

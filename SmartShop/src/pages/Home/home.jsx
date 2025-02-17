@@ -128,6 +128,7 @@ const Home = () => {
                   ratings={product.ratings}
                   actual_price={product.actual_price}
                   discount_price={product.discount_price}
+                  className="prod"
                 />
               </div>
             ))}
