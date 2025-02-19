@@ -98,7 +98,6 @@ router.post(`/signUp`, async (req, res) => {
 });
 
 router.post(`/signIn`, async (req, res) => {
-  console.log("Sign in");
   const { email, password } = req.body;
 
   try {
@@ -114,7 +113,7 @@ router.post(`/signIn`, async (req, res) => {
     }
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
-      process.env.JSON_WEB_TOKEN_SECRET_KEY,
+      process.env.JSON_WEB_TOKEN_SECRET_KEY
     );
     return res.status(200).send({
       user: existingUser,
@@ -123,6 +122,45 @@ router.post(`/signIn`, async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ error: true, msg: "Something Went Wrong" });
+  }
+});
+
+router.post(`/authWithGoogle`, async (req, res) => {
+  const { name, phone, email, password, images, isAdmin } = req.body;
+  try {
+    const existingUser = await Users.findOne({ email: email });
+    if (existingUser) {
+      const result = await Users.create({
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+        images: images,
+        isAdmin: isAdmin
+      }); //need to replace with vite.
+      const token = jwt.sign(
+        { email: result.email, id: result._id },
+        process.env.JSON_WEB_TOKEN_SECRET_KEY
+      );
+      return res.status(200).send({
+        user: result,
+        token: token,
+        msg: "User Login Successfully!",
+      });
+    } else {
+      const existingUser = await Users.findOne({ email: email });
+      const token = jwt.sign(
+        { email: existingUser.email, id: existingUser._id },
+        process.env.JSON_WEB_TOKEN_SECRET_KEY
+      );
+      return res.status(200).send({
+        user: existingUser,
+        token: token,
+        msg: "User Login Successfully!",
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

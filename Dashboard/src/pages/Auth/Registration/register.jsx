@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import "./register.css";
-
+import GoogleImg from "../../../assets/7123025_logo_google_g_icon.png";
 import { DynamicIcon, Images } from "../../../constants";
 import {
   Button,
@@ -12,7 +12,13 @@ import {
 
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../../App";
+
 import { postData } from "../../../utils/api";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../../firebase";
+
+const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(firebaseApp);
 
 const Register = () => {
   const [ShowPassword, setShowPassword] = useState(false);
@@ -140,6 +146,85 @@ const Register = () => {
     }
   };
 
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // Get Google Credentials
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+
+        // Get User Details
+        const user = result.user;
+        const fields = {
+          name: user.providerData[0]?.displayName || "",
+          email: user.providerData[0]?.email || "",
+          password: null,
+          images: user.providerData[0]?.photoURL || "",
+          phone: user.providerData[0]?.phoneNumber || "",
+          isAdmin: true,
+        };
+
+        // Send data to backend API
+        postData("api/users/authWithGoogle", fields).then((res) => {
+          try {
+            if (!res.error) {
+              localStorage.setItem("token", res.token);
+              console.log(res?.user);
+              const userData = {
+                name: res.user?.name,
+                email: res.user?.email,
+                userId: res.user?.id,
+                image: res?.user?.images?.length > 0 ? res?.user?.image[0] : "",
+                isAdmin: res.user?.isAdmin,
+              };
+              localStorage.setItem("users", JSON.stringify(userData)); // Fixed incorrect variable
+
+              // Show success alert
+              Context.setAlertBox({
+                open: true,
+                error: false,
+                msg: res.msg,
+              });
+
+              setTimeout(() => {
+                history("/");
+                Context.setIsLogin(true);
+                setIsLoading(false);
+
+                // ✅ Close Popup if Opened
+                if (window.opener) {
+                  setTimeout(() => {
+                    window.close();
+                  }, 1000); // Adding delay to avoid COOP issues
+                }
+              }, 2000);
+            } else {
+              // Show error alert
+              Context.setAlertBox({
+                open: true,
+                error: true,
+                msg: res.msg,
+              });
+              setIsLoading(false);
+            }
+          } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+          }
+        });
+
+        console.log("User Data:", user);
+      })
+      .catch((error) => {
+        console.error("Google Sign-In Error:", error.message);
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: error.message,
+        });
+      });
+  };
+
   return (
     <>
       <img src={Images.Pattern} className="loginPattern" />
@@ -211,57 +296,57 @@ const Register = () => {
                     />
                   </div>
 
-                    <div className="form-group mb-3 position-relative">
-                      <span className="icon">
-                        <DynamicIcon iconName="Lock" />
-                      </span>
-                      <input
-                        type={`${ShowPassword === true ? "text" : "password"}`}
-                        className="form-control"
-                        placeholder="Enter Password"
-                        name="password"
-                        onChange={changeInput}
-                      />
+                  <div className="form-group mb-3 position-relative">
+                    <span className="icon">
+                      <DynamicIcon iconName="Lock" />
+                    </span>
+                    <input
+                      type={`${ShowPassword === true ? "text" : "password"}`}
+                      className="form-control"
+                      placeholder="Enter Password"
+                      name="password"
+                      onChange={changeInput}
+                    />
 
-                      <span
-                        className="togglePassword"
-                        onClick={() => {
-                          setShowPassword(!ShowPassword);
-                        }}
-                      >
-                        {ShowPassword === true ? (
-                          <DynamicIcon iconName="VisibilityOff" />
-                        ) : (
-                          <DynamicIcon iconName="Visibility" />
-                        )}
-                      </span>
-                    </div>
+                    <span
+                      className="togglePassword"
+                      onClick={() => {
+                        setShowPassword(!ShowPassword);
+                      }}
+                    >
+                      {ShowPassword === true ? (
+                        <DynamicIcon iconName="VisibilityOff" />
+                      ) : (
+                        <DynamicIcon iconName="Visibility" />
+                      )}
+                    </span>
+                  </div>
 
-                    <div className="form-group mb-3 position-relative">
-                      <span className="icon">
-                        <DynamicIcon iconName="GppGood" />
-                      </span>
-                      <input
-                        type={`${ShowPassword2 === true ? "text" : "password"}`}
-                        className="form-control"
-                        placeholder="Enter Password"
-                        name="confirmPassword"
-                        onChange={changeInput}
-                      />
+                  <div className="form-group mb-3 position-relative">
+                    <span className="icon">
+                      <DynamicIcon iconName="GppGood" />
+                    </span>
+                    <input
+                      type={`${ShowPassword2 === true ? "text" : "password"}`}
+                      className="form-control"
+                      placeholder="Enter Password"
+                      name="confirmPassword"
+                      onChange={changeInput}
+                    />
 
-                      <span
-                        className="togglePassword"
-                        onClick={() => {
-                          setShowPassword2(!ShowPassword2);
-                        }}
-                      >
-                        {ShowPassword2 === true ? (
-                          <DynamicIcon iconName="VisibilityOff" />
-                        ) : (
-                          <DynamicIcon iconName="Visibility" />
-                        )}
-                      </span>
-                    </div>
+                    <span
+                      className="togglePassword"
+                      onClick={() => {
+                        setShowPassword2(!ShowPassword2);
+                      }}
+                    >
+                      {ShowPassword2 === true ? (
+                        <DynamicIcon iconName="VisibilityOff" />
+                      ) : (
+                        <DynamicIcon iconName="Visibility" />
+                      )}
+                    </span>
+                  </div>
 
                   <FormControlLabel
                     control={
@@ -281,34 +366,39 @@ const Register = () => {
                     </Button>
                   </div>
 
-                    <div className="form-group mb-3 position-relative text-center">
-                      <div className="d-flex align-items-center justify-content-center or">
-                        <span className="line"></span>
-                        <span className="txt">or</span>
-                        <span className="line"></span>
-                      </div>
-
-                      <div className="Google">
-                        <Button variant="outlined" className="w-100 btn-blue">
-                          &nbsp; Sign in With Google
-                        </Button>
-                      </div>
+                  <div className="form-group mb-3 position-relative text-center">
+                    <div className="d-flex align-items-center justify-content-center or">
+                      <span className="line"></span>
+                      <span className="txt">or</span>
+                      <span className="line"></span>
                     </div>
-                  </form>
-                </div>
-                <div className="wrapper border footer p-3 text-center">
-                  <span style={{ color: "var(--body_color)" }}>
-                    Already have an account?
-                    <Link to={"/auth/login"} className="link color ml-2">
-                      Login
-                    </Link>
-                  </span>
-                </div>
+
+                    <div className="Google">
+                      <Button
+                        variant="outlined"
+                        className="w-100 btn-blue"
+                        onClick={signInWithGoogle}
+                      >
+                        <img src={GoogleImg} />
+                        Sign in With Google
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div className="wrapper border footer p-3 text-center">
+                <span style={{ color: "var(--body_color)" }}>
+                  Already have an account?
+                  <Link to={"/auth/login"} className="link color ml-2">
+                    Login
+                  </Link>
+                </span>
               </div>
             </div>
           </div>
-        </section>
-      </>
-    );
-  };
+        </div>
+      </section>
+    </>
+  );
+};
 export default Register;

@@ -9,18 +9,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { MyContext } from "../../App";
-import { Login } from "@mui/icons-material";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotify, setisOpenNotify] = useState(false);
-
   // const [isLogin, setIsLogin] = useState(false);
-
   const openAcc = Boolean(anchorEl);
   const openNotify = Boolean(isOpenNotify);
-
-  const context = useContext(MyContext);
+  const Context = useContext(MyContext);
 
   const handleOpenAcc = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,19 +36,16 @@ const Header = () => {
 
   const logout = () => {
     setAnchorEl(null);
-    console.log("he;llo");
 
-    context.setIsLogin(false);
-    // setIsLogin(false);
+    Context.setIsLogin(false);
 
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    // console.log(Login);
-    navigate("/login");
+    navigate("/auth/login");
   };
 
   const toggleTheme = () => {
-    context.setThemeMode((prevTheme) =>
+    Context.setThemeMode((prevTheme) =>
       prevTheme === "light" ? "dark" : "light"
     );
   };
@@ -72,9 +65,9 @@ const Header = () => {
             <div className="col-sm-3 d-flex align-items-center part2 pl-4">
               <Button
                 className="rounded-circle mr-3"
-                onClick={() => context.setIsToggle(!context.isToggle)}
+                onClick={() => Context.setIsToggle(!Context.isToggle)}
               >
-                {context.isToggle === false ? (
+                {Context.isToggle === false ? (
                   <DynamicIcon iconName="MenuOpen" />
                 ) : (
                   <DynamicIcon iconName="Menu" />
@@ -88,7 +81,7 @@ const Header = () => {
 
             <div className="col-sm-7 d-flex align-items-center justify-content-end part3">
               <Button className="rounded-circle mr-3" onClick={toggleTheme}>
-                {context.ThemeMode === "light" ? (
+                {Context.ThemeMode === "light" ? (
                   <DynamicIcon iconName="LightModeOutlined" />
                 ) : (
                   <DynamicIcon iconName="DarkModeOutlined" />
@@ -166,25 +159,29 @@ const Header = () => {
                 </Menu>
               </div>
 
-              {context.isLogin === true ? (
+              {Context.isLogin !== true ? (
                 <Link to={"/auth/login"}>
                   <Button className="btn-blue btn-style">Log In</Button>
                 </Link>
               ) : (
                 <div className="myAccWrapper">
                   <Button
-                    className="myAcc d-flex align-items-center"
+                    className={`myAcc d-flex align-items-center ${
+                      Context?.user?.isAdmin === true
+                        ? "isAdminCheck"
+                        : "isUserCheck"
+                    }`}
                     onClick={handleOpenAcc}
                   >
-                    {context?.user?.image !== "" ? (
-                      <UserImg img={Images.userImg} width="40" />
+                    {Context?.user?.image !== "" ? (
+                      <UserImg img={Context?.user.images} width="40" />
                     ) : (
-                      context?.user?.userName.charAt(0)
+                      Context?.user?.userName.charAt(0)
                     )}
 
                     <div className="userInfo">
-                      <h4>{context?.user?.userName}</h4>
-                      <p className="mb-0">{context?.user?.email}</p>
+                      <h4>{Context?.user?.userName}</h4>
+                      <p className="mb-0">{Context?.user?.email}</p>
                     </div>
                   </Button>
                   <Menu

@@ -64,10 +64,17 @@ header button.rounded-circle svg {
   color: var(--sidebar_color);
 }
 
+.myAccWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .myAcc {
   text-align: left !important;
   color: var(--click) !important;
   text-transform: capitalize !important;
+  gap: 15px;
 }
 
 .userImg {
@@ -149,4 +156,12 @@ header button.rounded-circle svg {
 .userImg.sizeL {
   height: 60px !important;
   width: 60px !important;
+}
+
+.isAdminCheck {
+  padding-left: 20px !important;
+}
+
+.isUserCheck {
+  padding-left: 20px !important;
 }

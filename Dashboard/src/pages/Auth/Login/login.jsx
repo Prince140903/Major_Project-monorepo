@@ -6,6 +6,13 @@ import { DynamicIcon, Images } from "../../../constants";
 import { Button, CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { postData } from "../../../utils/api";
+import GoogleImg from "../../../assets/7123025_logo_google_g_icon.png";
+
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../../firebase";
+
+const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(firebaseApp);
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -58,9 +65,24 @@ const Login = () => {
               msg: res.msg || "Check for Incorrect Email or Password",
             });
           } else {
-            if (res.user?.isAdmin) {
+            if (res.user?.isAdmin === true) {
               localStorage.removeItem("user");
               localStorage.setItem("token", res?.token);
+              Context.setIsLogin(true);
+
+              const user = {
+                userName: res?.user?.name,
+                email: res?.user?.email,
+                userId: res.user?.id,
+                image: res?.user?.image?.length > 0 ? res?.user?.image[0] : "",
+                isAdmin: res.user?.isAdmin,
+              };
+              localStorage.setItem("user", JSON.stringify(user));
+            } else {
+              localStorage.removeItem("user");
+              localStorage.setItem("token", res?.token);
+              Context.setIsLogin(true);
+
               const user = {
                 userName: res?.user?.name,
                 email: res?.user?.email,
@@ -94,6 +116,85 @@ const Login = () => {
       console.log("Errror:", error);
       setIsLoading(false);
     }
+  };
+
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // Get Google Credentials
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+
+        // Get User Details
+        const user = result.user;
+        const fields = {
+          name: user.providerData[0]?.displayName || "",
+          email: user.providerData[0]?.email || "",
+          password: null,
+          images: user.providerData[0]?.photoURL || "",
+          phone: user.providerData[0]?.phoneNumber || "",
+          isAdmin:true
+        };
+
+        // Send data to backend API
+        postData("api/users/authWithGoogle", fields).then((res) => {
+          try {
+            if (!res.error) {
+              localStorage.setItem("token", res.token);
+              console.log(res?.user)
+              const userData = {
+                name: res.user?.name,
+                email: res.user?.email,
+                userId: res.user?.id,
+                image: res?.user?.images?.length > 0 ? res?.user?.image[0] : "",
+                isAdmin: res.user?.isAdmin,
+              };
+              localStorage.setItem("users", JSON.stringify(userData)); // Fixed incorrect variable
+
+              // Show success alert
+              Context.setAlertBox({
+                open: true,
+                error: false,
+                msg: res.msg,
+              });
+
+              setTimeout(() => {
+                history("/");
+                Context.setIsLogin(true);
+                setIsLoading(false);
+
+                // ✅ Close Popup if Opened
+                if (window.opener) {
+                  setTimeout(() => {
+                    window.close();
+                  }, 1000); // Adding delay to avoid COOP issues
+                }
+              }, 2000);
+            } else {
+              // Show error alert
+              Context.setAlertBox({
+                open: true,
+                error: true,
+                msg: res.msg,
+              });
+              setIsLoading(false);
+            }
+          } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+          }
+        });
+
+        console.log("User Data:", user);
+      })
+      .catch((error) => {
+        console.error("Google Sign-In Error:", error.message);
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: error.message,
+        });
+      });
   };
 
   return (
@@ -164,7 +265,12 @@ const Login = () => {
                   <span className="line"></span>
                 </div>
                 <div className="Google">
-                  <Button variant="outlined" className="w-100 btn-blue">
+                  <Button
+                    variant="outlined"
+                    className="w-100 btn-blue"
+                    onClick={signInWithGoogle}
+                  >
+                    <img src={GoogleImg} />
                     Sign in With Google
                   </Button>
                 </div>
