@@ -3,30 +3,37 @@ import React, { useContext, useEffect, useState } from "react";
 import { deleteData, fetchDataFromApi } from "../../../utils/api";
 import { MyContext } from "../../../App";
 import { DynamicIcon } from "../../../constants";
-import { Breadcrumbs, styled, emphasize, Chip, Button } from "@mui/material";
+import {
+  Breadcrumbs,
+  styled,
+  emphasize,
+  Chip,
+  Button,
+  capitalize,
+} from "@mui/material";
 import LazyLoad from "react-lazyload";
+import { Link } from "react-router-dom";
 
 const SubCategoryList = () => {
-  const [subCatData, setSubCatData] = useState([]);
-
+  const [catData, setCatData] = useState([]);
   const Context = useContext(MyContext);
 
   useEffect(() => {
     Context.setProgress(20);
     fetchDataFromApi("/api/category").then((res) => {
-      setSubCatData(res);
+      setCatData(res);
       Context.setProgress(100);
     });
   }, []);
 
-  const deleteCat = (id) => {
+  const deleteSubCat = (id) => {
     Context.setProgress(30);
     deleteData(`/api/category/${id}`).then((res) => {
       Context.setProgress(100);
       fetchDataFromApi("/api/category").then((res) => {
-        setSubCatData(res);
+        setCatData(res);
         Context.setProgress(100);
-        Context.setAlertbox({
+        Context.setAlertBox({
           open: true,
           error: false,
           msg: "SubCategory Deleted!",
@@ -73,7 +80,7 @@ const SubCategoryList = () => {
               label="SubCategory"
             />
             <Button className="btn-blue mr-4 ml-2 p-2 w-100">
-              ADD SUBCATEGORY
+              <Link to="/subcategory-upload">ADD SUBCATEGORY</Link>
             </Button>
           </Breadcrumbs>
         </div>
@@ -85,15 +92,14 @@ const SubCategoryList = () => {
               <thead className="thead-dark">
                 <tr>
                   <th>INDEX</th>
-                  <th>IMAGE</th>
-                  <th>CATEGORY</th>
-                  <th>COLOR</th>
-                  <th>ACTION</th>
+                  <th>CATEGORY IMAGE</th>
+                  <th>CATEGORY NAME</th>
+                  <th>SUBCATEGORY</th>
                 </tr>
               </thead>
               <tbody>
                 {catData?.categoryList?.length !== 0 &&
-                  catData?.categoryList?.map((cat, index) => {
+                  catData?.categoryList?.map((item, index) => {
                     return (
                       <tr key={index}>
                         <td>{index + 1}</td>
@@ -102,7 +108,7 @@ const SubCategoryList = () => {
                             <div className="img">
                               <LazyLoad>
                                 <img
-                                  src={cat?.images?.[0]}
+                                  src={item?.images?.[0]}
                                   alt="product-img"
                                   className="prod-list"
                                 />
@@ -110,24 +116,25 @@ const SubCategoryList = () => {
                             </div>
                           </div>
                         </td>
-                        <td>{cat?.name}</td>
-                        <td>{cat?.color}</td>
+                        <td>{capitalize(item?.name)}</td>
                         <td>
-                          <div className="d-flex actions align-items-center">
-                            <Button color="secondary" className="secondary">
-                              <DynamicIcon iconName="Visibility" />
-                            </Button>
-                            <Button color="success" className="success">
-                              <DynamicIcon iconName="Create" />
-                            </Button>
-                            <Button
-                              color="error"
-                              className="error"
-                              onClick={() => deleteCat(cat._id)}
-                            >
-                              <DynamicIcon iconName="Delete" />
-                            </Button>
-                          </div>
+                          {item?.children?.map((subCat, key) => {
+                            return (
+                              <span
+                                className="badge-primary mx-1 btn"
+                                key={key}
+                              >
+                                {subCat.name} &nbsp;
+                                <DynamicIcon
+                                  iconName="Close"
+                                  className="cursor"
+                                  onClick={() => {
+                                    deleteSubCat(subCat._id);
+                                  }}
+                                />
+                              </span>
+                            );
+                          })}
                         </td>
                       </tr>
                     );

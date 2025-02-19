@@ -23,7 +23,7 @@ import AuthLayout from "./Layouts/AuthLayouts";
 import LoadingBar from "react-top-loading-bar";
 
 import { Snackbar, Alert } from "@mui/material";
-// import { fetchDataFromApi } from "./utils/api";
+import { fetchDataFromApi } from "./utils/api";
 
 export const MyContext = createContext();
 
@@ -32,6 +32,7 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState();
   const [progress, setProgress] = useState(0);
+  const [catData, setCatData] = useState([]);
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
@@ -74,11 +75,12 @@ function App() {
     isLogin,
     setThemeMode,
     setIsLogin,
-    // alertBox,
+    alertBox,
     setAlertBox,
     user,
     progress,
     setProgress,
+    fetchCategory,
   };
 
   const handleClose = (event, reason) => {

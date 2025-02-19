@@ -8,7 +8,7 @@ const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-  cloud_name: process.env.cloudinary_Config_Name,
+  cloud_name: process.env.cloudinary_Config_Cloud_Name,
   api_key: process.env.cloudinary_Config_api_key,
   api_secret: process.env.cloudinary_Config_api_secret,
   secure: true,
@@ -100,7 +100,9 @@ const createCategories = (categories, parentId = null) => {
   if (parentId == null) {
     category = categories.filter((cat) => cat.parentId === undefined);
   } else {
-    category = categories.filter((cat) => String(cat.parentId) === String(parentId));
+    category = categories.filter(
+      (cat) => String(cat.parentId) === String(parentId)
+    );
   }
 
   for (let cat of category) {
@@ -186,12 +188,9 @@ router.delete("/deleteImage", async (req, res) => {
   const urlArr = imgUrl.split("/");
   const image = urlArr[urlArr.length - 1];
 
-  const response = await cloudinary.uploader.destroy(
-    imageName,
-    (error, result) => {
-      console.log(error, result);
-    }
-  );
+  const response = await cloudinary.uploader.destroy(image, (error, result) => {
+    console.log(error, result);
+  });
 
   if (response) {
     res.status(200).send(response);
@@ -225,9 +224,10 @@ router.delete("/:id", async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Category deleted",
+    // data: deletedCat,
   });
 
-  return res.status(200).send(category);
+  // return res.status(200).send(category);
 });
 
 router.put("/:id", async (req, res) => {

@@ -58,6 +58,10 @@ body {
   text-transform: capitalize !important;
   border-radius: 5px !important;
 }
+.btn-blue a {
+  text-decoration: none !important;
+  color: #fff !important;
+}
 
 h1,
 h2,
@@ -84,8 +88,8 @@ p {
   color: #0858f7;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-inner-spin-button{
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;

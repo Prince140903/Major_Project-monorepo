@@ -6,9 +6,6 @@ import {
   styled,
   emphasize,
   Chip,
-  MenuItem,
-  Select,
-  FormControl,
   CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -18,20 +15,18 @@ import {
   fetchDataFromApi,
   deleteImages,
   deleteData,
+  postData,
 } from "../../../utils/api";
 import { MyContext } from "../../../App";
 
 const CategoryUpload = () => {
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [formFields, setFormFields] = useState({
     name: "",
     images: [],
-    main_category: "",
-    sub_category: "",
-    actual_price: "",
-    discount_price: "",
-    extraData: "",
+    color: "",
+    parentId: "",
   });
 
   const Context = useContext(MyContext);
@@ -39,26 +34,62 @@ const CategoryUpload = () => {
   const history = useNavigate();
   const [previews, setPreviews] = useState([]);
 
-    useEffect(() => {
-      fetchDataFromApi("/api/imageUpload").then((res) => {
-        res?.map((item) => {
-          item?.images?.map((img) => {
-            deleteImages(`/api/category/deleteImages?img=${img}`).then((res) => {
-              deleteData("/api/imageUpload/deleteAllImages");
-            });
+  useEffect(() => {
+    fetchDataFromApi("/api/imageUpload").then((res) => {
+      res?.map((item) => {
+        item?.images?.map((img) => {
+          deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+            deleteData("/api/imageUpload/deleteAllImages");
           });
         });
       });
-    }, []);
+    });
+  }, []);
 
   const addCat = (e) => {
     e.preventDefault();
+
+    const appendedArray = [...previews, ...uniqueArray];
+    img_arr = [];
+
+    formFields.images = appendedArray;
+
+    if (
+      formFields.name !== "" &&
+      formFields.color !== "" &&
+      previews.length !== 0
+    ) {
+      setIsLoading(true);
+
+      postData("/api/category/create", formFields)
+        .then((res) => {
+          setIsLoading(false);
+          Context.fetchCategory();
+
+          deleteData("/api/imageupload/deleteAllImages");
+
+          history("/category-list");
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          console.error("Error creating category:", error);
+        });
+    } else {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill all details first!!",
+      });
+      return false;
+    }
   };
 
   const changeInput = (e) => {
-    setFormFields(() => ({
-      ...formFields,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+
+    setFormFields((prevFields) => ({
+      ...prevFields,
+      [name]: value,
     }));
   };
 
@@ -85,8 +116,7 @@ const CategoryUpload = () => {
           const file = files[i];
           selectedImages.push(file);
           formData.append("images", file);
-
-          // console.log(...formData);
+        
         } else {
           Context.setAlertBox({
             open: true,
@@ -141,13 +171,6 @@ const CategoryUpload = () => {
     });
   };
 
-  const [selectedValues, setSelectedValues] = useState({
-    select1: "option1",
-    select2: "option1",
-    select3: "option1",
-    select4: "option1",
-  });
-
   const handleRemoveImg = async (index, imgUrl) => {
     const imgIndex = previews.indexOf(imgUrl);
 
@@ -164,13 +187,6 @@ const CategoryUpload = () => {
     }
 
     // setUserImages(userImages.filter((_, i) => i !== index));
-  };
-
-  const handleChange = (name) => (event) => {
-    setSelectedValues({
-      ...selectedValues,
-      [name]: event.target.value,
-    });
   };
 
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -230,6 +246,7 @@ const CategoryUpload = () => {
                       <input
                         type="text"
                         placeholder="Type here"
+                        name="name"
                         value={formFields.name}
                         onChange={changeInput}
                       />
@@ -241,6 +258,7 @@ const CategoryUpload = () => {
                       <input
                         type="text"
                         placeholder="Enter value"
+                        name="color"
                         value={formFields.color}
                         onChange={changeInput}
                       />
@@ -318,9 +336,20 @@ const CategoryUpload = () => {
             </div>
           </div>
 
-          <Button onClick={addCat} className="btn-blue p-3">
-            <DynamicIcon iconName="CloudUpload" className="mr-2" />
-            Publish and View
+          <Button
+            onClick={(e) => {
+              addCat(e);
+            }}
+            className="btn-blue p-3"
+          >
+            {isLoading === true ? (
+              <CircularProgress color="inherit" className="loader" />
+            ) : (
+              <>
+                <DynamicIcon iconName="CloudUpload" className="mr-2" />
+                Publish and View
+              </>
+            )}
           </Button>
         </div>
       </div>

@@ -3,12 +3,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { deleteData, fetchDataFromApi } from "../../../utils/api";
 import { MyContext } from "../../../App";
 import { DynamicIcon } from "../../../constants";
-import { Breadcrumbs, styled, emphasize, Chip, Button } from "@mui/material";
+import {
+  Breadcrumbs,
+  styled,
+  emphasize,
+  Chip,
+  Button,
+  capitalize,
+} from "@mui/material";
 import LazyLoad from "react-lazyload";
+import { Link } from "react-router-dom";
 
 const CategoryList = () => {
   const [catData, setCatData] = useState([]);
-
   const Context = useContext(MyContext);
 
   useEffect(() => {
@@ -21,18 +28,23 @@ const CategoryList = () => {
 
   const deleteCat = (id) => {
     Context.setProgress(30);
-    deleteData(`/api/category/${id}`).then((res) => {
-      Context.setProgress(100);
-      fetchDataFromApi("/api/category").then((res) => {
-        setCatData(res);
+    deleteData(`/api/category/${id}`)
+      .then((res) => {
         Context.setProgress(100);
-        Context.setAlertbox({
-          open: true,
-          error: false,
-          msg: "Category Deleted!",
+        fetchDataFromApi("/api/category").then((res) => {
+          setCatData(res);
+          Context.setProgress(100);
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Category Deleted!",
+          });
         });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error("Error deleting category:", error);
       });
-    });
   };
 
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -73,7 +85,7 @@ const CategoryList = () => {
               label="Category"
             />
             <Button className="btn-blue mr-4 ml-2 p-2 w-100">
-              ADD CATEGORY
+              <Link to="/category-upload">ADD CATEGORY</Link>
             </Button>
           </Breadcrumbs>
         </div>
@@ -110,7 +122,7 @@ const CategoryList = () => {
                             </div>
                           </div>
                         </td>
-                        <td>{cat?.name}</td>
+                        <td>{capitalize(cat?.name)}</td>
                         <td>{cat?.color}</td>
                         <td>
                           <div className="d-flex actions align-items-center">
