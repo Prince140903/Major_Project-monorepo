@@ -60,7 +60,7 @@ const Dashboard = () => {
       }
     };
 
-    // fetchProducts();
+    fetchProducts();
   }, [page, limit, company, searchQuery, selection]);
 
   const handleSelection = (event) => {
@@ -88,7 +88,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="right-content w-100 "> 
+      <div className="right-content w-100 ">
         <div className="row boxRow">
           <div className="col-md-8">
             <div className="boxWrapper d-flex">
@@ -226,11 +226,9 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* {filteredProducts.slice(0, limit).map((product, index) => ( */}
                 {products.length !== 0 ? (
-                  // products.map((product, index) => (
                   products.map((product, index) => (
-                    <tr>
+                    <tr key={index}>
                       <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <div className="d-flex align-items-center productBox">
@@ -259,9 +257,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </td>
-                      <td>
-                        {product.company}
-                      </td>
+                      <td>{product.company}</td>
                       <td>{product.main_category}</td>
                       <td>{product.sub_category}</td>
                       <td>

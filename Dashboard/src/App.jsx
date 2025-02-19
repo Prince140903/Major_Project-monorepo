@@ -14,7 +14,9 @@ import {
   ProductList,
   Orders,
   CategoryList,
-  SubcategoryList,
+  CategoryUpload,
+  SubCategoryList,
+  SubCategoryUpload,
 } from "./pages";
 import { Header, Sidebar, Footer } from "./components";
 import AuthLayout from "./Layouts/AuthLayouts";
@@ -41,13 +43,13 @@ function App() {
     open: false,
   });
 
-  // const fetchCategory = () => {
-  //   setProgress(30);
-  //   fetchDataFromApi("/api/category").then((res) => {
-  //     setCatData(res);
-  //     setProgress(100);
-  //   });
-  // };
+  const fetchCategory = () => {
+    setProgress(30);
+    fetchDataFromApi("/api/category").then((res) => {
+      setCatData(res);
+      setProgress(100);
+    });
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", ThemeMode);
@@ -155,8 +157,16 @@ function App() {
                       <Route path="/product-list" element={<ProductList />} />
                       <Route path="/category-list" element={<CategoryList />} />
                       <Route
+                        path="/category-upload"
+                        element={<CategoryUpload />}
+                      />
+                      <Route
                         path="/subcategory-list"
-                        element={<SubcategoryList />}
+                        element={<SubCategoryList />}
+                      />
+                      <Route
+                        path="/subcategory-upload"
+                        element={<SubCategoryUpload />}
                       />
                       <Route path="/orders" element={<Orders />} />
                       <Route path="*" element={<NotFound />} />

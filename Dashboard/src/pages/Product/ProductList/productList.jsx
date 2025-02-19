@@ -49,7 +49,6 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        console.log("fetch");
         const Sorted = await fetchDataFromApi(
           `/api/products/filter?page=${page}&limit=${limit}&search=${searchQuery}&company=${company}&selection=${selection}`
         );
@@ -94,7 +93,6 @@ const ProductList = () => {
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
-    // setPage(1);
   };
   const handleCompanyChange = (event) => {
     setCompany(event.target.value);
@@ -242,7 +240,7 @@ const ProductList = () => {
                 {products.length !== 0 ? (
                   // products.map((product, index) => (
                   products.map((product, index) => (
-                    <tr>
+                    <tr key={index}>
                       <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <div className="d-flex align-items-center productBox">
@@ -255,7 +253,7 @@ const ProductList = () => {
                                     "https://i.ibb.co/GQmxxNg/images.png"
                                   }
                                   alt="product-img"
-                                  className="w-100"
+                                  className="prod-list"
                                   onError={(e) => {
                                     e.target.onError = null;
                                     e.target.src =

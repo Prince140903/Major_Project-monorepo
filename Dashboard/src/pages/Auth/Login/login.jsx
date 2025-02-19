@@ -164,11 +164,7 @@ const Login = () => {
                 setIsLoading(false);
 
                 // ✅ Close Popup if Opened
-                if (window.opener) {
-                  setTimeout(() => {
-                    window.close();
-                  }, 1000); // Adding delay to avoid COOP issues
-                }
+                
               }, 2000);
             } else {
               // Show error alert

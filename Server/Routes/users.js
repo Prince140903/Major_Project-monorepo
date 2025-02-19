@@ -128,15 +128,15 @@ router.post(`/signIn`, async (req, res) => {
 router.post(`/authWithGoogle`, async (req, res) => {
   const { name, phone, email, password, images, isAdmin } = req.body;
   try {
-    const existingUser = await Users.findOne({ email: email });
+    const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      const result = await Users.create({
+      const result = await User.create({
         name: name,
         phone: phone,
         email: email,
         password: password,
         images: images,
-        isAdmin: isAdmin
+        isAdmin: isAdmin,
       }); //need to replace with vite.
       const token = jwt.sign(
         { email: result.email, id: result._id },
@@ -148,7 +148,7 @@ router.post(`/authWithGoogle`, async (req, res) => {
         msg: "User Login Successfully!",
       });
     } else {
-      const existingUser = await Users.findOne({ email: email });
+      const existingUser = await User.findOne({ email: email });
       const token = jwt.sign(
         { email: existingUser.email, id: existingUser._id },
         process.env.JSON_WEB_TOKEN_SECRET_KEY

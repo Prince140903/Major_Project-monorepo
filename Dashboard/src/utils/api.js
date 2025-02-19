@@ -43,7 +43,7 @@ export const deleteImages = async (url, image) => {
 
 export const postData = async (url, formData) => {
   try {
-    console.log("Base URL:",baseUrl);
+    console.log("Base URL:",url);
 
     const res = await axios.post(`${baseUrl}/${url}`, formData);
     return res.data;
