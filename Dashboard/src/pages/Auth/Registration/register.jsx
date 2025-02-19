@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
-import "./register.css";
 
+import "./register.css";
+import GoogleImg from "../../../assets/7123025_logo_google_g_icon.png";
 import { DynamicIcon, Images } from "../../../constants";
 import {
   Button,
@@ -8,9 +9,16 @@ import {
   CircularProgress,
   FormControlLabel,
 } from "@mui/material";
+
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../../App";
+
 import { postData } from "../../../utils/api";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../../firebase";
+
+const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(firebaseApp);
 
 const Register = () => {
   const [ShowPassword, setShowPassword] = useState(false);
@@ -136,6 +144,81 @@ const Register = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // Get Google Credentials
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+
+        // Get User Details
+        const user = result.user;
+        const fields = {
+          name: user.providerData[0]?.displayName || "",
+          email: user.providerData[0]?.email || "",
+          password: null,
+          images: user.providerData[0]?.photoURL || "",
+          phone: user.providerData[0]?.phoneNumber || "",
+          isAdmin: true,
+        };
+
+        // Send data to backend API
+        postData("api/users/authWithGoogle", fields).then((res) => {
+          try {
+            if (!res.error) {
+              localStorage.setItem("token", res.token);
+              console.log(res?.user);
+              const userData = {
+                name: res.user?.name,
+                email: res.user?.email,
+                userId: res.user?.id,
+                image: res?.user?.images?.length > 0 ? res?.user?.image[0] : "",
+                isAdmin: res.user?.isAdmin,
+              };
+              localStorage.setItem("users", JSON.stringify(userData)); // Fixed incorrect variable
+
+              // Show success alert
+              Context.setAlertBox({
+                open: true,
+                error: false,
+                msg: res.msg,
+              });
+
+              setTimeout(() => {
+                history("/");
+                Context.setIsLogin(true);
+                setIsLoading(false);
+
+                // ✅ Close Popup if Opened
+                
+              }, 2000);
+            } else {
+              // Show error alert
+              Context.setAlertBox({
+                open: true,
+                error: true,
+                msg: res.msg,
+              });
+              setIsLoading(false);
+            }
+          } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+          }
+        });
+
+        console.log("User Data:", user);
+      })
+      .catch((error) => {
+        console.error("Google Sign-In Error:", error.message);
+        Context.setAlertBox({
+          open: true,
+          error: true,
+          msg: error.message,
+        });
+      });
   };
 
   return (
@@ -287,8 +370,13 @@ const Register = () => {
                     </div>
 
                     <div className="Google">
-                      <Button variant="outlined" className="w-100 btn-blue">
-                        &nbsp; Sign in With Google
+                      <Button
+                        variant="outlined"
+                        className="w-100 btn-blue"
+                        onClick={signInWithGoogle}
+                      >
+                        <img src={GoogleImg} />
+                        Sign in With Google
                       </Button>
                     </div>
                   </div>
@@ -309,5 +397,4 @@ const Register = () => {
     </>
   );
 };
-
 export default Register;
