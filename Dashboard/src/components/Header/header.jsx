@@ -174,7 +174,7 @@ const Header = () => {
                     onClick={handleOpenAcc}
                   >
                     {Context?.user?.image !== "" ? (
-                      <UserImg img={Images.userImg} width="40" />
+                      <UserImg img={Context?.user.images} width="40" />
                     ) : (
                       Context?.user?.userName.charAt(0)
                     )}

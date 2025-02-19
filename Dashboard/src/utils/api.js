@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const token = localStorage.getItem("token");
-const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl=import.meta.env.VITE_BASE_URL;
 
 const params = {
   headers: {
@@ -32,18 +32,20 @@ export const uploadImage = async (url, formData) => {
 };
 
 export const deleteData = async (url) => {
-  const { res } = await axios.delete(`${baseUrl}${url}`, params);
+  const res  = await axios.delete(`${baseUrl}${url}`, params.headers);
   return res;
 };
 
 export const deleteImages = async (url, image) => {
-  const { res } = await axios.delete(`${baseUrl}${url}`, image);
+  const res = await axios.delete(`${baseUrl}${url}`, {data:image,param:headers});
   return res;
 };
 
 export const postData = async (url, formData) => {
   try {
-    const res = await axios.post(`${baseUrl}${url}`, formData);
+    console.log("Base URL:",url);
+
+    const res = await axios.post(`${baseUrl}/${url}`, formData);
     return res.data;
   } catch (error) {
     if (error.response) {
