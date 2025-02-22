@@ -152,7 +152,6 @@ const SubCategoryUpload = () => {
                               className="text-capitalize"
                               value={cat._id}
                               key={index}
-                              // onClick={() => selectCat(cat.name, cat._id)}
                             >
                               {capitalize(cat.name)}
                             </MenuItem>

@@ -5,14 +5,11 @@ const { ImageUpload } = require("../Models/imageUpload");
 router.get("/", async (req, res) => {
   try {
     const imageUploadList = await ImageUpload.find();
-    // console.log("ImagesList", imageUploadList);
-
     if (!imageUploadList) {
       res.status(500).json({ success: false });
     }
 
     return res.status(200).json(imageUploadList);
-    
   } catch (error) {
     res.status(500).json({ success: false });
   }
@@ -23,8 +20,8 @@ router.delete("/deleteAllImages", async (req, res) => {
   let deletedImage;
 
   if (images.length !== 0) {
-    for (image of images) {
-      deletedImage = await ImageUpload.findByIdAndDelete(image.id);
+    for (let image of images) {
+      deletedImage = await ImageUpload.findByIdAndDelete(image._id);
     }
   }
 

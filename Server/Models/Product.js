@@ -14,23 +14,21 @@ const productSchema = mongoose.Schema(
       type: String,
     },
     ratings: {
-      type: String,
+      type: Number,
     },
     no_of_ratings: {
-      type: String,
+      type: Number,
     },
     actual_price: {
-      type: String,
+      type: Number,
     },
     discount_price: {
+      type: Number,
+    },
+    product_link: {
       type: String,
     },
-    link: {
-      type: String,
-    },
-    images: { 
-      type: [String],
-    },
+    images: [{ type: String }],
   },
   { timestamps: true, collection: "All Products" }
 );

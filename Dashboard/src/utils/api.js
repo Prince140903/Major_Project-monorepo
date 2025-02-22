@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const token = localStorage.getItem("token");
-const baseUrl=import.meta.env.VITE_BASE_URL;
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const params = {
   headers: {
@@ -23,7 +23,6 @@ export const fetchDataFromApi = async (url) => {
 export const uploadImage = async (url, formData) => {
   try {
     const response = await axios.post(`${baseUrl}${url}`, formData);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Upload failed", error.response?.data || error.message);
@@ -37,15 +36,13 @@ export const deleteData = async (url) => {
 };
 
 export const deleteImages = async (url, image) => {
-  const res = await axios.delete(`${baseUrl}${url}`, {data:image,param:headers});
-  return res;
+  const res = await axios.delete(`${baseUrl}${url}`, image);
+  return res.data;
 };
 
 export const postData = async (url, formData) => {
   try {
-    console.log("Base URL:",url);
-
-    const res = await axios.post(`${baseUrl}/${url}`, formData);
+    const res = await axios.post(`${baseUrl}${url}`, formData);
     return res.data;
   } catch (error) {
     if (error.response) {

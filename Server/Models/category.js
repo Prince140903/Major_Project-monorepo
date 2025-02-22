@@ -17,7 +17,7 @@ const categorySchema = mongoose.Schema(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "categories" }
 );
 
 categorySchema.virtual("id").get(function () {

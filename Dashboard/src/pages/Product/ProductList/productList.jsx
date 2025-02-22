@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./productList.css";
 
 import { DynamicIcon } from "../../../constants";
@@ -14,10 +14,20 @@ import {
   MenuItem,
   Pagination,
 } from "@mui/material";
-import { fetchDataFromApi } from "../../../utils/api";
+import { fetchDataFromApi, deleteData } from "../../../utils/api";
+import { MyContext } from "../../../App";
 import LazyLoad from "react-lazyload";
 
 const ProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [company, setCompany] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selection, setSelection] = useState("Featured");
+  const Context = useContext(MyContext);
+
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === "light"
@@ -37,14 +47,6 @@ const ProductList = () => {
       },
     };
   });
-
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [company, setCompany] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selection, setSelection] = useState("Featured");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -97,6 +99,27 @@ const ProductList = () => {
   const handleCompanyChange = (event) => {
     setCompany(event.target.value);
     setPage(1);
+  };
+
+  const deleteProd = (id) => {
+    Context.setProgress(30);
+    deleteData(`/api/products/${id}`)
+      .then((res) => {
+        Context.setProgress(100);
+        fetchDataFromApi("/api/products/filter").then((res) => {
+          setProducts(res.products);
+          setPage(1);
+          Context.setProgress(100);
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Product Deleted!",
+          });
+        });
+      })
+      .catch((error) => {
+        console.error("Error deleting category:", error);
+      });
   };
 
   return (
@@ -236,10 +259,8 @@ const ProductList = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* {filteredProducts.slice(0, limit).map((product, index) => ( */}
-                {products.length !== 0 ? (
-                  // products.map((product, index) => (
-                  products.map((product, index) => (
+                {products?.length !== 0 ? (
+                  products?.map((product, index) => (
                     <tr key={index}>
                       <td>{(page - 1) * limit + index + 1}</td>
                       <td>
@@ -287,7 +308,11 @@ const ProductList = () => {
                           <Button color="success" className="success">
                             <DynamicIcon iconName="Create" />
                           </Button>
-                          <Button color="error" className="error">
+                          <Button
+                            color="error"
+                            className="error"
+                            onClick={() => deleteProd(product._id)}
+                          >
                             <DynamicIcon iconName="Delete" />
                           </Button>
                         </div>
@@ -327,15 +352,3 @@ const ProductList = () => {
 };
 
 export default ProductList;
-
-// const fetchProducts = async () => {
-//   try {
-//     const data = await fetchDataFromApi(
-//       `/api/products?page=${page}&limit=${limit}&company=${company}`
-//     );
-//     setProducts(data.products);
-//     setTotalProducts(data.total);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

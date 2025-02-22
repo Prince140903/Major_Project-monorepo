@@ -33,6 +33,7 @@ function App() {
   const [user, setUser] = useState();
   const [progress, setProgress] = useState(0);
   const [catData, setCatData] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const [ThemeMode, setThemeMode] = useState(
     () => localStorage.getItem("ThemeMode") || "light"
@@ -51,6 +52,13 @@ function App() {
       setProgress(100);
     });
   };
+  const fetchProducts = () => {
+    setProgress(30);
+    fetchDataFromApi("/api/products/filter").then((res) => {
+      setProducts(res);
+      setProgress(100);
+    });
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", ThemeMode);
@@ -59,7 +67,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-     
+
     if (token !== "" && token !== undefined && token !== null) {
       setIsLogin(true);
       const userData = JSON.parse(localStorage.getItem("user"));
@@ -82,6 +90,7 @@ function App() {
     progress,
     setProgress,
     fetchCategory,
+    fetchProducts,
   };
 
   const handleClose = (event, reason) => {

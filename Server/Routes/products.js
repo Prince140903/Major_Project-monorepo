@@ -15,6 +15,8 @@ cloudinary.config({
   secure: true,
 });
 
+var imagesArr = [];
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads");
@@ -28,7 +30,7 @@ const upload = multer({ storage: storage });
 
 router.post("/upload", upload.array("images"), async (req, res) => {
   try {
-    console.log("recieved files", req.files);
+    // console.log("recieved files", req.files);
     const uploadPromises = req.files.map(async (file) => {
       const options = {
         use_filename: true,
@@ -55,32 +57,64 @@ router.post("/upload", upload.array("images"), async (req, res) => {
   }
 });
 
-// router.get("/", async (req, res) => {
-//   const { company, page = 1, limit = 20 } = req.query; //defaults: page 1, 10 products
-//   const query = company && company !== "All" ? { company } : {};
-//   const startIndex = (page - 1) * limit;
-//   const endIndex = page * limit;
+router.get("/", async (req, res) => {
+  const { company, page = 1, limit = 20 } = req.query; //defaults: page 1, 10 products
+  const query = company && company !== "All" ? { company } : {};
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
 
-//   try {
-//     const products = await Product.find(query)
-//       .skip(startIndex)
-//       .limit(Number(limit));
+  try {
+    const products = await Product.find(query)
+      .skip(startIndex)
+      .limit(Number(limit));
 
-//     const total = await Product.countDocuments(query);
-//     if (!products || products.length === 0) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "No products found" });
-//     }
+    const total = await Product.countDocuments(query);
+    if (!products || products.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No products found" });
+    }
 
-//     // const CategoryData = createCategory(products);
+    return res.status(200).json({ products, total });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
 
-//     return res.status(200).json({ products, total });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ success: false, message: error.message });
-//   }
-// });
+router.post("/create", async (req, res) => {
+  let prodObj = {};
+
+  if (req.body) {
+    prodObj = {
+      name: req.body.name,
+      main_category: req.body.main_category,
+      sub_category: req.body.sub_category,
+      ratings: req.body.ratings,
+      no_of_ratings: req.body.no_of_ratings,
+      actual_price: req.body.actual_price,
+      discount_price: req.body.discount_price,
+      product_link: req.body.product_link,
+      images: req.body.images,
+    };
+  } else {
+    console.log("error");
+  }
+
+  let product = new Product(prodObj);
+
+  if (!product) {
+    res.status(500).json({
+      error: err,
+      success: false,
+    });
+  }
+
+  product = await product.save();
+  imagesArr = [];
+
+  res.status(201).json(product);
+});
 
 router.get("/filter", async (req, res) => {
   const {
@@ -144,420 +178,33 @@ router.get("/:id", async (req, res) => {
   return res.status(200).send(product);
 });
 
-module.exports = router;
-
-// const createCategory = (products) => {
-//   const categoryMap = {};
-
-//   products.forEach((product) => {
-//     const { main_category: category, sub_category: subCategory } = product;
-
-//     if (!categoryMap[category]) {
-//       categoryMap[category] = {
-//         name: category,
-//         subCategories: {},
-//       };
-//     }
-
-//     if (subCategory) {
-//       if (!categoryMap[category].subCategories[subCategory]) {
-//         categoryMap[category].subCategories[subCategory] = {
-//           name: subCategory,
-//           products: [],
-//         };
-//       }
-
-//       categoryMap[category].subCategories[subCategory].products.push(product);
-//     }
-//   });
-
-//   const categoryList = Object.values(categoryMap).map((category) => ({
-//     name: category.name,
-//     subCategories: Object.values(category.subCategories),
-//   }));
-
-//   return categoryList;
-// };
-
-// router.get("/count", async (req, res) => {
-//   try {
-//     const total = await Product.countDocuments();
-//     // const Company = await Product.find({ company: req.params });
-
-//     if (!total || total.length === 0) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "No products found" });
-//     }
-//     // if (!Company || Company.length === 0) {
-//     //   return res
-//     //     .status(404)
-//     //     .json({ success: false, message: "No products found" });
-//     // }
-
-//     return res.status(200).json({ total });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ success: false, message: error.message });
-//   }
-// });
-
-// router.get("/", async (req, res) => {
-//   try {
-//     const {
-//       search = "",
-//       page = 1,
-//       limit = 10,
-//       company = "All",
-//       selection = "Featured",
-//     } = req.query;
-
-//     const products = await Product.find();
-//     let filteredProducts = products.filter((product) => {
-//       const searchMatch = search
-//         ? product.name.toLowerCase().includes(search.toLowerCase())
-//         : true;
-//       const companyMatch = company ? product.company === company : true;
-//       return searchMatch && companyMatch;
-//     });
-
-//     console.log("products");
-//     console.log(filteredProducts);
-
-//     switch (selection) {
-//       case "Featured":
-//         console.log("Featured");
-//         break;
-//       case "Low->High":
-//         filteredProducts.sort((a, b) => a.price - b.price);
-//         break;
-//       case "High->Low":
-//         filteredProducts.sort((a, b) => b.price - a.price);
-//         break;
-//       case "Popular":
-//       default:
-//         filteredProducts.sort((a, b) => {
-//           if (a.rating === undefined) return 1; // a comes after b
-//           if (b.rating === undefined) return -1; // b comes after a
-
-//           return b.rating - a.rating;
-//         });
-//         break;
-//     }
-
-//     const startIndex = (page - 1) * limit;
-//     const paginated = filteredProducts.slice(
-//       startIndex,
-//       startIndex + parseInt(limit)
-//     );
-
-//     res.json({ products: paginated, total: filteredProducts.length });
-//   } catch (error) {
-//     console.error("Error in /products route:", error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// });
-router.post("/upload", upload.array("images"), async (req, res) => {
-  imagesArr = [];
-
-  try {
-    for (let i = 0; i < req?.files?.length; i++) {
-      const options = {
-        use_filename: true,
-        unique_filename: false,
-        overwrite: false,
-      };
-
-      const img = await cloudinary.uploader.upload(
-        req.files[i].path,
-        options,
-        function (error, result) {
-          imagesArr.push(result.secure_url);
-          fs.unlinkSync(`Uploads/${req.files[i].filename}`);
-        }
-      );
-
-      let imagesUploaded = new ImageUpload({
-        images: imagesArr,
-      });
-
-      imagesUploaded = await imagesUploaded.save();
-      return res.status(200).json(imagesArr);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.get("/", async (req, res) => {
-  const { page = 1, limit = 10 } = req.query; //defaults: page 1, 10 products
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-
-  try {
-    const products = await Product.find().skip(startIndex).limit(Number(limit));
-    // console.log(products);
-    if (!products || products.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No products found" });
-    }
-
-    // const CategoryData = createCategory(products);
-
-    return res.status(200).json({ products });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-router.get("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const product = await Product.findById(req.params.id);
+  const images = product.images;
 
-  if (!product) {
-    res
-      .status(404)
-      .json({ message: "The product with the givern Id was not found." });
-  }
+  for (img of images) {
+    const imgUrl = img;
+    const urlArr = imgUrl.split("/");
+    const image = urlArr[urlArr.length - 1];
 
-  return res.status(200).send(product);
-});
+    const imageName = image.split(".")[0];
 
-/*//'api/products'
-router.get(`/`, async (req, res) => {  //created by a . v 27 15.6 directly shown by him
-  const page = parseInt(req.query.page) || 1;
-  const perPage = parseInt(req.query.perPage);
-  const totalPosts = await Product.countDocuments();
-  const totalPages = Math.ceil(totalPosts / perPage);
-
-  if (page > totalPages) {
-    return res.status(404).json({ message: "page not found" });
-  }
-  let productList = []; // there is new section i think you did no done yet .
-  if (
-    req.query.location !== "" &&
-    req.query.location !== undefined &&
-    req.query.location !== null
-  )
-  {
-    productlist = await Product.find({ location: req.query.location })
-      .populate("category")
-      .skip((page - 1) * perPage)
-      .limit(perPage)
-      .exec();
-  }
-  else
-  {
-    productlist = await Product.find()
-      .populate("category")
-      .skip((page - 1) * perPage)
-      .limit(perPage)
-      .exec();
-  
-  }
-
-  return res.status(200).json
-  ({
-    products: productList,
-    totalPages: totalPages,
-    page: page,
-  });
-});
-
-//'/api/products/catName?caatName="fashion'
-router.get(`/catName`, async (req, res) => {
-  
-  const page = parseInt(req.query.page) || 1;
-  const perPage = parseInt(req.query.perPage);
-  const totalPosts = await Product.countSocuments();
-  const totalPages = Math.ceil(totalPosts / perPage);
-  if (page > totalPages) {
-    return res.status(404).json({
-      message: "page Not Found "
+    cloudinary.uploader.destroy(imageName, (error, result) => {
+      console.log(error, result);
     });
-    
   }
 
-  let productList = [];
-  
-  productList = await Product.find({
-    location: req.query.location,
-    catName: req.query.catName,
+  const deletedProd = await Product.findByIdAndDelete(req.params.id);
+
+  if(!deletedProd) {
+    res.status(404).json({message: "The product not found!", success: false});
+  }
+
+  res.status(200).json({
+    success: true,
+    msg: "Product Deleted",
+    data: deletedProd,
   })
-    .populate("category")
-    .skip(page - 1 * perPage)
-    .limit(perPage)
-    .exec();
-  return res.status(200).json({
-    products: productList,
-    totalPages: totalPages,
-    page: page,
-  });
-  
-
 });
-
-
-router.get(`/catId`, async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const perPage = parseInt(req.query.perPage);
-  const totalPosts = await Product.countSocuments();
-  const totalPages = Math.ceil(totalPosts / perPage);
-  if (page > totalPages) {
-    return res.status(404).json({
-      message: "page Not Found ",
-    });
-  }
-
-  let productList = [];
-  
-    productList = await Product.find({
-      location: req.query.location,
-      catName: req.query.catId,
-    })
-      .populate("category")
-      .skip(page - 1 * perPage)
-      .limit(perPage)
-      .exec();
-  
-  return res.status(200).json({
-    products: productList,
-    totalPages: totalPages,
-    page: page,
-  });
-});
-
-
-
-router.get(`/subCatId`, async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const perPage = parseInt(req.query.perPage);
-  const totalPosts = await Product.countSocuments();
-  const totalPages = Math.ceil(totalPosts / perPage);
-  if (page > totalPages) {
-    return res.status(404).json({
-      message: "page Not Found ",
-    });
-  }
-
-  let productList = [];
-  productList = await Product.find({
-    location: req.query.location,
-    catName: req.query.subCatId,
-  })
-    .populate("category")
-    .skip(page - 1 * perPage)
-    .limit(perPage)
-    .exec();
-  return res.status(200).json({
-    products: productList,
-    totalPages: totalPages,
-    page: page,
-  });
-});
-
-router.get(`/filterByPrice`, async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const perPage = parseInt(req.query.perPage);
-  const totalPosts = await Product.countSocuments();
-  const totalPages = Math.ceil(totalPosts / perPage);
-  if (page > totalPages) {
-    return res.status(404).json({
-      message: "page Not Found ",
-    });
-  }
-
-  let productList = [];
-  if (req.query.catId !== "") {
-    productList = await Product.find({
-      catId: req.query.catId,
-      location: req.query.location,
-    })
-      .populate("category")
-      .skip(page - 1 * perPage)
-      .limit(perPage)
-      .exec();
-  } else if (req.query.subCatId !== "") {
-    productList = await Product.find({
-      subCatId: req.query.subCatId,
-      location: req.query.location,
-    })
-      .populate("category")
-      .skip(page - 1 * perPage)
-      .limit(perPage)
-      .exec();
-  }
-  const filteredProducts = productList.filter((product) => {
-    if (req.query.miniPrice && product.price < parseInt(+req.query.miniPrice)) {
-      return false;
-    }
-     if (
-       req.query.miniPrice &&
-       product.price < parseInt(+req.query.miniPrice)
-     ) {
-       return false;
-    }
-    return false;
-  })
-    
-  
-  
-  return res.status(200).json({
-    products: productList,
-    totalPages: totalPages,
-    page: page,
-  });
-});
-
-
-router.get(`/rating`, async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const perPage = parseInt(req.query.perPage);
-  const totalPosts = await Product.countSocuments();
-  const totalPages = Math.ceil(totalPosts / perPage);
-  if (page > totalPages) {
-    return res.status(404).json({
-      message: "page Not Found ",
-    });
-  }
-
-  let productList = [];
-  if (req.query.catId !== "") {
-    console.log  // 17.34
-    productList = await Product.find({
-      catId: req.query.catId,
-      location: req.query.location,
-    })
-      .populate("category")
-      .skip(page - 1 * perPage)
-      .limit(perPage)
-      .exec();
-  } else if (req.query.subCatId !== "") {
-    productList = await Product.find({
-      subCatId: req.query.subCatId,
-      location: req.query.location,
-    })
-      .populate("category")
-      .skip(page - 1 * perPage)
-      .limit(perPage)
-      .exec();
-  }
-  const filteredProducts = productList.filter((product) => {
-    if (req.query.miniPrice && product.price < parseInt(+req.query.miniPrice)) {
-      return false;
-    }
-    if (req.query.miniPrice && product.price < parseInt(+req.query.miniPrice)) {
-      return false;
-    }
-    return false;
-  });
-
-  return res.status(200).json({
-    products: productList,
-    totalPages: totalPages,
-    page: page,
-  });
-});*/
 
 module.exports = router;

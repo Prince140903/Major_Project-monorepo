@@ -22,17 +22,19 @@ import { MyContext } from "../../../App";
 const CategoryUpload = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const Context = useContext(MyContext);
+  const formData = new FormData();
+  const history = useNavigate();
+  const [previews, setPreviews] = useState([]);
   const [formFields, setFormFields] = useState({
     name: "",
     images: [],
     color: "",
     parentId: "",
+    no_of_ratings: 0,
+    ratings: 0.0,
+    link: "",
   });
-
-  const Context = useContext(MyContext);
-  const formData = new FormData();
-  const history = useNavigate();
-  const [previews, setPreviews] = useState([]);
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
@@ -97,14 +99,6 @@ const CategoryUpload = () => {
   let uniqueArray = [];
   let selectedImages = [];
 
-  // const [userImages, setUserImages] = useState([]);
-
-  // const handleImageUpload = (e) => {
-  //   const uploadedFiles = Array.from(e.target.files);
-  //   const imageUrls = uploadedFiles.map((file) => URL.createObjectURL(file));
-  //   setUserImages((prevImages) => [...prevImages, ...imageUrls]);
-  // };
-
   const onChangeFile = async (e, apiEndPoint) => {
     try {
       const files = e.target.files;
@@ -116,7 +110,6 @@ const CategoryUpload = () => {
           const file = files[i];
           selectedImages.push(file);
           formData.append("images", file);
-        
         } else {
           Context.setAlertBox({
             open: true,
@@ -133,8 +126,6 @@ const CategoryUpload = () => {
 
     uploadImage(apiEndPoint, formData).then((res) => {
       fetchDataFromApi("/api/imageUpload").then((response) => {
-        console.log("Response", response);
-
         if (
           response !== undefined &&
           response !== null &&
@@ -185,8 +176,6 @@ const CategoryUpload = () => {
     if (imgIndex > -1) {
       previews.splice(index, 1);
     }
-
-    // setUserImages(userImages.filter((_, i) => i !== index));
   };
 
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -242,7 +231,7 @@ const CategoryUpload = () => {
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>Category NAME</label>
+                      <label>Category Name</label>
                       <input
                         type="text"
                         placeholder="Type here"

@@ -9,8 +9,8 @@ import {
   Chip,
   MenuItem,
   Select,
-  FormControl,
   CircularProgress,
+  capitalize,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { DynamicIcon } from "../../../constants";
@@ -19,12 +19,22 @@ import {
   fetchDataFromApi,
   deleteImages,
   deleteData,
+  postData,
 } from "../../../utils/api";
 import { MyContext } from "../../../App";
+import { Link } from "react-router-dom";
 
 const ProductUpload = () => {
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [previews, setPreviews] = useState([]);
+  const [categoryVal, setCategoryVal] = useState("");
+  const [subCatVal, setSubCatVal] = useState("");
+  const Context = useContext(MyContext);
+  const formData = new FormData();
+  const history = useNavigate();
+  const [catData, setCatData] = useState([]);
+  const [subCatData, setSubCatData] = useState([]);
   const [formFields, setFormFields] = useState({
     name: "",
     images: [],
@@ -32,12 +42,10 @@ const ProductUpload = () => {
     sub_category: "",
     actual_price: "",
     discount_price: "",
-    extraData: "",
+    ratings: 0.0,
+    no_of_ratings: 0,
+    product_link: "",
   });
-
-  const context = useContext(MyContext);
-  const formData = new FormData();
-  const history = useNavigate();
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
@@ -51,13 +59,59 @@ const ProductUpload = () => {
     });
   }, []);
 
-  const addProduct = (e) => {
+  useEffect(() => {
+    fetchDataFromApi("/api/category").then((res) => {
+      setCatData(res);
+    });
+  }, [categoryVal]);
+
+  const addProd = (e) => {
     e.preventDefault();
+
+    const appendedArray = [...previews, ...uniqueArray];
+    img_arr = [];
+
+    formFields.images = appendedArray;
+
+    if (previews.length !== 0) {
+      setIsLoading(true);
+
+      postData("/api/products/create", formFields)
+        .then((res) => {
+          setIsLoading(false);
+          Context.fetchProducts();
+
+          deleteData("/api/imageupload/deleteAllImages");
+
+          Context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "Product added successfully!",
+          });
+          history("/product-list");
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Error creating Product",
+          });
+          console.error("Error creating Product:", error);
+        });
+    } else {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill all details first!!",
+      });
+      return false;
+    }
   };
 
   const changeInput = (e) => {
-    setFormFields(() => ({
-      ...formFields,
+    setFormFields((prevFields) => ({
+      ...prevFields,
       [e.target.name]: e.target.value,
     }));
   };
@@ -65,16 +119,6 @@ const ProductUpload = () => {
   let img_arr = [];
   let uniqueArray = [];
   let selectedImages = [];
-
-  const [previews, setPreviews] = useState([]);
-
-  // const [userImages, setUserImages] = useState([]);
-
-  // const handleImageUpload = (e) => {
-  //   const uploadedFiles = Array.from(e.target.files);
-  //   const imageUrls = uploadedFiles.map((file) => URL.createObjectURL(file));
-  //   setUserImages((prevImages) => [...prevImages, ...imageUrls]);
-  // };
 
   const onChangeFile = async (e, apiEndPoint) => {
     try {
@@ -87,10 +131,8 @@ const ProductUpload = () => {
           const file = files[i];
           selectedImages.push(file);
           formData.append("images", file);
-
-          // console.log(...formData);
         } else {
-          context.setAlertBox({
+          Context.setAlertBox({
             open: true,
             error: true,
             msg: "Please select a valid JPG or PNG image file",
@@ -105,8 +147,6 @@ const ProductUpload = () => {
 
     uploadImage(apiEndPoint, formData).then((res) => {
       fetchDataFromApi("/api/imageUpload").then((response) => {
-        console.log("Response", response);
-
         if (response !== undefined && response !== null && response !== "") {
           response.length !== 0 &&
             response.map((item) => {
@@ -126,7 +166,7 @@ const ProductUpload = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            context.setAlertBox({
+            Context.setAlertBox({
               open: true,
               error: false,
               msg: "Image uploaded!",
@@ -139,18 +179,11 @@ const ProductUpload = () => {
     });
   };
 
-  const [selectedValues, setSelectedValues] = useState({
-    select1: "option1",
-    select2: "option1",
-    select3: "option1",
-    select4: "option1",
-  });
-
   const handleRemoveImg = async (index, imgUrl) => {
     const imgIndex = previews.indexOf(imgUrl);
 
     deleteImages(`/api/product/deleteImage?img=${imgUrl}`).then((res) => {
-      context.setAlertBox({
+      Context.setAlertBox({
         open: true,
         error: false,
         msg: "Image Deleted!",
@@ -160,15 +193,30 @@ const ProductUpload = () => {
     if (imgIndex > -1) {
       previews.splice(index, 1);
     }
-
-    // setUserImages(userImages.filter((_, i) => i !== index));
   };
 
-  const handleChange = (name) => (event) => {
-    setSelectedValues({
-      ...selectedValues,
-      [name]: event.target.value,
-    });
+  const handleChange1 = (event) => {
+    const selectedCategory = event.target.value;
+    setCategoryVal(selectedCategory);
+
+    const selectedCat = catData?.categoryList?.find(
+      (cat) => cat.name === selectedCategory
+    );
+
+    setSubCatData(selectedCat?.children || []);
+
+    setFormFields((prevFields) => ({
+      ...prevFields,
+      main_category: selectedCategory,
+      sub_category: "",
+    }));
+  };
+  const handleChange2 = (event) => {
+    setSubCatVal(event.target.value);
+    setFormFields((prevFields) => ({
+      ...prevFields,
+      sub_category: event.target.value,
+    }));
   };
 
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -227,6 +275,7 @@ const ProductUpload = () => {
                     type="text"
                     placeholder="Type here"
                     value={formFields.name}
+                    name="name"
                     onChange={changeInput}
                   />
                 </div>
@@ -235,10 +284,8 @@ const ProductUpload = () => {
                   <textarea
                     type="text"
                     placeholder="Type here"
-                    rows={5}
+                    rows={2}
                     cols={10}
-                    onChange={changeInput}
-                    value={formFields.description}
                   />
                 </div>
 
@@ -246,45 +293,25 @@ const ProductUpload = () => {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>REGULAR PRICE</label>
-                      <FormControl fullWidth>
-                        <Select
-                          className="select-dropdown"
-                          value={selectedValues.select1}
-                          onChange={handleChange("select1")}
-                        >
-                          <MenuItem value="option1">Option 1</MenuItem>
-                          <MenuItem value="option2">Option 2</MenuItem>
-                          <MenuItem value="option3">Option 3</MenuItem>
-                        </Select>
-                      </FormControl>
+                      <input
+                        type="number"
+                        name="actual_price"
+                        placeholder="Type here"
+                        value={formFields.actual_price}
+                        onChange={changeInput}
+                      />
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>DISCOUNT PRICE</label>
-                      <FormControl fullWidth>
-                        <Select
-                          className="select-dropdown"
-                          value={selectedValues.select2}
-                          onChange={handleChange("select2")}
-                        >
-                          <MenuItem value="option1">Option 1</MenuItem>
-                          <MenuItem value="option2">Option 2</MenuItem>
-                          <MenuItem value="option3">Option 3</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>REGULAR PRICE</label>
-                      <input type="number" placeholder="Enter value" />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>DISCOUNT PRICE</label>
-                      <input type="number" placeholder="Enter value" />
+                      <input
+                        type="number"
+                        placeholder="Type here"
+                        name="discount_price"
+                        value={formFields.discount_price}
+                        onChange={changeInput}
+                      />
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -305,7 +332,7 @@ const ProductUpload = () => {
                   <textarea
                     type="text"
                     placeholder="Type here"
-                    rows={4}
+                    rows={2}
                     cols={8}
                   />
                 </div>
@@ -316,43 +343,65 @@ const ProductUpload = () => {
             <div className="card p-4">
               <h5>Organization</h5>
               <form className="form">
-                <div className="row">
+                <div className="row pt-4">
                   <div className="col-md-12">
                     <div className="form-group">
                       <label>ADD CATEGORY</label>
-                      <FormControl fullWidth>
-                        <Select
-                          className="select-dropdown"
-                          value={selectedValues.select3}
-                          onChange={handleChange("select3")}
-                        >
-                          <MenuItem value="option1">Option 1</MenuItem>
-                          <MenuItem value="option2">Option 2</MenuItem>
-                          <MenuItem value="option3">Option 3</MenuItem>
-                        </Select>
-                      </FormControl>
+                      <Select
+                        value={categoryVal}
+                        onChange={handleChange1}
+                        className="select-dropdown"
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                      >
+                        <MenuItem value="">
+                          <em value="null">None</em>
+                        </MenuItem>
+                        {catData?.categoryList?.map((cat, index) => (
+                          <MenuItem value={cat.name} key={index}>
+                            {capitalize(cat.name)}
+                          </MenuItem>
+                        ))}
+                        <MenuItem>
+                          <Button className="btn-blue mr-4 ml-2 p-2">
+                            <Link to="/category-upload">➕ ADD CATEGORY</Link>
+                          </Button>
+                        </MenuItem>
+                      </Select>
                     </div>
                   </div>
                 </div>
-                <div className="row">
+                <div className="row pt-4">
                   <div className="col-md-12">
                     <div className="form-group">
                       <label>ADD SUB-CATEGORY</label>
-                      <FormControl fullWidth>
-                        <Select
-                          className="select-dropdown"
-                          value={selectedValues.select3}
-                          onChange={handleChange("select3")}
-                        >
-                          <MenuItem value="option1">Option 1</MenuItem>
-                          <MenuItem value="option2">Option 2</MenuItem>
-                          <MenuItem value="option3">Option 3</MenuItem>
-                        </Select>
-                      </FormControl>
+                      <Select
+                        value={subCatVal}
+                        onChange={handleChange2}
+                        className="select-dropdown"
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                      >
+                        <MenuItem value="">
+                          <em value="null">None</em>
+                        </MenuItem>
+                        {subCatData?.map((subCat, index) => (
+                          <MenuItem value={subCat.name} key={index}>
+                            {capitalize(subCat.name)}
+                          </MenuItem>
+                        ))}
+                        <MenuItem>
+                          <Button className="btn-blue mr-4 ml-2 p-2">
+                            <Link to="/subcategory-upload">
+                              ➕ ADD SUB-CATEGORY
+                            </Link>
+                          </Button>
+                        </MenuItem>
+                      </Select>
                     </div>
                   </div>
                 </div>
-                <div className="row">
+                <div className="row pt-4">
                   <div className="col-md-9">
                     <div className="form-group">
                       <label>ADD COLOR</label>
@@ -363,7 +412,7 @@ const ProductUpload = () => {
                     <Button className="btn-blue p-2 mt-4 w-100">ADD</Button>
                   </div>
                 </div>
-                <div className="row">
+                <div className="row pt-4">
                   <div className="col-md-9">
                     <div className="form-group">
                       <label>ADD SIZE</label>
@@ -375,9 +424,6 @@ const ProductUpload = () => {
                   </div>
                 </div>
               </form>
-            </div>
-            <div className="card p-4">
-              <h5>Specification</h5>
             </div>
           </div>
         </div>
@@ -448,9 +494,20 @@ const ProductUpload = () => {
             </div>
           </div>
 
-          <Button onClick={addProduct} className="btn-blue p-3">
-            <DynamicIcon iconName="CloudUpload" className="mr-2" />
-            Publish and View
+          <Button
+            onClick={(e) => {
+              addProd(e);
+            }}
+            className="btn-blue p-3"
+          >
+            {isLoading === true ? (
+              <CircularProgress color="inherit" className="loader" />
+            ) : (
+              <>
+                <DynamicIcon iconName="CloudUpload" className="mr-2" />
+                Publish and View
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -459,22 +516,3 @@ const ProductUpload = () => {
 };
 
 export default ProductUpload;
-
-// {userImages.map((image, index) => (
-
-//   <div key={index} style={{ position: "relative" }} className="imgView">
-//   <div className="remove" onClick={() => handleRemoveImg(index)}>
-//     <DynamicIcon iconName="Delete" />
-//   </div>
-//   <img
-//     src={img}
-//     alt={`Upload ${index}`}
-//     style={{
-//       width: "200px",
-//       height: "200px",
-//       objectFit: "cover",
-//       borderRadius: "5px",
-//     }}
-//   />
-// </div>;
-// ))}
