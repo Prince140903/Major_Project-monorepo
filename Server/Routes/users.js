@@ -8,8 +8,6 @@ const jwt = require("jsonwebtoken");
 
 const multer = require("multer"); //for image upload
 const fs = require("fs");
-const { error } = require("console");
-const { match } = require("assert");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -125,42 +123,76 @@ router.post(`/signIn`, async (req, res) => {
   }
 });
 
+// router.post(`/authWithGoogle`, async (req, res) => {
+//   const { name, phone, email, password, images, isAdmin } = req.body;
+//   try {
+//     const existingUser = await User.findOne({ email: email });
+//     if (existingUser) {
+//       const result = await User.create({
+//         name: name,
+//         phone: phone,
+//         email: email,
+//         password: password,
+//         images: images,
+//         isAdmin: isAdmin,
+//       }); //need to replace with vite.
+//       const token = jwt.sign(
+//         { email: result.email, id: result._id },
+//         process.env.JSON_WEB_TOKEN_SECRET_KEY
+//       );
+//       return res.status(200).send({
+//         user: result,
+//         token: token,
+//         msg: "User Login Successfully!",
+//       });
+//     } else {
+//       const existingUser = await User.findOne({ email: email });
+//       const token = jwt.sign(
+//         { email: existingUser.email, id: existingUser._id },
+//         process.env.JSON_WEB_TOKEN_SECRET_KEY
+//       );
+//       return res.status(200).send({
+//         user: existingUser,
+//         token: token,
+//         msg: "User Login Successfully!",
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
 router.post(`/authWithGoogle`, async (req, res) => {
-  const { name, phone, email, password, images, isAdmin } = req.body;
+  const { name, phone, email, images, isAdmin } = req.body; // Removed `password`
+
   try {
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-      const result = await User.create({
-        name: name,
-        phone: phone,
-        email: email,
-        password: password,
-        images: images,
-        isAdmin: isAdmin,
-      }); //need to replace with vite.
-      const token = jwt.sign(
-        { email: result.email, id: result._id },
-        process.env.JSON_WEB_TOKEN_SECRET_KEY
-      );
-      return res.status(200).send({
-        user: result,
-        token: token,
-        msg: "User Login Successfully!",
-      });
-    } else {
-      const existingUser = await User.findOne({ email: email });
-      const token = jwt.sign(
-        { email: existingUser.email, id: existingUser._id },
-        process.env.JSON_WEB_TOKEN_SECRET_KEY
-      );
-      return res.status(200).send({
-        user: existingUser,
-        token: token,
-        msg: "User Login Successfully!",
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // If the user does NOT exist, create a new user
+      user = await User.create({
+        name,
+        phone,
+        email,
+        images,
+        isAdmin: isAdmin || false, // Ensure only intended users are admins
       });
     }
+
+    // Generate token
+    const token = jwt.sign(
+      { email: user.email, id: user._id },
+      process.env.JSON_WEB_TOKEN_SECRET_KEY
+    );
+
+    return res.status(200).send({
+      user,
+      token,
+      msg: "User Login Successfully!",
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Google Auth Error:", error);
+    return res.status(500).send({ msg: "Internal Server Error" });
   }
 });
 

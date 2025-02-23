@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
-// const userRoutes = require("./Routes/users.js");
 
 App.use(cors());
 App.options("*", cors());
@@ -15,10 +14,10 @@ App.use(express.json());
 
 //Routes
 
-const userRoutes = require("./Routes/users");
 const productRoutes = require("./Routes/products");
 const imageUploadRoutes = require("./Helper/imageUpload");
 const categoryRoutes = require("./Routes/categories");
+const userRoutes = require("./Routes/users");
 
 App.use("/uploads", express.static("uploads"));
 App.use("/api/products/upload", productRoutes);
@@ -28,6 +27,10 @@ App.use("/api/category", categoryRoutes);
 App.use("/api/imageUpload", imageUploadRoutes);
 App.use("/:id", productRoutes);
 App.use("/api/users", userRoutes);
+App.use((req, res, next) => {
+  res.removeHeader("Cross-Origin-Opener-Policy"); // Remove the header
+  next();
+});
 
 //Database
 mongoose

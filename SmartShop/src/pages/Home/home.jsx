@@ -119,8 +119,8 @@ const Home = () => {
 
           <div className="productRow">
             {/* {console.log(products[0])} */}
-            {products.map((product) => (
-              <div className="item">
+            {products.map((product, index) => (
+              <div className="item" key={index}>
                 <Product
                   tag={product.company}
                   image={product.images[0]}
@@ -174,8 +174,8 @@ const Home = () => {
 
             <div className="col-md-9">
               <Slider {...settings} className="productSlider">
-                {products.map((product) => (
-                  <div className="item">
+                {products.map((product, index) => (
+                  <div className="item" key={index}>
                     <Product
                       tag={product.company}
                       image={product.images[0]}

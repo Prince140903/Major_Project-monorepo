@@ -42,6 +42,8 @@ export const deleteImages = async (url, image) => {
 
 export const postData = async (url, formData) => {
   try {
+    const fullUrl = `${baseUrl}${url}`;
+    console.log("Full URL:", fullUrl); // Log the full URL
     const res = await axios.post(`${baseUrl}${url}`, formData);
     return res.data;
   } catch (error) {
@@ -56,3 +58,22 @@ export const postData = async (url, formData) => {
     }
   }
 };
+
+// export const postData = async (url, data, token = null) => {
+//   try {
+//     const headers = {
+//       "Content-Type": "application/json",
+//     };
+
+//     if (token) {
+//       headers["Authorization"] = `Bearer ${token}`; // Attach Firebase token
+//     }
+//     console.log("Url: ", url);
+//     const response = await axios.post(url, data, { headers });
+//     console.log(response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("API Error:", error.response?.data || error.message);
+//     return { error: true, msg: "Server error occurred" };
+//   }
+// };

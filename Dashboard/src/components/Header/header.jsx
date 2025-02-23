@@ -176,12 +176,19 @@ const Header = () => {
                     {Context?.user?.image !== "" ? (
                       <UserImg img={Context?.user.images} width="40" />
                     ) : (
-                      Context?.user?.userName.charAt(0)
+                      // Context?.user?.userName.charAt(0)
+                      ""
                     )}
 
                     <div className="userInfo">
-                      <h4>{Context?.user?.userName}</h4>
-                      <p className="mb-0">{Context?.user?.email}</p>
+                      <h4>
+                        {Context?.user?.userName
+                          ? Context?.user?.userName
+                          : Context?.user?.name}
+                      </h4>
+                      <p className="mb-0">
+                        {Context?.user?.email?.toLowerCase() ?? ""}
+                      </p>
                     </div>
                   </Button>
                   <Menu

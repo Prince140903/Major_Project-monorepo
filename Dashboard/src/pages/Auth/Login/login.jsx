@@ -12,6 +12,9 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from "../../../firebase";
 
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: "select_account", //force account selection
+});
 const auth = getAuth(firebaseApp);
 
 const Login = () => {
@@ -133,15 +136,16 @@ const Login = () => {
           password: null,
           images: user.providerData[0]?.photoURL || "",
           phone: user.providerData[0]?.phoneNumber || "",
-          isAdmin:true
+          isAdmin: true,
         };
 
         // Send data to backend API
-        postData("api/users/authWithGoogle", fields).then((res) => {
+        postData("/api/users/authWithGoogle", fields).then((res) => {
           try {
             if (!res.error) {
               localStorage.setItem("token", res.token);
-              console.log(res?.user)
+              // console.log(res?.user)
+
               const userData = {
                 name: res.user?.name,
                 email: res.user?.email,
@@ -149,7 +153,7 @@ const Login = () => {
                 image: res?.user?.images?.length > 0 ? res?.user?.image[0] : "",
                 isAdmin: res.user?.isAdmin,
               };
-              localStorage.setItem("users", JSON.stringify(userData)); // Fixed incorrect variable
+              localStorage.setItem("user", JSON.stringify(userData)); // Fixed incorrect variable
 
               // Show success alert
               Context.setAlertBox({
@@ -164,7 +168,6 @@ const Login = () => {
                 setIsLoading(false);
 
                 // ✅ Close Popup if Opened
-                
               }, 2000);
             } else {
               // Show error alert
