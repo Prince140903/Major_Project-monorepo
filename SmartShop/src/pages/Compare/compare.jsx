@@ -21,7 +21,7 @@ const Compare = () => {
     const fetchProducts = async () => {
       try {
         const Prods = await fetchDataFromApi(
-          `/api/products/filter?search=${searchQuery}&company=Amazon&limit=5&selection=${selection}`
+          `/api/products/filter?search=${searchQuery}&company=amazon&limit=5&selection=${selection}`
         );
 
         const { products, total } = Prods;
@@ -46,9 +46,8 @@ const Compare = () => {
   useEffect(() => {
     const fetchProducts2 = async () => {
       try {
-        console.log(selection);
         const Prods = await fetchDataFromApi(
-          `/api/products/filter?search=${searchQuery}&company=Flipkart&limit=5&selection=${selection}`
+          `/api/products/filter?search=${searchQuery}&company=flipkart&limit=5&selection=${selection}`
         );
 
         const { products, total } = Prods;
@@ -110,7 +109,7 @@ const Compare = () => {
       <div className="compareWrapper">
         <div className="container-fluid">
           <h2 className="hd mb-0 mt-4">Compare</h2>
-          <div className="searchSection w-100">
+          <div className="searchSection w-100 pb-4">
             <input
               type="text"
               name="search"
@@ -155,8 +154,8 @@ const Compare = () => {
                       className="w-100 drop"
                     >
                       <MenuItem value="All">All</MenuItem>
-                      <MenuItem value="Amazon">Amazon</MenuItem>
-                      <MenuItem value="Flipkart">Flipkart</MenuItem>
+                      <MenuItem value="amazon">Amazon</MenuItem>
+                      <MenuItem value="flipkart">Flipkart</MenuItem>
                     </Select>
                   </FormControl>
                 </div>
@@ -225,7 +224,7 @@ const Compare = () => {
                   </div>
                 ) : (
                   <div className="products">
-                    <h2>Product not found</h2>
+                    <h2>Product 1</h2>
                   </div>
                 )}
               </div>
@@ -281,7 +280,7 @@ const Compare = () => {
                   </div>
                 ) : (
                   <div className="products">
-                    <h2>Product not found</h2>
+                    <h2>Product 2</h2>
                   </div>
                 )}
               </div>

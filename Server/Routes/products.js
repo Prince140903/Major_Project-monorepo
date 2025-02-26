@@ -96,11 +96,14 @@ router.post("/create", async (req, res) => {
       discount_price: req.body.discount_price,
       product_link: req.body.product_link,
       images: req.body.images,
+      description: req.body.description,
+      tags: Array.isArray(req.body.tags) ? req.body.tags : [],
     };
   } else {
     console.log("error");
   }
 
+  console.log("product: ", prodObj);
   let product = new Product(prodObj);
 
   if (!product) {
@@ -111,6 +114,7 @@ router.post("/create", async (req, res) => {
   }
 
   product = await product.save();
+  console.log("Product after save: ", product);
   imagesArr = [];
 
   res.status(201).json(product);
@@ -196,15 +200,15 @@ router.delete("/:id", async (req, res) => {
 
   const deletedProd = await Product.findByIdAndDelete(req.params.id);
 
-  if(!deletedProd) {
-    res.status(404).json({message: "The product not found!", success: false});
+  if (!deletedProd) {
+    res.status(404).json({ message: "The product not found!", success: false });
   }
 
   res.status(200).json({
     success: true,
     msg: "Product Deleted",
     data: deletedProd,
-  })
+  });
 });
 
 module.exports = router;

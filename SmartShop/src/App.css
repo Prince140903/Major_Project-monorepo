@@ -10,38 +10,37 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  font-size : 20px;
+  font-size: 20px;
 }
 
 #root {
   zoom: 0.75;
 }
 
-.transition{
+.transition {
   transition: all 0.3s ease-in-out;
 }
-.cursor{
+.cursor {
   cursor: pointer;
 }
 
 .bg-g,
-.bg-success{
+.bg-success {
   background-color: #3bb77e;
 }
 
-.text-g{
+.text-g {
   color: #3bb77e;
 }
 
-
-.text-muted{
-    color: #B6B6b6;
-}    
+.text-muted {
+  color: #b6b6b6;
+}
 .container-fluid {
   padding: 0px 45px;
 }
 
-.hd{
+.hd {
   font-size: 38px;
   font-weight: 600;
   margin-bottom: 25px;
@@ -52,44 +51,44 @@ body {
   padding: 1px;
   margin-right: 10px;
 }
-.btn-border{
+.btn-border {
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   padding: 10px 25px !important;
   border-radius: 5px !important;
   color: #1f1e1e !important;
 }
 
-.btn-border svg{
+.btn-border svg {
   opacity: 0.5;
 }
 
-.btn-border:hover{
+.btn-border:hover {
   border: 1px solid #3bb73b !important;
   background: #3bb73b !important;
   color: #fff !important;
 }
-.btn-border:hover svg{
+.btn-border:hover svg {
   opacity: 1 !important;
 }
 
-.btn-g{
+.btn-g {
   background: #3bb73b !important;
   padding: 10px 25px !important;
   border-radius: 10px !important;
   color: #fff !important;
   text-transform: capitalize !important;
 }
-.btn-lg{
+.btn-lg {
   font-size: 24px !important;
   padding: 10px 25px !important;
 }
 
-.btn-g a{
+.btn-g a {
   text-decoration: none !important;
   color: #fff !important;
 }
 
-.btn-g:hover{
+.btn-g:hover {
   background: #fdc040 !important;
   color: #000 !important;
 }
@@ -111,17 +110,17 @@ body {
   opacity: 0;
 }
 [tooltip]::before {
-  content: '';
+  content: "";
   border: 5px solid transparent; /* opinion 4 */
   z-index: 1001; /* absurdity 1 */
 }
 [tooltip]::after {
   content: attr(tooltip); /* magic! */
-  
+
   /* most of the rest of this is opinion */
   font-family: Helvetica, sans-serif;
   text-align: center;
-  
+
   /* 
     Let the content set the size of the tooltips 
     but this will also keep them from being obnoxious
@@ -132,8 +131,8 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 1ch 1.5ch;
-  border-radius: .3ch;
-  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
+  border-radius: 0.3ch;
+  box-shadow: 0 1em 2em -0.5em rgba(0, 0, 0, 0.35);
   background: #3bb77e;
   color: #fff;
   z-index: 1000; /* absurdity 2 */
@@ -146,8 +145,8 @@ body {
 }
 
 /* don't show empty tooltips */
-[tooltip='']::before,
-[tooltip='']::after {
+[tooltip=""]::before,
+[tooltip=""]::after {
   display: none !important;
 }
 
@@ -167,7 +166,7 @@ body {
 [tooltip][flow^="up"]::before,
 [tooltip][flow^="up"]::after {
   left: 50%;
-  transform: translate(-50%, -.5em);
+  transform: translate(-50%, -0.5em);
 }
 
 /* FLOW: DOWN */
@@ -182,7 +181,7 @@ body {
 [tooltip][flow^="down"]::before,
 [tooltip][flow^="down"]::after {
   left: 50%;
-  transform: translate(-50%, .5em);
+  transform: translate(-50%, 0.5em);
 }
 
 /* FLOW: LEFT */
@@ -191,12 +190,12 @@ body {
   border-right-width: 0;
   border-left-color: #333;
   left: calc(0em - 5px);
-  transform: translate(-.5em, -50%);
+  transform: translate(-0.5em, -50%);
 }
 [tooltip][flow^="left"]::after {
   top: 50%;
   right: calc(100% + 5px);
-  transform: translate(-.5em, -50%);
+  transform: translate(-0.5em, -50%);
 }
 
 /* FLOW: RIGHT */
@@ -205,30 +204,30 @@ body {
   border-left-width: 0;
   border-right-color: #3bb77e;
   right: calc(0em - 5px);
-  transform: translate(.5em, -50%);
+  transform: translate(0.5em, -50%);
 }
 [tooltip][flow^="right"]::after {
   top: 50%;
   left: calc(100% + 5px);
-  transform: translate(.5em, -50%);
+  transform: translate(0.5em, -50%);
 }
 
 /* KEYFRAMES */
 @keyframes tooltips-vert {
   to {
-    opacity: .9;
+    opacity: 0.9;
     transform: translate(-50%, 0);
   }
 }
 
 @keyframes tooltips-horz {
   to {
-    opacity: .9;
+    opacity: 0.9;
     transform: translate(0, -50%);
   }
 }
 
-/* FX All The Things */ 
+/* FX All The Things */
 [tooltip]:not([flow]):hover::before,
 [tooltip]:not([flow]):hover::after,
 [tooltip][flow^="up"]:hover::before,
@@ -245,16 +244,30 @@ body {
   animation: tooltips-horz 300ms ease-out forwards;
 }
 
-.price{
-    font-size: 25px;
-    margin-right: 20px;
+.price {
+  font-size: 25px;
+  margin-right: 20px;
 }
 
-.oldPrice{
-  
-    font-size: 20px;
-    opacity: 0.6;
-    color:#000;
-    text-decoration: line-through;
+.oldPrice {
+  font-size: 20px;
+  opacity: 0.6;
+  color: #000;
+  text-decoration: line-through;
 }
 
+.lazyload-wrapper {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.lazyload-wrapper img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}

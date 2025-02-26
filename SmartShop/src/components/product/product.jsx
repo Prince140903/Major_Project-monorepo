@@ -11,37 +11,34 @@ import LazyLoad from "react-lazyload";
 const Product = (props) => {
   return (
     <div>
-      <span className={`badge ${props.tag}`}>{props.tag}</span>
+      <LazyLoad>
+        <span className="badge new">{props.tag}</span>
+        <img
+          src={props.image}
+          onError={(e) =>
+            (e.target.src = "https://i.ibb.co/GQmxxNg/images.png")
+          }
+        />
+      </LazyLoad>
 
-      <div className="d-flex align-items-center">
-        <LazyLoad>
-          <img
-            src={props.image}
-            onError={(e) =>
-              (e.target.src = "https://i.ibb.co/GQmxxNg/images.png")
-            }
-          />
-        </LazyLoad>
-
-        <div className="overlay transition">
-          <ul className="list list-inline mb-0">
-            <li className="list-inline-item">
-              <a className="cursor" tooltip="Add to Wishlist ">
-                <FavoriteBorderIcon />
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a className="cursor" tooltip="Compare">
-                <CompareArrowsIcon />
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a className="cursor" tooltip="Quick View">
-                <VisibilityIcon />
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div className="overlay transition">
+        <ul className="list list-inline mb-0">
+          <li className="list-inline-item">
+            <a className="cursor" tooltip="Add to Wishlist ">
+              <FavoriteBorderIcon />
+            </a>
+          </li>
+          <li className="list-inline-item">
+            <a className="cursor" tooltip="Compare">
+              <CompareArrowsIcon />
+            </a>
+          </li>
+          <li className="list-inline-item">
+            <a className="cursor" tooltip="Quick View">
+              <VisibilityIcon />
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div className="info">
@@ -57,7 +54,10 @@ const Product = (props) => {
             <span className="price text-g font-weight-bold ">
               ₹ {props.actual_price}
             </span>
-            <span className="oldPrice">₹ {props.discount_price}</span>
+            <span className="oldPrice">
+              ₹ {props.discount_price}
+              {props.color}
+            </span>
           </div>
 
           <Button className=" btn-g  ml-5 transition">

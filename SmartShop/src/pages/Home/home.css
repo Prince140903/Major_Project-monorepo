@@ -29,9 +29,8 @@
 }
 
 .homeProducts .productRow .item {
-  /*use for makiing boxes which are needed 5 . check for cat slider for Ak*/
   width: 20% !important;
-  height: 20% !important;
+  height: auto !important;
   padding: 15px 15px;
   display: flex;
   align-items: center;
@@ -39,8 +38,8 @@
   overflow: hidden;
 }
 
-.homeProducts .productRow .item .productThumb {
-  object-fit: cover !important;
+.homeProducts .productRow .item .prod-img img {
+  object-fit: contain !important;
   width: 100% !important;
   height: 100% !important;
 }

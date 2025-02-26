@@ -118,7 +118,6 @@ const Home = () => {
           </div>
 
           <div className="productRow">
-            {/* {console.log(products[0])} */}
             {products.map((product, index) => (
               <div className="item" key={index}>
                 <Product
@@ -128,7 +127,7 @@ const Home = () => {
                   ratings={product.ratings}
                   actual_price={product.actual_price}
                   discount_price={product.discount_price}
-                  className="prod"
+                  className="prod-img"
                 />
               </div>
             ))}
@@ -139,17 +138,6 @@ const Home = () => {
         <div className="container-fluid">
           <div className="d-flex align-items-center ml-auto">
             <h2 className="hd mb-0 mt-0">Daily Best Sells</h2>
-            {/* <ul className="list list-inline ml-auto filterTab mb-0">
-              <li className="list list-inline-item">
-                <a className="cursor">Feature</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">Popular</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">New Added</a>
-              </li>
-            </ul> */}
             <Box sx={{ width: "100%" }}>
               <Tabs
                 value={selection}
@@ -183,6 +171,7 @@ const Home = () => {
                       ratings={product.ratings}
                       actual_price={product.actual_price}
                       discount_price={product.discount_price}
+                      className="prod-img"
                     />
                   </div>
                 ))}

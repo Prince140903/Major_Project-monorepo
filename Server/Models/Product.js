@@ -29,6 +29,16 @@ const productSchema = mongoose.Schema(
       type: String,
     },
     images: [{ type: String }],
+    description: {
+      type: String,
+    },
+    delivary: {
+      type: Number,
+    },
+    tags: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true, collection: "All Products" }
 );

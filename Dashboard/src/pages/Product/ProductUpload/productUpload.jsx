@@ -30,6 +30,7 @@ const ProductUpload = () => {
   const [previews, setPreviews] = useState([]);
   const [categoryVal, setCategoryVal] = useState("");
   const [subCatVal, setSubCatVal] = useState("");
+  const [tagInput, setTagInput] = useState("");
   const Context = useContext(MyContext);
   const formData = new FormData();
   const history = useNavigate();
@@ -45,6 +46,8 @@ const ProductUpload = () => {
     ratings: 0.0,
     no_of_ratings: 0,
     product_link: "",
+    tags: [],
+    description: "",
   });
 
   useEffect(() => {
@@ -219,6 +222,29 @@ const ProductUpload = () => {
     }));
   };
 
+  const handleInputChange = (e) => {
+    setTagInput(e.target.value);
+  };
+
+  const handleAddTag = () => {
+    if (tagInput.trim() === "") return; // Prevent empty tag
+    if (formFields.tags.includes(tagInput.trim())) return; // Prevent duplicates
+
+    setFormFields((prev) => ({
+      ...prev,
+      tags: [...prev.tags, tagInput.trim()], // Add new tag to the array
+    }));
+
+    setTagInput(""); // Clear input field
+  };
+
+  const handleRemoveTag = (index) => {
+    setFormFields((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((_, i) => i !== index), // Remove tag by index
+    }));
+  };
+
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === "light"
@@ -286,6 +312,9 @@ const ProductUpload = () => {
                     placeholder="Type here"
                     rows={2}
                     cols={10}
+                    name="description"
+                    value={formFields.description}
+                    onChange={changeInput}
                   />
                 </div>
 
@@ -326,15 +355,41 @@ const ProductUpload = () => {
                       <input type="number" placeholder="Enter value" />
                     </div>
                   </div>
-                </div>
-                <div className="form-group">
-                  <label>TAGS</label>
-                  <textarea
-                    type="text"
-                    placeholder="Type here"
-                    rows={2}
-                    cols={8}
-                  />
+                  <div className="col-sm-9">
+                    <div className="form-group">
+                      <label>TAGS</label>
+                      <input
+                        type="text"
+                        placeholder="Type here"
+                        value={tagInput}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-3 d-flex align-items-center pt-3">
+                    <Button
+                      className="btn-blue p-2 w-100"
+                      onClick={handleAddTag}
+                    >
+                      ADD
+                    </Button>
+                  </div>
+
+                  {/* Preview Section */}
+                  <div className="col-12 mt-3">
+                    {formFields.tags.map((tag, index) => (
+                      <span key={index} className="btn btn-blue m-1">
+                        {tag}{" "}
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger ml-1"
+                          onClick={() => handleRemoveTag(index)}
+                        >
+                          x
+                        </button>
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </form>
             </div>

@@ -7,3 +7,4 @@ export { default as Banners } from "./banners/banners";
 export { default as Newsletter } from "./newsletter/newsletter";
 export { default as Product } from "./product/product";
 export { default as TopProducts } from "./TopProducts/top";
+export { default as SearchBar } from "./SearchBar/searchBar";
