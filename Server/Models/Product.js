@@ -32,7 +32,7 @@ const productSchema = mongoose.Schema(
     description: {
       type: String,
     },
-    delivary: {
+    delivery: {
       type: Number,
     },
     tags: {

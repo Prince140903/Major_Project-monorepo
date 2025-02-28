@@ -36,7 +36,7 @@ const Cart = () => {
                 <div className="left">
                   <h1 className="hd mb-0">Your Cart</h1>
                   <p>
-                    There are <span className="text-g">3</span> products in your
+                    There are <span className="text-g">4</span> products in your
                     cart
                   </p>
                 </div>
@@ -71,7 +71,7 @@ const Cart = () => {
                             </div>
                             <div className="info pl-4">
                               <Link>
-                                <h4>Field Roast Chao Cheese Creamy Origin</h4>
+                                <h4>Tamarind Sticks Sour And Mint</h4>
                               </Link>
                               <Rating
                                 name="half-rating-read"
@@ -85,13 +85,13 @@ const Cart = () => {
                         </td>
 
                         <td>
-                          <span>₹22.1</span>
+                          <span>₹220.10</span>
                         </td>
                         <td>
                           <QuantityBox />
                         </td>
                         <td>
-                          <span className="text-g">₹22.51</span>
+                          <span className="text-g">₹220.10</span>
                         </td>
                         <td>
                           <DeleteOutlinedIcon />
@@ -108,7 +108,7 @@ const Cart = () => {
                             </div>
                             <div className="info pl-4">
                               <Link>
-                                <h4>Field Roast Chao Cheese Creamy Origin</h4>
+                                <h4>Garlic Roast Peanut Creamy Paste</h4>
                               </Link>
                               <Rating
                                 name="half-rating-read"
@@ -122,13 +122,13 @@ const Cart = () => {
                         </td>
 
                         <td>
-                          <span>₹22.1</span>
+                          <span>₹212.10</span>
                         </td>
                         <td>
                           <QuantityBox />
                         </td>
                         <td>
-                          <span className="text-g">₹22.51</span>
+                          <span className="text-g">₹424.20</span>
                         </td>
                         <td>
                           <DeleteOutlinedIcon />
@@ -145,7 +145,7 @@ const Cart = () => {
                             </div>
                             <div className="info pl-4">
                               <Link>
-                                <h4>Field Roast Chao Cheese Creamy Origin</h4>
+                                <h4>Roast Chao Cheese Sour Origin</h4>
                               </Link>
                               <Rating
                                 name="half-rating-read"
@@ -159,13 +159,13 @@ const Cart = () => {
                         </td>
 
                         <td>
-                          <span>₹22.1</span>
+                          <span>₹122.10</span>
                         </td>
                         <td>
                           <QuantityBox />
                         </td>
                         <td>
-                          <span className="text-g">₹22.51</span>
+                          <span className="text-g">₹122.10</span>
                         </td>
                         <td>
                           <DeleteOutlinedIcon />
@@ -196,13 +196,13 @@ const Cart = () => {
                         </td>
 
                         <td>
-                          <span>₹22.1</span>
+                          <span>₹150.50</span>
                         </td>
                         <td>
                           <QuantityBox />
                         </td>
                         <td>
-                          <span className="text-g">₹22.51</span>
+                          <span className="text-g">₹451.50</span>
                         </td>
                         <td>
                           <DeleteOutlinedIcon />
@@ -219,7 +219,7 @@ const Cart = () => {
                 <div className="d-flex align-items-center mb-4">
                   <h5 className="mb-0 text-muted">Subtotal</h5>
                   <h3 className="ml-auto mb-0 font-weight-bold">
-                    <span className="text-g">₹22.31</span>
+                    <span className="text-g">₹1217.90</span>
                   </h3>
                 </div>
                 <div className="d-flex align-items-center mb-4">
@@ -229,15 +229,15 @@ const Cart = () => {
                   </h3>
                 </div>
                 <div className="d-flex align-items-center mb-4">
-                  <h5 className="mb-0 text-muted">Estimate for</h5>
+                  <h5 className="mb-0 text-muted">Discounts</h5>
                   <h3 className="ml-auto mb-0 font-weight-bold">
-                    <span className="">United Kingdom</span>
+                    <span className="">-₹250.00</span>
                   </h3>
                 </div>
                 <div className="d-flex align-items-center mb-4">
                   <h5 className="mb-0 text-muted">Total</h5>
                   <h3 className="ml-auto mb-0 font-weight-bold">
-                    <span className="text-g">₹22.31</span>
+                    <span className="text-g">₹967.90</span>
                   </h3>
                 </div>
                 <br />

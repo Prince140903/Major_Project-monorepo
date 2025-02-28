@@ -90,7 +90,7 @@ const Home = () => {
     <>
       <HomeSliderBanner />
       <CatSlider />
-      <Banners />
+      {/* <Banners /> */}
       <section className="homeProducts">
         <div className="container-fluid">
           <div className="d-flex align-items-center">
@@ -163,7 +163,7 @@ const Home = () => {
             <div className="col-md-9">
               <Slider {...settings} className="productSlider">
                 {products.map((product, index) => (
-                  <div className="item" key={index}>
+                  <div className="item pl-4" key={index}>
                     <Product
                       tag={product.company}
                       image={product.images[0]}
@@ -180,7 +180,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="topProductsSection">
+      {/* <section className="topProductsSection">
         <div className="container-fluid">
           <div className="row">
             <div className="col">
@@ -197,7 +197,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       <section className="newsLetterSection">
         <div className="container-fluid ">
           <div className="box d-flex align-items-center">

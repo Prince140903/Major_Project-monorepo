@@ -23,7 +23,6 @@ export const fetchDataFromApi = async (url) => {
 export const uploadImage = async (url, formData) => {
   try {
     const response = await axios.post(`${baseUrl}${url}`, formData);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Upload failed", error.response?.data || error.message);
@@ -32,11 +31,28 @@ export const uploadImage = async (url, formData) => {
 };
 
 export const deleteData = async (url) => {
-  const { res } = await axios.delete(`${baseUrl}${url}`, params);
-  return res;
+  const res = await axios.delete(`${baseUrl}${url}`, params);
+  return res.data;
 };
 
 export const deleteImages = async (url, image) => {
-  const { res } = await axios.delete(`${baseUrl}${url}`, image);
-  return res;
+  const res = await axios.delete(`${baseUrl}${url}`, image);
+  return res.data;
+};
+
+export const postData = async (url, formData) => {
+  try {
+    const res = await axios.post(`${baseUrl}${url}`, formData);
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return { error: true, msg: error.response.data.message };
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+      return { error: true, msg: "No response received from the server." };
+    } else {
+      console.error("Request setup error:", error.message);
+      return { error: true, msg: "Error setting up the request." };
+    }
+  }
 };

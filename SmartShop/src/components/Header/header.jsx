@@ -5,8 +5,10 @@ import { Select } from "../../components";
 import Button from "@mui/material/Button";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { Link } from "react-router-dom";
+import { fetchDataFromApi } from "../../utils/api.js";
 
 import Nav from "./nav/nav.jsx";
+import { capitalize } from "@mui/material";
 
 const Header = () => {
   const [isOpenDropDown, setisOpenDropDown] = useState(false);
@@ -14,6 +16,8 @@ const Header = () => {
   const headerRef = useRef();
 
   const [categories, setcategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState([]);
 
   const stateList = [
     "Andhra Pradesh",
@@ -47,15 +51,45 @@ const Header = () => {
   ];
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      let position = window.pageYOffset;
-      if (position > 100) {
-        headerRef.current.classList.add("fixed");
-      } else {
-        headerRef.current.classList.remove("fixed");
+    const fetchProducts = async () => {
+      try {
+        const Prods = await fetchDataFromApi(
+          `/api/products/filter?search=${searchQuery}&limit=5`
+        );
+
+        const { products, total } = Prods;
+
+        if (!products || products.length === 0) {
+          setProducts([]);
+          return;
+        }
+        setProducts(products);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          console.warn("API returned 404: Not Found.");
+          setProducts([]);
+        } else {
+          console.error("Error fetching search results:", error);
+        }
       }
-    });
-  }, []);
+    };
+    fetchProducts();
+  }, [searchQuery]);
+
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // useEffect(() => {
+  //   window.addEventListener("scroll", () => {
+  //     let position = window.pageYOffset;
+  //     if (position > 100) {
+  //       headerRef.current.classList.add("fixed");
+  //     } else {
+  //       headerRef.current.classList.remove("fixed");
+  //     }
+  //   });
+  // }, []);
 
   return (
     <>
@@ -75,11 +109,34 @@ const Header = () => {
                     icon={false}
                   />
                   <div className="search">
-                    <input type="text" placeholder="Search for items..." />
+                    <input
+                      type="text"
+                      placeholder="Search for items..."
+                      value={searchQuery}
+                      onChange={handleSearch}
+                    />
                     <DynamicIcon
                       iconName="Search"
                       className="searchIcon cursor"
                     />
+                    {searchQuery && (
+                      <div className="search-dropdown">
+                        {products.length > 0 ? (
+                          products.map((product, index) => (
+                            <div
+                              key={index}
+                              className="search-item"
+                              onClick={() => setSearchQuery(product.name)}
+                            >
+                              {product.name} &nbsp;{" "}
+                              <p>{capitalize(product.company)}</p>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="no-results">No results found</div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

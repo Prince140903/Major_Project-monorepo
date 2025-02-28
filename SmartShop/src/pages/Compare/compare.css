@@ -124,3 +124,120 @@
   transition: all 0.3s ease-in-out !important;
   position: relative;
 }
+
+/* Hewadadba */
+
+.comparison-wrapper {
+  display: flex; /* Places both sections side by side */
+  justify-content: center;
+  gap: 40px; /* Adds space between the sections */
+  padding: 20px;
+  background: #f8f8f8;
+  /* border: 1px solid #000; */
+  margin: 30px 10px;
+}
+
+.comparison-section {
+  background: #f8f9fa !important;
+  text-align: center;
+  width: 550px; /* Sets a fixed width for each section */
+}
+
+.comparison-section.addition {
+  width: 300px !important;
+}
+
+.comparison-section h2 {
+  /* margin-bottom: 40px; */
+  margin: 25px 15px;
+  font-size: 40px;
+  color: #333;
+}
+
+.comparison-section .column {
+  display: flex;
+  flex-direction: column; /* Stacks elements vertically */
+  gap: 10px;
+  background: #efefef;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-section .column .row {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.comparison-section .column .row:nth-child(even) {
+  background-color: #f3f0e9;
+}
+
+.comparison-section .column .row.space {
+  height: 113px;
+}
+
+.comparison-section .column .row .lazyload-wrapper {
+  height: 400px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.comparison-section .column .row .lazyload-wrapper img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.comparison-section .column .row strong {
+  display: block;
+  font-size: 18px;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.comparison-section .column .row p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.comparison-section .column.col-bar {
+  /* min-height: 5rem !important; */
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  min-width: 200px !important;
+}
+
+.comparison-section .column.col-bar .row {
+  height: 113px !important;
+  background-color: #444444;
+  color: #dddddd;
+  /* padding: 30px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.comparison-section .column.col-bar .row:nth-child(even) {
+  background-color: #333333;
+}
+
+.comparison-section .column.col-bar .row .icon {
+  color: #f3bc2b;
+  margin-bottom: 4px;
+}
+
+.comparison-section .column.col-bar .row.name {
+  height: 425px !important;
+}

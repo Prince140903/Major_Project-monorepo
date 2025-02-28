@@ -21,10 +21,9 @@
 }
 
 .homeProducts .productRow {
-  /*use for making boxes*/
   display: flex;
   padding: 30px 0px;
-  margin: 0px -15px;
+  margin: 0px -25px;
   flex-wrap: wrap;
 }
 
@@ -36,6 +35,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  margin: 10px 0px 10px 0px;
 }
 
 .homeProducts .productRow .item .prod-img img {

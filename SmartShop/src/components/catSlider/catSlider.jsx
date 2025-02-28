@@ -1,20 +1,32 @@
-import React, { useState, useEffect } from "react";
-import Slider from "react-slick";
+import React, { useState, useEffect, useContext } from "react";
 import "./catSlider.css";
-import images from "../../constants/images";
-//import { Speed } from "@mui/icons-material";
-//import { Fade } from "@mui/material";
+import Slider from "react-slick";
+import { MyContext } from "../../App";
+import { fetchDataFromApi } from "../../utils/api";
+import { capitalize } from "@mui/material";
 
 const CatSlider = () => {
+  const [catData, setCatData] = useState([]);
+
+  const Context = useContext(MyContext);
+
+  useEffect(() => {
+    Context.setProgress(20);
+    fetchDataFromApi("/api/category").then((res) => {
+      setCatData(res);
+      Context.setProgress(100);
+    });
+  }, []);
+
   var settings = {
     dots: false,
     infinite: true,
     Speed: 500,
-    slidesToShow: 10,
+    slidesToShow: 8,
     Fade: false,
     arrows: true,
     autoplay: 2000,
-    centerMode:true
+    centerMode: false,
   };
 
   return (
@@ -27,91 +39,27 @@ const CatSlider = () => {
             className="cat_Slider_Main"
             id="cat_Slider_Main"
           >
-            <div className="item ">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
-            <div className="item">
-              <div className="info">
-                <img src={images.cat13} />
-                <h5>Cake & Milk</h5>
-                <p>26 items</p>
-              </div>
-            </div>
-
+            {catData?.categoryList?.map((cat, index) => {
+              return (
+                <div className="item" key={index}>
+                  <div
+                    className="info"
+                    style={{
+                      mixBlendMode: "multiply",
+                      background: `${cat.color}`,
+                    }}
+                  >
+                    <img src={cat?.images?.[0]} alt="category" />
+                    <h5>{capitalize(cat?.name)}</h5>
+                  </div>
+                </div>
+              );
+            })}
           </Slider>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default CatSlider;
