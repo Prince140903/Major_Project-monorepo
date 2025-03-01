@@ -1,34 +1,73 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { React, useRef, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import "./detail.css";
-import Rating from "@mui/material/Rating";
-import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.css";
-import images from "../../constants/images";
+import InnerImageZoom from "react-inner-image-zoom";
 import Slider from "react-slick";
-import { useRef, useState } from "react";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
-import { Button } from "@mui/material";
+import { Button, capitalize, Rating } from "@mui/material";
 import { Product } from "../../components";
-
+import { NotFound } from "../../pages";
+import { fetchDataFromApi } from "../../utils/api";
+import { DynamicIcon } from "../../constants";
 
 const DetailsPage = () => {
-  const [zoomImage, setZoomImage] = useState(
-    `https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg`
-  );
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
+
   const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
   const [smlImageSize, setSmlImageSize] = useState([150, 150]);
+  const [zoomImage, setZoomImage] = useState("");
 
-  const [activeSize, setActiveSize] = useState(0);
   const [inputValue, setinputValue] = useState(1);
   const [activeTabs, setActivetabs] = useState(0);
 
   const zoomSlider = useRef();
   const zoomSliderBig = useRef();
+
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await fetchDataFromApi(`/api/products/${id}`); // Fetching product data
+        setProduct(response);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
+    };
+
+    fetchProductDetails();
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const Prods = await fetchDataFromApi(`/api/products/filter`);
+
+        const { products, total } = Prods;
+
+        if (!products || products.length === 0) {
+          setProducts([]);
+          return;
+        }
+        setProducts(products);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          console.warn("API returned 404: Not Found.");
+          setProducts([]);
+        } else {
+          console.error("Error fetching search results:", error);
+        }
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (product?.images?.length > 0) {
+      setZoomImage(product.images[0]);
+    }
+  }, [product]);
 
   var settings2 = {
     dots: false,
@@ -39,7 +78,6 @@ const DetailsPage = () => {
     fade: false,
     arrows: false,
   };
-
   var settings = {
     dots: false,
     infinite: false,
@@ -65,33 +103,30 @@ const DetailsPage = () => {
     zoomSliderBig.current.slickGoTo(index);
   };
 
-  const isActive = (index) => {
-    setActiveSize(index);
-  };
-
   const plus = () => {
     setinputValue(inputValue + 1);
   };
-
   const minus = () => {
     if (inputValue !== 0) {
       setinputValue(inputValue - 1);
     }
   };
 
+  if (!product) return <NotFound />;
+
   return (
-    <secction className="detailspage mb-5">
+    <section className="detailspage mb-5">
       <div className="breadcrumbWrapper mb-4">
         <div className="container-fluid">
           <ul className="breadcrumb breadcrumb2  mb-0">
             <li>
-              <Link>Home </Link>
+              <Link to={"/"}>Home </Link>
             </li>
             <li>
-              <Link>Vegetables & Tubers</Link>
+              <Link>{capitalize(product.main_category)}</Link>
             </li>
 
-            <li>Seeds Of Change Organic</li>
+            <li>{capitalize(product.sub_category)}</li>
           </ul>
         </div>
       </div>
@@ -105,234 +140,94 @@ const DetailsPage = () => {
                 className="zoomSliderBig"
                 ref={zoomSliderBig}
               >
-                <div className="item">
-                  <InnerImageZoom
-                    zoomType="hover"
-                    zoomScale={1}
-                    src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
-                    onClick={() => goto(0)}
-                  />
-                </div>
-                <div className="item">
-                  <InnerImageZoom
-                    zoomType="hover"
-                    zoomScale={1}
-                    src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-1-202305292130.jpg?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
-                    onClick={() => goto(1)}
-                  />
-                </div>
-                <div className="item">
-                  <InnerImageZoom
-                    zoomType="hover"
-                    zoomScale={1}
-                    src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-2-202305292130.jpg?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
-                    onClick={() => goto(2)}
-                  />
-                </div>
-                <div className="item">
-                  <InnerImageZoom
-                    zoomType="hover"
-                    zoomScale={1}
-                    src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-3-202305292130.jpg?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
-                    onClick={() => goto(3)}
-                  />
-                </div>
-                <div className="item">
-                  <InnerImageZoom
-                    zoomType="hover"
-                    zoomScale={1}
-                    src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
-                    onClick={() => goto(4)}
-                  />
-                </div>
-                <div className="item">
-                  <InnerImageZoom
-                    zoomType="hover"
-                    zoomScale={1}
-                    src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
-                    onClick={() => goto(5)}
-                  />
-                </div>
+                {product.images.map((img, index) => (
+                  <div className="item" key={index}>
+                    <InnerImageZoom
+                      zoomType="hover"
+                      zoomScale={1}
+                      src={`${img}?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
+                      onClick={() => goto(img, index)}
+                    />
+                  </div>
+                ))}
               </Slider>
             </div>
 
             {/*slider 1*/}
             <Slider {...settings} className="zoomSlider" ref={zoomSlider}>
-              <div className="item">
-                <img
-                  src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                  className="w-100"
-                  onClick={() =>
-                    goto(
-                      "https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg",
-                      0
-                    )
-                  }
-                />
-              </div>
-              <div className="item">
-                <img
-                  src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-1-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                  className="w-100"
-                  onClick={() =>
-                    goto(
-                      "https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-1-202305292130.jpg",
-                      1
-                    )
-                  }
-                />
-              </div>
-              <div className="item">
-                <img
-                  src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-2-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                  className="w-100"
-                  onClick={() =>
-                    goto(
-                      "https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-2-202305292130.jpg",
-                      2
-                    )
-                  }
-                />
-              </div>
-              <div className="item">
-                <img
-                  src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-3-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                  className="w-100"
-                  onClick={() =>
-                    goto(
-                      "https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-3-202305292130.jpg",
-                      3
-                    )
-                  }
-                />
-              </div>
-              <div className="item">
-                <img
-                  src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                  className="w-100"
-                  onClick={() =>
-                    goto(
-                      "https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg",
-                      4
-                    )
-                  }
-                />
-              </div>
-              <div className="item">
-                <img
-                  src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                  className="w-100"
-                  onClick={() =>
-                    goto(
-                      "https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg",
-                      5
-                    )
-                  }
-                />
-              </div>
+              {product.images.map((img, index) => (
+                <div className="item" key={index}>
+                  <img
+                    src={`${img}?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
+                    className="w-100"
+                    onClick={() => goto(img, index)}
+                  />
+                </div>
+              ))}
             </Slider>
           </div>
           {/* productZoom end  here */}
 
           <div className="col-md-7 productInfo ">
             {/* productInfo start here */}
-            <h1>Seeds Of Chnage Organic Quinoa,Brown </h1>
+            <h1>{product.name}</h1>
             <div className="d-flex-align-items-center mb-4 mt-3">
               <Rating
                 name="half-rating-read"
-                defaultValue={4.5}
+                value={Math.round(parseFloat(product.ratings) * 2) / 2}
                 precision={0.5}
                 readOnly
               />
-              <span className="text-muted">(32 rewies)</span>
+              <span className="text-muted pl-3">
+                ({product.no_of_ratings} reviews)
+              </span>
+            </div>
+            <div className="d-flex-align-items-center mb-4 mt-3">
+              <span className="mark pl-3">By {product.company}</span>
             </div>
             <div className="priceSec d-flex align-items-center mb-3">
-              <span className="text-g priceLarge">₹38</span>
+              <span className="text-g priceLarge">
+                ₹ {product.discount_price}
+              </span>
               <div className="ml-2 d-flex column">
-                <span className="text-org">26% Off</span>
+                <span className="text-org">
+                  {(
+                    ((product.actual_price - product.discount_price) /
+                      product.actual_price) *
+                    100
+                  ).toFixed(0)}
+                  % Off
+                </span>
 
-                <span className="OldPrice">₹52</span>
+                <span className="OldPrice">₹ {product.actual_price}</span>
               </div>
             </div>
 
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.Aliquam
-              rem officia,corrupti reiciendis minima nisi modi, quasi,odio minus
-              dolore impedit fuga eum eligendi.
-            </p>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.Aliquam
-              rem officia,corrupti reiciendis minima nisi modi, quasi,odio minus
-              dolore impedit fuga eum eligendi.
-            </p>
-
-            <div className="productSize d-flex align-items-center">
-              <span>Size / Weight:</span>
-              <ul className="list list-inline mb-0 pl-4">
-                <li className="list-inline-item">
-                  <a
-                    className={`tag ${activeSize === 0 ? `active` : ``}`}
-                    onClick={() => isActive(0)}
-                  >
-                    50g
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a
-                    className={`tag ${activeSize === 1 ? `active` : ``}`}
-                    onClick={() => isActive(1)}
-                  >
-                    60g
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a
-                    className={`tag ${activeSize === 2 ? `active` : ``}`}
-                    onClick={() => isActive(2)}
-                  >
-                    80g
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a
-                    className={`tag ${activeSize === 3 ? `active` : ``}`}
-                    onClick={() => isActive(3)}
-                  >
-                    100g
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a
-                    className={`tag ${activeSize === 4 ? `active` : ``}`}
-                    onClick={() => isActive(4)}
-                  >
-                    150g
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <p className="text-muted">{product.description}</p>
 
             <div className="addCartSection pt-4 pb-4 d-flex align-items-center">
               <div className="counterSec mr-3">
-                <input type="number" value={inputValue} />
+                <input type="number" value={inputValue} readOnly />
 
                 <span className="arrow plus" onClick={plus}>
-                  <KeyboardArrowUpIcon />
+                  <DynamicIcon iconName="KeyboardArrowUp" />
                 </span>
                 <span className="arrow minus" onClick={minus}>
-                  <KeyboardArrowDownIcon />
+                  <DynamicIcon iconName="KeyboardArrowDown" />
                 </span>
               </div>
 
               <button className="btn-g btn-lgaddtocartbtn ">
-                <ShoppingCartOutlinedIcon />
+                <DynamicIcon iconName="ShoppingCartOutlined" />
                 Add to Cart
               </button>
               <button className=" btn-lg addtocartbtn ml-3 btn-border">
-                <FavoriteBorderOutlinedIcon />
+                <DynamicIcon iconName="FavoriteBorderOutlined" />
               </button>
               <button className=" btn-lg addtocartbtn ml-3 btn-border">
-                <CompareArrowsOutlinedIcon />
+                <Link to={"/compare"}>
+                  <DynamicIcon iconName="CompareArrowsOutlined" />
+                </Link>
               </button>
 
               {/* productInfo end here */}
@@ -775,28 +670,24 @@ const DetailsPage = () => {
           <h2 className="hd mb-0 mt-0 ">Related Products</h2>
           <br />
           <Slider {...related} className="productSlider">
-            <div className="item">
-              <Product tag="sale" />
-            </div>
-            <div className="item">
-              <Product tag="hot" />
-            </div>
-            <div className="item">
-              <Product tag="new" />
-            </div>
-            <div className="item">
-              <Product tag="sale" />
-            </div>
-            <div className="item">
-              <Product tag="sale" />
-            </div>
-            <div className="item">
-              <Product tag="best" />
-            </div>
+            {products?.length !== 0 &&
+              products.map((prod, index) => (
+                <div className="item" key={index}>
+                  <Product
+                    image={prod.images[0]}
+                    tag={prod.company}
+                    name={prod.name}
+                    ratings={prod.ratings}
+                    actual_price={prod.actual_price}
+                    discount_price={prod.discount_price}
+                    className="prod-img"
+                  />
+                </div>
+              ))}
           </Slider>
         </div>
       </div>
-    </secction>
+    </section>
   );
 };
 

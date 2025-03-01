@@ -92,6 +92,12 @@ body {
   background: #fdc040 !important;
   color: #000 !important;
 }
+
+.link {
+  text-decoration: none !important;
+  color: #000 !important; 
+}
+
 /* START TOOLTIP STYLES */
 [tooltip] {
   position: relative; /* opinion 1 */

@@ -8,7 +8,6 @@ import { Home, Compare, Listing, NotFound, DetailsPage, Cart } from "./pages";
 // import { fetchDataFromApi } from "./utils/api";
 import { Snackbar, Alert } from "@mui/material";
 
-
 export const MyContext = createContext();
 
 function App() {
@@ -74,8 +73,8 @@ function App() {
         <Routes>
           <Route exact={true} path="/" element={<Home />} />
           <Route exact={true} path="/compare" element={<Compare />} />
-          <Route exact={true} path="/product/listing" element={<Listing />} />
-          <Route exact={true} path="/Details" element={<DetailsPage />} />
+          <Route exact={true} path="/products/listing" element={<Listing />} />
+          <Route exact={true} path="/products/:id" element={<DetailsPage />} />
           <Route exact={true} path="/Cart" element={<Cart />} />
           <Route exact={true} path="*" element={<NotFound />} />
         </Routes>

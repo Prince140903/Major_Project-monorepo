@@ -25,7 +25,8 @@ App.use("/api/products", productRoutes);
 App.use("/api/products/filter", productRoutes);
 App.use("/api/category", categoryRoutes);
 App.use("/api/imageUpload", imageUploadRoutes);
-App.use("/:id", productRoutes);
+// App.use("/:id", productRoutes);
+// App.use("/api/products/:id", productRoutes);
 App.use("/api/users", userRoutes);
 App.use((req, res, next) => {
   res.removeHeader("Cross-Origin-Opener-Policy"); // Remove the header

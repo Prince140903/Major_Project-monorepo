@@ -29,6 +29,10 @@
   overflow: hidden;
 }
 
+.item .info {
+  padding: 10px;
+}
+
 .item:hover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.23) !important;
 }
@@ -114,8 +118,8 @@
 .item .brand a {
   text-decoration: none;
 }
-.item .brand .price {
-  font-size: 25px;
+.item .info .price {
+  font-size: 30px !important;
   margin-right: 20px;
 }
 
@@ -126,7 +130,11 @@
   text-decoration: line-through;
 }
 
-.item .button {
+.item .info .btn-g {
+  font-size: 20px;
+}
+
+/* .item .button {
   font-size: 40px;
   color: #3bb77e !important;
   padding: 10px 20px !important;
@@ -138,4 +146,4 @@
 .item button:hover {
   background: #3bb77e !important;
   color: #fff !important;
-}
+} */

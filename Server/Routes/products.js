@@ -176,7 +176,7 @@ router.get("/:id", async (req, res) => {
   if (!product) {
     res
       .status(404)
-      .json({ message: "The product with the givern Id was not found." });
+      .json({ message: "The product with the given Id was not found." });
   }
 
   return res.status(200).send(product);

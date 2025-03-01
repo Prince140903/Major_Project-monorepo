@@ -80,16 +80,9 @@ const Header = () => {
     setSearchQuery(event.target.value);
   };
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", () => {
-  //     let position = window.pageYOffset;
-  //     if (position > 100) {
-  //       headerRef.current.classList.add("fixed");
-  //     } else {
-  //       headerRef.current.classList.remove("fixed");
-  //     }
-  //   });
-  // }, []);
+  const handleSelect = () => {
+    setSearchQuery("");
+  };
 
   return (
     <>
@@ -123,12 +116,14 @@ const Header = () => {
                       <div className="search-dropdown">
                         {products.length > 0 ? (
                           products.map((product, index) => (
-                            <div
-                              key={index}
-                              className="search-item"
-                              onClick={() => setSearchQuery(product.name)}
-                            >
-                              {product.name} &nbsp;{" "}
+                            <div key={index} className="search-item">
+                              <Link
+                                to={`/products/${product._id}`}
+                                className="link"
+                                onClick={handleSelect}
+                              >
+                                {product.name} &nbsp;
+                              </Link>
                               <p>{capitalize(product.company)}</p>
                             </div>
                           ))

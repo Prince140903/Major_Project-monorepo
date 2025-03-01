@@ -10,6 +10,7 @@ import {
 } from "../../components";
 import { images } from "../../constants";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 
 import { Tab, Tabs, Box } from "@mui/material";
 import { fetchDataFromApi } from "../../utils/api.js";
@@ -127,6 +128,7 @@ const Home = () => {
                   ratings={product.ratings}
                   actual_price={product.actual_price}
                   discount_price={product.discount_price}
+                  _id={product._id}
                   className="prod-img"
                 />
               </div>
@@ -171,6 +173,7 @@ const Home = () => {
                       ratings={product.ratings}
                       actual_price={product.actual_price}
                       discount_price={product.discount_price}
+                      _id={product._id}
                       className="prod-img"
                     />
                   </div>

@@ -7,6 +7,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import LazyLoad from "react-lazyload";
+import { Link } from "react-router-dom";
 
 const Product = (props) => {
   return (
@@ -34,9 +35,9 @@ const Product = (props) => {
             </a>
           </li>
           <li className="list-inline-item">
-            <a className="cursor" tooltip="Quick View">
+            <Link to={`/products/${props._id}`} className="link cursor">
               <VisibilityIcon />
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
@@ -60,7 +61,7 @@ const Product = (props) => {
             </span>
           </div>
 
-          <Button className=" btn-g  ml-5 transition">
+          <Button className=" btn-g ml-5 transition">
             <ShoppingCartOutlinedIcon />
             ADD
           </Button>

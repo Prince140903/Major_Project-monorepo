@@ -285,3 +285,10 @@ input[type="number"] {
   padding: 15px 5px;
   padding-right: 25px !important;
 }
+
+.mark {
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #37bb7e;
+  color: #fff;
+}
