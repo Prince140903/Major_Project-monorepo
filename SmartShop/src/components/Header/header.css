@@ -117,7 +117,7 @@ header .headerTabs li span {
 
 .dropdownMenu {
   position: absolute;
-  top: 40px;
+  top: 80px;
   right: 0px;
   width: 200px;
   height: auto;
@@ -186,4 +186,22 @@ header .headerTabs li span {
 .no-results {
   padding: 8px;
   color: gray;
+}
+
+.login-btn {
+  background: #0858f7 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  text-transform: capitalize !important;
+  border-radius: 5px !important;
+}
+
+.userImage {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 70px;
+  border: 1px solid green;
+  padding: 2px;
+  margin-right: 4px;
 }

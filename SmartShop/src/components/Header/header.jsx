@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import "./header.css";
 import { DynamicIcon, images } from "../../constants";
 import { Select } from "../../components";
 import Button from "@mui/material/Button";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api.js";
-
+import { MyContext } from "../../App.jsx";
 import Nav from "./nav/nav.jsx";
 import { capitalize } from "@mui/material";
 
@@ -18,6 +18,8 @@ const Header = () => {
   const [categories, setcategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState([]);
+  const Context = useContext(MyContext);
+  const navigate = useNavigate();
 
   const stateList = [
     "Andhra Pradesh",
@@ -82,6 +84,16 @@ const Header = () => {
 
   const handleSelect = () => {
     setSearchQuery("");
+  };
+
+  const logout = () => {
+    setAnchorEl(null);
+
+    Context.setIsLogin(false);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/auth/signin");
   };
 
   return (
@@ -190,15 +202,32 @@ const Header = () => {
                         </Link>
                       </li>
                       <li className="list-inline-item">
-                        <span
-                          onClick={() => setisOpenDropDown(!isOpenDropDown)}
-                        >
-                          <DynamicIcon
-                            iconName="PersonOutlined"
-                            className="Icon"
-                          />
-                          Account
-                        </span>
+                        {Context.isLogin !== true ? (
+                          <div className="btn">
+                            <Link to="/auth/signin">
+                              <Button className="login-btn">Login</Button>
+                            </Link>
+                          </div>
+                        ) : (
+                          <Button
+                            onClick={() => setisOpenDropDown(!isOpenDropDown)}
+                          >
+                            {Context.user?.image !== 0 ? (
+                              <img
+                                src={Context.user.image}
+                                alt="userImage"
+                                className="userImage"
+                              />
+                            ) : (
+                              <DynamicIcon
+                                iconName="PersonOutlined"
+                                className="Icon"
+                              />
+                            )}
+                            {Context.user.name}
+                          </Button>
+                        )}
+                        {/*  */}
 
                         {isOpenDropDown !== false && (
                           <ul className="dropdownMenu">
@@ -239,7 +268,7 @@ const Header = () => {
                               </Button>
                             </li>
                             <li>
-                              <Button>
+                              <Button onClick={logout}>
                                 <DynamicIcon
                                   iconName="LogoutOutlined"
                                   className="Icon"

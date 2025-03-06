@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
-
 import "./register.css";
-import GoogleImg from "../../../assets/7123025_logo_google_g_icon.png";
+
 import { DynamicIcon, Images } from "../../../constants";
 import {
   Button,
@@ -9,22 +8,22 @@ import {
   CircularProgress,
   FormControlLabel,
 } from "@mui/material";
-
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../../App";
-
 import { postData } from "../../../utils/api";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from "../../../firebase";
 
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: "select_account", //force account selection
+});
 const auth = getAuth(firebaseApp);
 
 const Register = () => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ShowPassword2, setShowPassword2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [checked, setChecked] = useState(false);
   const history = useNavigate();
   const Context = useContext(MyContext);
 
@@ -192,7 +191,6 @@ const Register = () => {
                 setIsLoading(false);
 
                 // ✅ Close Popup if Opened
-                
               }, 2000);
             } else {
               // Show error alert
@@ -375,7 +373,7 @@ const Register = () => {
                         className="w-100 btn-blue"
                         onClick={signInWithGoogle}
                       >
-                        <img src={GoogleImg} />
+                        <DynamicIcon iconName="Google" className="icon pr-2" />
                         Sign in With Google
                       </Button>
                     </div>

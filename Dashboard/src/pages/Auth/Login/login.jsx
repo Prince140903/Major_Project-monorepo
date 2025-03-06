@@ -6,7 +6,6 @@ import { DynamicIcon, Images } from "../../../constants";
 import { Button, CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { postData } from "../../../utils/api";
-import GoogleImg from "../../../assets/7123025_logo_google_g_icon.png";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from "../../../firebase";
@@ -269,7 +268,7 @@ const Login = () => {
                     className="w-100 btn-blue"
                     onClick={signInWithGoogle}
                   >
-                    <img src={GoogleImg} />
+                    <DynamicIcon iconName="Google" className="icon pr-2" />
                     Sign in With Google
                   </Button>
                 </div>

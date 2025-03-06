@@ -5,3 +5,6 @@ export { default as NotFound } from "./NotFound/notFound";
 export { default as DetailsPage } from "./Details/detail";
 export { default as Cart } from "./Cart/cart";
 export { default as Compare } from "./Compare/compare";
+export { default as SignIn } from "./Auth/SignIn/SignIn";
+export { default as SignUp } from "./Auth/SignUp/SignUp";
+export { default as Forget } from "./Auth/Forget/Forget";

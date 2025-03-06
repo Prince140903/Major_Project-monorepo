@@ -1,0 +1,68 @@
+.loginSection {
+  padding: 15px 15px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loginSection .form-group {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 40px;
+}
+
+.loginSection .form-group svg {
+  font-size: 50px !important;
+}
+
+.loginSection .form-group input {
+  width: 100%;
+  height: auto;
+  font-size: 30px;
+}
+
+.loginSection .form-group button {
+  font-size: 25px !important;
+}
+
+.line {
+  display: block;
+  width: 35%;
+  height: 1px;
+  background: grey !important;
+}
+
+.txt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  width: 50px;
+  height: 50px;
+  color: black !important;
+}
+
+.Google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 40px;
+}
+
+.Google button {
+  font-size: 25px !important;
+}
+
+.link {
+  color: blue !important;
+}
+
+.labeled span {
+  font-size: 25px !important;
+}

@@ -281,3 +281,23 @@ body {
 .icon {
   font-size: 40px !important;
 }
+
+.btn {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  text-transform: capitalize !important;
+}
+
+.btn-blue {
+  background: #0858f7 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  text-transform: capitalize !important;
+  border-radius: 5px !important;
+}
+.btn-blue a {
+  text-decoration: none !important;
+  color: #fff !important;
+}

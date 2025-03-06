@@ -4,16 +4,12 @@ import "./header.css";
 import { UserImg } from "../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { Images, DynamicIcon } from "../../constants";
-import { Button } from "@mui/material";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
+import { Button, Menu, MenuItem, ListItemIcon } from "@mui/material";
 import { MyContext } from "../../App";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotify, setisOpenNotify] = useState(false);
-  // const [isLogin, setIsLogin] = useState(false);
   const openAcc = Boolean(anchorEl);
   const openNotify = Boolean(isOpenNotify);
   const Context = useContext(MyContext);

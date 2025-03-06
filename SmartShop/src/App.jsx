@@ -4,7 +4,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import { Header, Footer } from "./components";
-import { Home, Compare, Listing, NotFound, DetailsPage, Cart } from "./pages";
+import {
+  Home,
+  Compare,
+  Listing,
+  NotFound,
+  DetailsPage,
+  Cart,
+  SignIn,
+  SignUp,
+  Forget,
+} from "./pages";
 // import { fetchDataFromApi } from "./utils/api";
 import { Snackbar, Alert } from "@mui/material";
 
@@ -72,6 +82,9 @@ function App() {
         <Header />
         <Routes>
           <Route exact={true} path="/" element={<Home />} />
+          <Route exact={true} path="/auth/signin" element={<SignIn />} />
+          <Route exact={true} path="/auth/signup" element={<SignUp />} />
+          <Route exact={true} path="/auth/forget" element={<Forget />} />
           <Route exact={true} path="/compare" element={<Compare />} />
           <Route exact={true} path="/products/listing" element={<Listing />} />
           <Route exact={true} path="/products/:id" element={<DetailsPage />} />
