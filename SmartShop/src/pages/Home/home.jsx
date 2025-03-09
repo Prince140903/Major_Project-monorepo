@@ -3,10 +3,8 @@ import "./home.css";
 import HomeSliderBanner from "./Slider/slider.jsx";
 import {
   CatSlider,
-  Banners,
   Newsletter,
   Product,
-  TopProducts,
 } from "../../components";
 import { images } from "../../constants";
 import Slider from "react-slick";

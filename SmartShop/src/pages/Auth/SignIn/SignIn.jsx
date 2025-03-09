@@ -137,27 +137,23 @@ const SignIn = () => {
           isAdmin: true,
         };
 
-        console.log("fields: ", fields);
-
         // Send data to backend API
         postData("/api/users/authWithGoogle", fields).then((res) => {
           try {
             if (!res.error) {
               localStorage.setItem("token", res.token);
-              // console.log(res?.user)
 
               const userData = {
                 name: res.user?.name,
                 email: res.user?.email,
-                userId: res.user?.id,
-                image: res?.user?.images?.length > 0 ? res?.user?.image[0] : "",
+                userId: res.user?._id,
+                image: res?.user?.images?.length > 0 ? res?.user?.images[0] : "",
                 isAdmin: res.user?.isAdmin,
               };
 
               console.log("userData", userData);
-              localStorage.setItem("user", JSON.stringify(userData)); // Fixed incorrect variable
+              localStorage.setItem("user", JSON.stringify(userData));
 
-              // Show success alert
               Context.setAlertBox({
                 open: true,
                 error: false,
@@ -172,7 +168,6 @@ const SignIn = () => {
                 // ✅ Close Popup if Opened
               }, 2000);
             } else {
-              // Show error alert
               Context.setAlertBox({
                 open: true,
                 error: true,

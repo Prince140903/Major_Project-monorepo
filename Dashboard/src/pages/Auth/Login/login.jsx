@@ -149,7 +149,8 @@ const Login = () => {
                 name: res.user?.name,
                 email: res.user?.email,
                 userId: res.user?.id,
-                image: res?.user?.images?.length > 0 ? res?.user?.image[0] : "",
+                image:
+                  res?.user?.images?.length > 0 ? res?.user?.images[0] : "",
                 isAdmin: res.user?.isAdmin,
               };
               localStorage.setItem("user", JSON.stringify(userData)); // Fixed incorrect variable

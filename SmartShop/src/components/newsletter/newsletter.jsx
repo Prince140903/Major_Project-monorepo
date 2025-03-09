@@ -9,7 +9,7 @@ const Newsletter = () => {
     <div className="newsLetterBanner ">
       <SendOutlinedIcon />
       <input type="text" placeholder="your email address" />
-      <Button className="btn-g">Subcribe</Button>
+      <Button className="btn-g">Subscribe</Button>
     </div>
   );
 };

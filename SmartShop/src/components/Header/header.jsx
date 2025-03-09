@@ -2,13 +2,12 @@ import React, { useEffect, useContext, useState, useRef } from "react";
 import "./header.css";
 import { DynamicIcon, images } from "../../constants";
 import { Select } from "../../components";
-import Button from "@mui/material/Button";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api.js";
 import { MyContext } from "../../App.jsx";
 import Nav from "./nav/nav.jsx";
-import { capitalize } from "@mui/material";
+import { Button, capitalize } from "@mui/material";
 
 const Header = () => {
   const [isOpenDropDown, setisOpenDropDown] = useState(false);
@@ -87,7 +86,7 @@ const Header = () => {
   };
 
   const logout = () => {
-    setAnchorEl(null);
+    setisOpenDropDown(false);
 
     Context.setIsLogin(false);
 
@@ -212,7 +211,7 @@ const Header = () => {
                           <Button
                             onClick={() => setisOpenDropDown(!isOpenDropDown)}
                           >
-                            {Context.user?.image !== 0 ? (
+                            {Context.user?.image !== "" ? (
                               <img
                                 src={Context.user.image}
                                 alt="userImage"
@@ -268,7 +267,7 @@ const Header = () => {
                               </Button>
                             </li>
                             <li>
-                              <Button onClick={logout}>
+                              <Button onClick={() => logout()}>
                                 <DynamicIcon
                                   iconName="LogoutOutlined"
                                   className="Icon"

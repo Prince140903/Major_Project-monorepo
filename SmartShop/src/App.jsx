@@ -24,6 +24,7 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState();
   const [progress, setProgress] = useState(0);
+  const [cart, setCart] = useState([]);
 
   const [alertBox, setAlertBox] = useState({
     msg: "",
@@ -42,6 +43,10 @@ function App() {
       setIsLogin(false);
     }
   }, [isLogin]);
+
+  useEffect(() => {
+    
+  })
 
   const values = {
     isLogin,

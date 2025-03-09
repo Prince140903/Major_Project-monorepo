@@ -154,7 +154,6 @@ const Header = () => {
                   </MenuItem>
                 </Menu>
               </div>
-
               {Context.isLogin !== true ? (
                 <Link to={"/auth/login"}>
                   <Button className="btn-blue btn-style">Log In</Button>
@@ -169,11 +168,10 @@ const Header = () => {
                     }`}
                     onClick={handleOpenAcc}
                   >
-                    {Context?.user?.image !== "" ? (
-                      <UserImg img={Context?.user.images} width="40" />
+                    {Context?.user?.image !== 0 ? (
+                      <UserImg img={Context.user?.image} width="40" />
                     ) : (
-                      // Context?.user?.userName.charAt(0)
-                      ""
+                      Context?.user?.name?.charAt(0)
                     )}
 
                     <div className="userInfo">
