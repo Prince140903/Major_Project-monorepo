@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
 import HomeSliderBanner from "./Slider/slider.jsx";
-import {
-  CatSlider,
-  Newsletter,
-  Product,
-} from "../../components";
+import { CatSlider, Newsletter, Product } from "../../components";
 import { images } from "../../constants";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
@@ -52,6 +48,7 @@ const Home = () => {
       }
     };
     fetchProducts();
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {

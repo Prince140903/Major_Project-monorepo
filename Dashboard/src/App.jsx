@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -68,14 +69,14 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token !== "" && token !== undefined && token !== null) {
+    if (token) {
       setIsLogin(true);
       const userData = JSON.parse(localStorage.getItem("user"));
       setUser(userData);
     } else {
       setIsLogin(false);
     }
-  }, [isLogin]);
+  }, []);
 
   const values = {
     isToggle,

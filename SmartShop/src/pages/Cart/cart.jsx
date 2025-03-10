@@ -3,7 +3,7 @@ import "./cart.css";
 
 import { Link } from "react-router-dom";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import { Button, Rating } from "@mui/material";
+import { Button } from "@mui/material";
 import { QuantityBox } from "../../components";
 import { MyContext } from "../../App";
 import { fetchDataFromApi, deleteData } from "../../utils/api";
@@ -48,8 +48,6 @@ const Cart = () => {
     (acc, item) => acc + item.actual_price * item.quantity,
     0
   );
-
-  console.log("cart: ", cart);
 
   const discount =
     subTotal -

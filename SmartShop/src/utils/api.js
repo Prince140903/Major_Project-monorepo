@@ -56,3 +56,17 @@ export const postData = async (url, formData) => {
     }
   }
 };
+
+export const trackInteraction = async (userId, productId, eventType) => {
+  try {
+    // await axios.post("http://localhost:5000/api/interactions/track", {
+    await axios.post(`${baseUrl}/api/interactions/track`, {
+      userId,
+      productId,
+      eventType,
+    });
+  } catch (error) {
+    console.error("Error tracking interaction:", error);
+    return { error: true, msg: "Error setting Interaction." };
+  }
+};

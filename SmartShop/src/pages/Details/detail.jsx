@@ -7,7 +7,7 @@ import Slider from "react-slick";
 import { Button, capitalize, Rating } from "@mui/material";
 import { Product } from "../../components";
 import { NotFound } from "../../pages";
-import { fetchDataFromApi, postData } from "../../utils/api";
+import { fetchDataFromApi, postData, trackInteraction } from "../../utils/api";
 import { DynamicIcon } from "../../constants";
 import { MyContext } from "../../App";
 
@@ -17,15 +17,13 @@ const DetailsPage = () => {
   const [products, setProducts] = useState([]);
 
   const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
-  const [smlImageSize, setSmlImageSize] = useState([150, 150]);
   const [zoomImage, setZoomImage] = useState("");
-
-  const [inputValue, setinputValue] = useState(1);
-  const [activeTabs, setActivetabs] = useState(0);
 
   const Context = useContext(MyContext);
   const [isLoading, setIsLoading] = useState(false);
+  const user = Context.user;
   const history = useNavigate();
+  const hasTrackedView = useRef(false);
 
   const [cart, setCart] = useState([]);
   const [quantity, setQuantity] = useState(1);
@@ -77,6 +75,13 @@ const DetailsPage = () => {
     }
   }, [product]);
 
+  useEffect(() => {
+    if (user && product && !hasTrackedView.current) {
+      trackInteraction(user.userId, product._id, "view");
+      hasTrackedView.current = true;
+    }
+  }, [user, product]);
+
   var settings2 = {
     dots: false,
     infinite: false,
@@ -112,6 +117,10 @@ const DetailsPage = () => {
   };
 
   const addToCart = async () => {
+    if (user && product) {
+      trackInteraction(user.userId, product._id, "cart");
+    }
+
     try {
       const userId = Context.user?.userId;
       const productData = {
@@ -275,7 +284,7 @@ const DetailsPage = () => {
 
               <Button
                 className="btn-g btn-lg addtocartbtn "
-                onClick={addToCart}
+                onClick={() => addToCart()}
               >
                 <DynamicIcon iconName="ShoppingCartOutlined" />
                 Add to Cart

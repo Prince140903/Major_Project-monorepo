@@ -19,6 +19,7 @@ const imageUploadRoutes = require("./Helper/imageUpload");
 const categoryRoutes = require("./Routes/categories");
 const userRoutes = require("./Routes/users");
 const cartRoutes = require("./Routes/userCart");
+const interactionRoutes = require("./Routes/interactions");
 
 App.use("/uploads", express.static("uploads"));
 App.use("/api/products/upload", productRoutes);
@@ -28,8 +29,7 @@ App.use("/api/category", categoryRoutes);
 App.use("/api/imageUpload", imageUploadRoutes);
 App.use("/api/users", userRoutes);
 App.use("/api/cart", cartRoutes);
-// App.use("/:id", productRoutes);
-// App.use("/api/products/:id", productRoutes);
+App.use("/api/interactions", interactionRoutes);
 
 App.use((req, res, next) => {
   res.removeHeader("Cross-Origin-Opener-Policy"); // Remove the header
