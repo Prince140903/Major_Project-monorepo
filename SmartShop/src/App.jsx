@@ -14,6 +14,7 @@ import {
   SignIn,
   SignUp,
   Forget,
+  WishList,
 } from "./pages";
 // import { fetchDataFromApi } from "./utils/api";
 import { Snackbar, Alert } from "@mui/material";
@@ -24,7 +25,6 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState();
   const [progress, setProgress] = useState(0);
-  const [cart, setCart] = useState([]);
 
   const [alertBox, setAlertBox] = useState({
     msg: "",
@@ -44,9 +44,7 @@ function App() {
     }
   }, [isLogin]);
 
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
 
   const values = {
     isLogin,
@@ -94,6 +92,7 @@ function App() {
           <Route exact={true} path="/products/listing" element={<Listing />} />
           <Route exact={true} path="/products/:id" element={<DetailsPage />} />
           <Route exact={true} path="/Cart" element={<Cart />} />
+          <Route exact={true} path="/wishlist" element={<WishList />} />
           <Route exact={true} path="*" element={<NotFound />} />
         </Routes>
         <Footer />

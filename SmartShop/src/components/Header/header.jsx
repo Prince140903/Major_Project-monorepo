@@ -179,13 +179,17 @@ const Header = () => {
                         </Link>
                       </li>
                       <li className="list-inline-item">
-                        <span>
-                          <DynamicIcon
-                            iconName="FavoriteBorder"
-                            className="Icon"
-                          />
-                          Wishlist
-                        </span>
+                        <Link to={"/wishlist"}>
+                          <Button>
+                            <span>
+                              <DynamicIcon
+                                iconName="FavoriteBorder"
+                                className="Icon"
+                              />
+                              Wishlist
+                            </span>
+                          </Button>
+                        </Link>
                       </li>
                       <li className="list-inline-item">
                         <Link to={"/cart"}>
