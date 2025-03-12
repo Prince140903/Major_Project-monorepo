@@ -19,6 +19,7 @@ const imageUploadRoutes = require("./Helper/imageUpload");
 const categoryRoutes = require("./Routes/categories");
 const userRoutes = require("./Routes/users");
 const cartRoutes = require("./Routes/userCart");
+const wishListRoutes = require("./Routes/userWishlist");
 const interactionRoutes = require("./Routes/interactions");
 
 App.use("/uploads", express.static("uploads"));
@@ -29,6 +30,7 @@ App.use("/api/category", categoryRoutes);
 App.use("/api/imageUpload", imageUploadRoutes);
 App.use("/api/users", userRoutes);
 App.use("/api/cart", cartRoutes);
+App.use("/api/wishList", wishListRoutes);
 App.use("/api/interactions", interactionRoutes);
 
 App.use((req, res, next) => {

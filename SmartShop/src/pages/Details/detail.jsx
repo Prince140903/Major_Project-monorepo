@@ -26,6 +26,7 @@ const DetailsPage = () => {
   const hasTrackedView = useRef(false);
 
   const [cart, setCart] = useState([]);
+  const [userWishlist, setUserWishlist] = useState([]);
   const [quantity, setQuantity] = useState(1);
 
   const zoomSlider = useRef();
@@ -171,6 +172,61 @@ const DetailsPage = () => {
     }
   };
 
+  const addToWishlist = async () => {
+    if (user && product) {
+      trackInteraction(user.userId, product._id, "wishlist");
+    }
+
+    try {
+      const userId = Context.user?.userId;
+      const productData = {
+        productId: product._id,
+        name: product.name,
+        actual_price: product.actual_price,
+        discount_price: product.discount_price,
+        delivery: product.delivery,
+        quantity: quantity,
+        image: product.images[0],
+      };
+
+      postData("/api/wishlist/add", { userId, product: productData })
+        .then((res) => {
+          if (res.error !== true) {
+            Context.setAlertBox({
+              open: true,
+              error: false,
+              msg: "Product added in Wishlist!",
+            });
+            setUserWishlist(res);
+            setIsLoading(true);
+
+            // setTimeout(() => {
+            //   history("/");
+            // }, 200);
+          } else {
+            setIsLoading(false);
+            Context.setAlertBox({
+              open: true,
+              error: true,
+              msg: res.msg,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+          setIsLoading(false);
+          Context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Something went wrong during adding product.",
+          });
+        });
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      alert("Failed to add product to wishlist.");
+    }
+  };
+
   if (!product) return <NotFound />;
 
   return (
@@ -289,7 +345,10 @@ const DetailsPage = () => {
                 <DynamicIcon iconName="ShoppingCartOutlined" />
                 Add to Cart
               </Button>
-              <Button className=" btn-lg addtocartbtn ml-3 btn-border">
+              <Button
+                className=" btn-lg addtocartbtn ml-3 btn-border"
+                onClick={() => addToWishlist()}
+              >
                 <DynamicIcon iconName="FavoriteBorderOutlined" />
               </Button>
               <Button className=" btn-lg addtocartbtn ml-3 btn-border">
