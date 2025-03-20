@@ -13,7 +13,19 @@ const Product = (props) => {
   return (
     <div>
       <LazyLoad>
-        <span className={`badge ${props.tag === "meesho" ? "new": props.tag === "amazon" ? "sale" : props.tag === "flipkart" ? "best" : ""}`} >{props.tag}</span>
+        <span
+          className={`badge ${
+            props.tag === "meesho"
+              ? "new"
+              : props.tag === "amazon"
+              ? "sale"
+              : props.tag === "flipkart"
+              ? "best"
+              : ""
+          }`}
+        >
+          {props.tag}
+        </span>
         <img
           src={props.image}
           onError={(e) =>
@@ -46,17 +58,17 @@ const Product = (props) => {
         <h4 className="title">{props.name}</h4>
         <Rating
           name="half-rating-read"
-          defaultValue={Math.round(parseFloat(props.ratings) * 2) / 2}
+          value={Math.round(parseFloat(props.ratings) * 2) / 2}
           precision={0.5}
           readOnly
         />
         <div className="d-flex align-items-center">
           <div className="d-flex align-items-center">
             <span className="price text-g font-weight-bold ">
-              ₹ {props.actual_price}
+              ₹ {props.discount_price}
             </span>
             <span className="oldPrice">
-              ₹ {props.discount_price}
+              ₹ {props.actual_price}
               {props.color}
             </span>
           </div>

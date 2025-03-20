@@ -13,13 +13,18 @@ const Listing = () => {
   const [products, setProducts] = useState([]);
   const [selectedValue, setSelectedValue] = useState(30);
   const [selection, setSelection] = useState("Featured");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const Prods = await fetchDataFromApi(
-          `/api/products/filter?limit=${selectedValue}&selection=${selection}`
-        );
+        let apiUrl = `/api/products/filter?limit=${selectedValue}&selection=${selection}`;
+
+        if (selectedCategory) {
+          apiUrl += `&category=${selectedCategory}`;
+        }
+
+        const Prods = await fetchDataFromApi(apiUrl);
 
         const { products, total } = Prods;
 
@@ -39,7 +44,7 @@ const Listing = () => {
       }
     };
     fetchProducts();
-  }, [selectedValue, selection]);
+  }, [selectedValue, selection, selectedCategory]);
 
   const handleSelect = (value) => {
     setSelectedValue(value);
@@ -71,17 +76,16 @@ const Listing = () => {
         <div className="listingData">
           <div className="row">
             <div className="col-md-3 sidebarWrapper">
-              <SideBar />
+              <SideBar
+                setSelectedCategory={setSelectedCategory}
+                selectedCategory={selectedCategory}
+              />
             </div>
 
             <div className="col-md-9 rightContent homeProducts pt-0">
               <div className="topStrip d-flex align-items-center">
-                <p className="mb-0">
-                  We found <span className="text-success">29</span> items for
-                  you !
-                </p>
                 <div className="ml-auto d-flex align-items-center">
-                  <div className="tab_ position-relative">
+                  <div className="tab_ position-relative mr-4">
                     <Button
                       className="btn_"
                       onClick={() => setIsOpenDropDown(!isOpenDropDown)}

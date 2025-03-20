@@ -127,12 +127,16 @@ router.get("/filter", async (req, res) => {
     limit = 10,
     company = "All",
     selection = "Featured",
+    category = "All",
   } = req.query;
 
   let query = search ? { name: { $regex: search, $options: "i" } } : {};
 
   if (company !== "All") {
     query.company = company;
+  }
+  if (category !== "All") {
+    query.main_category = category;
   }
 
   let sortOption = {};
