@@ -13,7 +13,7 @@ const Product = (props) => {
   return (
     <div>
       <LazyLoad>
-        <span className="badge new">{props.tag}</span>
+        <span className={`badge ${props.tag === "meesho" ? "new": props.tag === "amazon" ? "sale" : props.tag === "flipkart" ? "best" : ""}`} >{props.tag}</span>
         <img
           src={props.image}
           onError={(e) =>

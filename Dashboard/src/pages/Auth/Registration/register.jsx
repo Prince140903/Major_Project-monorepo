@@ -30,7 +30,6 @@ const Register = () => {
   const [formFields, setFromFields] = useState({
     name: "",
     email: "",
-    phone: "",
     password: "",
     confirmPassword: "",
     isAdmin: false,
@@ -62,14 +61,6 @@ const Register = () => {
           open: true,
           error: true,
           msg: "@mail Blank",
-        });
-        return false;
-      }
-      if (formFields.phone === "" || undefined) {
-        Context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "Phone Blank",
         });
         return false;
       }
@@ -159,7 +150,6 @@ const Register = () => {
           email: user.providerData[0]?.email || "",
           password: null,
           images: user.providerData[0]?.photoURL || "",
-          phone: user.providerData[0]?.phoneNumber || "",
           isAdmin: true,
         };
 
@@ -274,18 +264,6 @@ const Register = () => {
                       className="form-control"
                       placeholder="Enter Email"
                       name="email"
-                      onChange={changeInput}
-                    />
-                  </div>
-                  <div className="form-group mb-3 position-relative">
-                    <span className="icon">
-                      <DynamicIcon iconName="Phone" />
-                    </span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter Phone"
-                      name="phone"
                       onChange={changeInput}
                     />
                   </div>

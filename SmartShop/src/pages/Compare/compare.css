@@ -241,3 +241,10 @@
 .comparison-section .column.col-bar .row.name {
   height: 425px !important;
 }
+
+.imageBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 800px;
+}

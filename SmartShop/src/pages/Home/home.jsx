@@ -30,9 +30,6 @@ const Home = () => {
   const [rec_prods, setRec_prods] = useState([]);
   const [content, setContent] = useState([]);
   const [selection, setSelection] = useState("Featured");
-  const Context = useContext(MyContext);
-  const user = Context.user;
-  const userId = user?.userId;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -171,20 +168,35 @@ const Home = () => {
               <h4>You May Like This</h4>
               <CollaborativeRecommendations setRec_prods={setRec_prods} />
               <Slider {...settings} className="productSlider">
-                {rec_prods?.map((product) => (
-                  <div key={product._id} className="item">
-                    <Product
-                      tag={product.company}
-                      image={product.images?.[0]}
-                      name={product.name}
-                      ratings={product.ratings}
-                      actual_price={product.actual_price}
-                      discount_price={product.discount_price}
-                      _id={product._id}
-                      className="prod-img"
-                    />
-                  </div>
-                ))}
+                {rec_prods.length >= 5
+                  ? rec_prods?.map((product) => (
+                      <div key={product._id} className="item">
+                        <Product
+                          tag={product.company}
+                          image={product.images?.[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))
+                  : products?.slice(0, 5).map((product, index) => (
+                      <div className="item" key={index}>
+                        <Product
+                          tag={product.company}
+                          image={product.images[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))}
               </Slider>
             </div>
           </div>
@@ -198,20 +210,35 @@ const Home = () => {
               <h4>Recommended Products</h4>
               <ContentBasedRecommendations setContent={setContent} />
               <Slider {...settings} className="productSlider">
-                {content?.map((product) => (
-                  <div key={product._id} className="item">
-                    <Product
-                      tag={product.company}
-                      image={product.images[0]}
-                      name={product.name}
-                      ratings={product.ratings}
-                      actual_price={product.actual_price}
-                      discount_price={product.discount_price}
-                      _id={product._id}
-                      className="prod-img"
-                    />
-                  </div>
-                ))}
+                {content?.length >= 5
+                  ? content?.map((product) => (
+                      <div key={product._id} className="item">
+                        <Product
+                          tag={product.company}
+                          image={product.images[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))
+                  : products?.slice(5, 10).map((product, index) => (
+                      <div className="item" key={index}>
+                        <Product
+                          tag={product.company}
+                          image={product.images[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))}
               </Slider>
             </div>
           </div>

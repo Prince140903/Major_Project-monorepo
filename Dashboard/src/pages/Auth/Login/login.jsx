@@ -134,7 +134,6 @@ const Login = () => {
           email: user.providerData[0]?.email || "",
           password: null,
           images: user.providerData[0]?.photoURL || "",
-          phone: user.providerData[0]?.phoneNumber || "",
           isAdmin: true,
         };
 
