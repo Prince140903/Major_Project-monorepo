@@ -1,11 +1,11 @@
 const express = require("express");
 const multer = require("multer");
+const axios = require("axios");
 const fs = require("fs");
 const router = express.Router();
 const { Product } = require("../Models/Product");
 const cloudinary = require("cloudinary").v2;
 const { ImageUpload } = require("../Models/imageUpload");
-const { compare } = require("bcryptjs");
 require("dotenv").config();
 
 cloudinary.config({
@@ -30,7 +30,6 @@ const upload = multer({ storage: storage });
 
 router.post("/upload", upload.array("images"), async (req, res) => {
   try {
-    // console.log("recieved files", req.files);
     const uploadPromises = req.files.map(async (file) => {
       const options = {
         use_filename: true,
@@ -47,6 +46,23 @@ router.post("/upload", upload.array("images"), async (req, res) => {
 
     const imagesUploaded = new ImageUpload({ images: imagesArr });
     await imagesUploaded.save();
+
+    const flaskRes = await axios.post(
+      `${process.env.FLASK_URL}/recommendations/on_new_product`,
+      req.body
+    );
+    const recommendedUsers = flaskRes.data.users;
+    const io = req.app.get("io");
+    const connectedUsers = req.app.get("connectedUsers");
+    recommendedUsers.forEach((userId) => {
+      const socketId = connectedUsers[userId];
+      if (socketId) {
+        io.to(socketId).emit("new_recommendation", {
+          message: "New product you might like!",
+          product: req.body,
+        });
+      }
+    });
 
     return res.status(200).json({ success: true, images: imagesArr });
   } catch (error) {
@@ -103,7 +119,6 @@ router.post("/create", async (req, res) => {
     console.log("error");
   }
 
-  console.log("product: ", prodObj);
   let product = new Product(prodObj);
 
   if (!product) {
@@ -174,11 +189,23 @@ router.get("/filter", async (req, res) => {
   }
 });
 
+router.delete("/deleteImages", async (req, res) => {
+  const imgUrl = req.query.img;
+  const publicId = imgUrl.split("/").pop().split(".")[0];
+
+  try {
+    await cloudinary.uploader.destroy(publicId);
+    res.status(200).json({ success: true, message: "Image deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, error });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
-    res
+    return res
       .status(404)
       .json({ message: "The product with the given Id was not found." });
   }
@@ -205,7 +232,9 @@ router.delete("/:id", async (req, res) => {
   const deletedProd = await Product.findByIdAndDelete(req.params.id);
 
   if (!deletedProd) {
-    res.status(404).json({ message: "The product not found!", success: false });
+    return res
+      .status(404)
+      .json({ message: "The product not found!", success: false });
   }
 
   res.status(200).json({

@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./select.css";
 import DynamicIcon from "../../constants/icons.jsx";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import { capitalize } from "@mui/material";
 
 const Select = ({ data, placeholder, icon }) => {
   const [isOpenSelect, setisOpenSelect] = useState(false);
   const [selectedIndex, setselectedIndex] = useState(0);
   const [selectedItem, setselectedItem] = useState(placeholder);
-
-  const [listData, setListData] = useState(data);
+  const [listData, setListData] = useState();
 
   const openSelect = () => {
     setisOpenSelect(!isOpenSelect);
@@ -19,6 +19,10 @@ const Select = ({ data, placeholder, icon }) => {
     setisOpenSelect(false);
     setselectedItem(name);
   };
+
+  useEffect(() => {
+    setListData(data);
+  }, [data]);
 
   return (
     <ClickAwayListener onClickAway={() => setisOpenSelect(false)}>
@@ -40,7 +44,6 @@ const Select = ({ data, placeholder, icon }) => {
               >
                 {placeholder}
               </li>
-
               {listData.map((item, index) => {
                 return (
                   <li

@@ -201,6 +201,23 @@ const Home = () => {
             </div>
           </div>
           <br /> <br />
+          <section className="newsLetterSection">
+            <div className="container-fluid ">
+              <div className="box d-flex align-items-center">
+                <div className="info">
+                  <h2>Stay Home & get your daily needs from our shop</h2>
+                  <p>Start your Daily Shopping With Nest Mart</p>
+                  <br /> <br />
+                  <Newsletter />
+                </div>
+                <div className="img">
+                  <img src={images.banner9} className="w-100" />
+                </div>
+              </div>
+            </div>
+          </section>
+          <br />
+          <br />
           <div className="row">
             <div className="col-md-3 pr-5 ">
               <img src={images.banner4} className="w-100" />
@@ -240,21 +257,6 @@ const Home = () => {
                       </div>
                     ))}
               </Slider>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="newsLetterSection">
-        <div className="container-fluid ">
-          <div className="box d-flex align-items-center">
-            <div className="info">
-              <h2>Stay Home & get your daily needs from our shop</h2>
-              <p>Start your Daily Shopping With Nest Mart</p>
-              <br /> <br />
-              <Newsletter />
-            </div>
-            <div className="img">
-              <img src={images.banner9} className="w-100" />
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { React, useEffect, useState } from "react";
 import "./sideBar.css";
 
-import images from "../../constants/images";
 import { Slider, Checkbox, Button, capitalize } from "@mui/material";
 import { DynamicIcon } from "../../constants";
 import { fetchDataFromApi } from "../../utils/api.js";
@@ -15,7 +14,6 @@ const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const SideBar = ({ setSelectedCategory, selectedCategory }) => {
   const [value, setValue] = useState([200, 800]);
   const [catData, setCatData] = useState([]);
-
   useEffect(() => {
     fetchDataFromApi("/api/category")
       .then((res) => {
@@ -26,7 +24,7 @@ const SideBar = ({ setSelectedCategory, selectedCategory }) => {
       });
   }, []);
 
-  const handleChange = (event, newValue) => {
+  const handleSliderChange = (event, newValue) => {
     setValue(newValue);
   };
 
@@ -50,9 +48,6 @@ const SideBar = ({ setSelectedCategory, selectedCategory }) => {
                   width={80}
                 />
                 <h4 className="mb-0 ml-3 mr-3">All Categories</h4>
-                <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                  30
-                </span>
               </span>
             </div>
             {catData?.map((cat) => (
@@ -66,9 +61,6 @@ const SideBar = ({ setSelectedCategory, selectedCategory }) => {
                 <span className="img">
                   <img src={cat.images[0]} alt="Icon" width={80} />
                   <h4 className="mb-0 ml-3 mr-3">{capitalize(cat.name)}</h4>
-                  <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                    30
-                  </span>
                 </span>
               </div>
             ))}
@@ -78,12 +70,10 @@ const SideBar = ({ setSelectedCategory, selectedCategory }) => {
         <div className="card border-0 shadow">
           <h3>Fill by price</h3>
           <Slider
-            min={0}
             step={1}
-            max={1000}
             getAriaLabel={() => "Temperature range"}
             value={value}
-            onChange={handleChange}
+            onChange={handleSliderChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
             color="success"

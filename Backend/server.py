@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -121,6 +121,34 @@ def recommend_content(user_id, num_recommendations=5):
 
     return recommended
 
+def get_relevant_users(product_data, num_similar=5):
+    # Step 1: Prepare the feature string for the new product
+    new_product_features = (
+        product_data.get("main_category", "") + " " +
+        product_data.get("sub_category", "") + " " +
+        product_data.get("company", "") + " " +
+        product_data.get("description", "") + " " +
+        " ".join(product_data.get("tags", []))
+    )
+
+    # Step 2: Convert to vector
+    new_vector = vectorizer.transform([new_product_features])
+    sim_scores = cosine_similarity(new_vector, tfidf_matrix)[0]
+
+    # Step 3: Get top N similar product indices
+    top_indices = sim_scores.argsort()[-num_similar:][::-1]
+    similar_product_ids = df_products.iloc[top_indices]["_id"].tolist()
+
+    # Step 4: Find users who interacted with similar products
+    user_cursor = interactions_collection.find(
+        {"productId": {"$in": similar_product_ids}},
+        {"userId": 1, "_id": 0}
+    )
+
+    user_ids = list({user["userId"] for user in user_cursor})  # Unique users
+
+    return user_ids
+
 # API routes
 @app.route("/recommend/collaborative/<user_id>/", methods=["GET"])
 def collaborative_recommend(user_id):
@@ -129,6 +157,13 @@ def collaborative_recommend(user_id):
 @app.route("/recommend/content/<user_id>/", methods=["GET"])
 def content_recommend(user_id):
     return jsonify({"userId": user_id, "recommendedProducts": recommend_content(user_id)})
+
+@app.route("/recommendations/on_new_product", methods=["POST"])
+def notify_relevant_users():
+    product_data = request.json
+    recommended_users = get_relevant_users(product_data)  # Your filtering logic
+    return jsonify({"users": recommended_users})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
