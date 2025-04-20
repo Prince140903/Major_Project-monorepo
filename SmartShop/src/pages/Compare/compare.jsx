@@ -3,17 +3,19 @@ import "./compare.css";
 
 import { DynamicIcon } from "../../constants";
 import { Product } from "../../components";
-import { Rating } from "@mui/material";
+import { Rating, capitalize } from "@mui/material";
 import Slider from "react-slick";
 import { fetchDataFromApi } from "../../utils/api";
 import LazyLoad from "react-lazyload";
+import { Link } from "react-router-dom";
 
 const Compare = () => {
+  const [selectedProductName, setSelectedProductName] = useState("");
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [products2, setProducts2] = useState([]);
   const [products3, setProducts3] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("OnePlus");
+  const [searchQuery, setSearchQuery] = useState("");
 
   var related = {
     dots: false,
@@ -26,34 +28,74 @@ const Compare = () => {
   };
 
   useEffect(() => {
-    const fetchProductsAll = async () => {
+    const fetchProducts = async () => {
       try {
         const Prods = await fetchDataFromApi(
           `/api/products/filter?search=${searchQuery}&limit=5`
         );
 
-        const { products } = Prods;
+        const { products, total } = Prods;
 
         if (!products || products.length === 0) {
           setAllProducts([]);
           return;
         }
-
         setAllProducts(products);
-        setProducts(products.filter((p) => p.company === "amazon"));
-        setProducts2(products.filter((p) => p.company === "flipkart"));
-        setProducts3(products.filter((p) => p.company === "meesho"));
       } catch (error) {
         if (error.response && error.response.status === 404) {
           console.warn("API returned 404: Not Found.");
-          setAllProducts([]);
+          setProducts([]);
         } else {
           console.error("Error fetching search results:", error);
         }
       }
     };
-    fetchProductsAll();
+    fetchProducts();
   }, [searchQuery]);
+
+  function slugify(str) {
+    return str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "") // Remove special characters
+      .replace(/\s+/g, "-"); // Replace spaces with dashes
+  }
+
+  useEffect(() => {
+    const fetchSameNameProducts = async () => {
+      if (!selectedProductName) return;
+
+      const slug = slugify(selectedProductName);
+
+      try {
+        const res = await fetchDataFromApi(`/api/products/filter?slug=${slug}`);
+        const { products } = res;
+
+        // Filter to exact match name (optional if your backend already filters properly)
+        const exactMatch = products.filter(
+          (p) => p.name === selectedProductName
+        );
+
+        // Get one product per company
+        const amazon = exactMatch.find((p) => p.company === "amazon");
+        const flipkart = exactMatch.find((p) => p.company === "flipkart");
+        const meesho = exactMatch.find((p) => p.company === "meesho");
+
+        setProducts(amazon ? [amazon] : []);
+        setProducts2(flipkart ? [flipkart] : []);
+        setProducts3(meesho ? [meesho] : []);
+      } catch (err) {
+        console.error("Error fetching products by name:", err);
+      }
+    };
+
+    fetchSameNameProducts();
+  }, [selectedProductName]);
+
+  const handleSelect = (product) => {
+    setSelectedProductName(product.name);
+    setSearchQuery("");
+  };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -93,6 +135,24 @@ const Compare = () => {
               value={searchQuery}
               onChange={handleSearch}
             />
+            {searchQuery && (
+              <div className="search-dropdown1">
+                {allProducts.length > 0 ? (
+                  allProducts.map((product, index) => (
+                    <div
+                      key={index}
+                      className="search-item"
+                      onClick={() => handleSelect(product)}
+                    >
+                      {product.name} &nbsp;
+                      <p>{capitalize(product.company)}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-results">No results found</div>
+                )}
+              </div>
+            )}
             <label className="btn-g">
               Search Item <DynamicIcon iconName="Search" />
             </label>

@@ -224,7 +224,7 @@ const Header = () => {
                           </div>
                         ) : (
                           <Button
-                            onClick={() => setisOpenDropDown(!isOpenDropDown)}
+                            onClick={() => set(!isOpenDropDown)}
                           >
                             {Context.user?.image !== "" ? (
                               <img

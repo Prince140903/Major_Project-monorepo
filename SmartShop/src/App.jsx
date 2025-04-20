@@ -17,11 +17,14 @@ import {
   Forget,
   WishList,
 } from "./pages";
-// import { fetchDataFromApi } from "./utils/api";
 import { Snackbar, Alert } from "@mui/material";
 
 export const MyContext = createContext();
-const socket = io(import.meta.env.VITE_BASE_URL);
+const socket = io(import.meta.env.VITE_BASE_URL, {
+  auth: {
+    token: localStorage.getItem("token"),
+  },
+});
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -59,7 +62,7 @@ function App() {
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
-      socket.emit("register", user); // Backend now knows this socket belongs to this user
+      socket.emit("register", token); // Backend now knows this socket belongs to this user
     });
 
     socket.on("newProductNotification", (data) => {

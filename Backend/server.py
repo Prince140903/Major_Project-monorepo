@@ -20,6 +20,7 @@ client = MongoClient(Mongo_URL)
 db = client["Amazon_Data"]
 interactions_collection = db["userinteractions"]
 products_collection = db["All Products"]
+# products_col = db["All Products"].find({}, {"_id": 1})
 
 def fetch_interactions():
     data = list(interactions_collection.find({}, {"userId": 1, "productId": 1, "eventType": 1, "_id": 0}))
@@ -51,9 +52,11 @@ def recommend_collaborative(user_id, num_recommendations=5):
 
     unique_products = df_interactions["productId"].unique()
 
+    valid_product_ids = set(str(p["_id"]) for p in products_collection.find({}, {"_id": 1}))
+
     predictions = [
         (product, model.predict(user_id, product).est)
-        for product in unique_products
+        for product in unique_products if str(product) in valid_product_ids
     ]
 
     predictions.sort(key=lambda x: x[1], reverse=True)
@@ -162,6 +165,7 @@ def content_recommend(user_id):
 def notify_relevant_users():
     product_data = request.json
     recommended_users = get_relevant_users(product_data)  # Your filtering logic
+    print("recommended_users", recommended_users)
     return jsonify({"users": recommended_users})
 
 

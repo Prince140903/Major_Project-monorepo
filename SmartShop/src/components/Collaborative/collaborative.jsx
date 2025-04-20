@@ -14,8 +14,14 @@ const CollaborativeRecommendations = ({ setRec_prods }) => {
 
       .then((data) => {
         const productIds = data.recommendedProducts || [];
+        console.log("Products: ", productIds);
         return Promise.all(
-          productIds.map((id) => fetchDataFromApi(`/api/products/${id}`))
+          productIds.map((id) =>
+            fetchDataFromApi(`/api/products/${id}`).catch((error) => {
+              console.warn(`Product with ID: ${id} not found`, error);
+              return null;
+            })
+          )
         );
       })
       .then((products) => setRec_prods(products.filter((p) => p !== null)))

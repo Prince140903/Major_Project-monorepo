@@ -124,6 +124,7 @@ const DetailsPage = () => {
 
     try {
       const userId = Context.user?.userId;
+
       const productData = {
         productId: product._id,
         name: product.name,

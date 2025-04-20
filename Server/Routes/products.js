@@ -143,9 +143,21 @@ router.get("/filter", async (req, res) => {
     company = "All",
     selection = "Featured",
     category = "All",
+    slug = "",
   } = req.query;
 
-  let query = search ? { name: { $regex: search, $options: "i" } } : {};
+  let query = {};
+
+  if (slug) {
+    query.slug = slug.toLowerCase();
+  } else if (search) {
+    query = {
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { slug: { $regex: search.toLowerCase(), $options: "i" } },
+      ],
+    };
+  }
 
   if (company !== "All") {
     query.company = company;
