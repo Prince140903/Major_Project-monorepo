@@ -172,129 +172,125 @@ const Header = () => {
                       }
                     />
                   </div>
-                  <ClickAwayListener
-                    onClickAway={() => setisOpenDropDown(false)}
-                  >
-                    <ul className="list list-inline mb-0 headerTabs">
-                      <li className="list-inline-item">
-                        <Link to="/compare">
-                          <Button>
-                            <span>
-                              <DynamicIcon
-                                iconName="LoopOutlined"
-                                className="Icon"
-                              />
-                              Compare
-                            </span>
-                          </Button>
-                        </Link>
-                      </li>
-                      <li className="list-inline-item">
-                        <Link to={"/wishlist"}>
-                          <Button>
-                            <span>
-                              <DynamicIcon
-                                iconName="FavoriteBorder"
-                                className="Icon"
-                              />
-                              Wishlist
-                            </span>
-                          </Button>
-                        </Link>
-                      </li>
-                      <li className="list-inline-item">
-                        <Link to={"/cart"}>
-                          <Button>
-                            <span>
-                              <DynamicIcon
-                                iconName="ShoppingCartOutlined"
-                                className="Icon"
-                              />
-                              Cart
-                            </span>
-                          </Button>
-                        </Link>
-                      </li>
-                      <li className="list-inline-item">
-                        {Context.isLogin !== true ? (
-                          <div className="btn">
-                            <Link to="/auth/signin">
-                              <Button className="login-btn">Login</Button>
-                            </Link>
-                          </div>
-                        ) : (
-                          <Button
-                            onClick={() => set(!isOpenDropDown)}
-                          >
-                            {Context.user?.image !== "" ? (
-                              <img
-                                src={Context.user.image}
-                                alt="userImage"
-                                className="userImage"
-                              />
-                            ) : (
+                  <ul className="list list-inline mb-0 headerTabs">
+                    <li className="list-inline-item">
+                      <Link to="/compare">
+                        <Button>
+                          <span>
+                            <DynamicIcon
+                              iconName="LoopOutlined"
+                              className="Icon"
+                            />
+                            Compare
+                          </span>
+                        </Button>
+                      </Link>
+                    </li>
+                    <li className="list-inline-item">
+                      <Link to={"/wishlist"}>
+                        <Button>
+                          <span>
+                            <DynamicIcon
+                              iconName="FavoriteBorder"
+                              className="Icon"
+                            />
+                            Wishlist
+                          </span>
+                        </Button>
+                      </Link>
+                    </li>
+                    <li className="list-inline-item">
+                      <Link to={"/cart"}>
+                        <Button>
+                          <span>
+                            <DynamicIcon
+                              iconName="ShoppingCartOutlined"
+                              className="Icon"
+                            />
+                            Cart
+                          </span>
+                        </Button>
+                      </Link>
+                    </li>
+                    <li className="list-inline-item">
+                      {Context.isLogin !== true ? (
+                        <div className="btn">
+                          <Link to="/auth/signin">
+                            <Button className="login-btn">Login</Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={() => setisOpenDropDown(!isOpenDropDown)}
+                        >
+                          {Context.user?.image !== "" ? (
+                            <img
+                              src={Context.user.image}
+                              alt="userImage"
+                              className="userImage"
+                            />
+                          ) : (
+                            <DynamicIcon
+                              iconName="PersonOutlined"
+                              className="Icon"
+                            />
+                          )}
+                          {Context.user.name}
+                        </Button>
+                      )}
+                      {/*  */}
+
+                      {isOpenDropDown !== false && (
+                        <ul className="dropdownMenu">
+                          <li className="lists">
+                            <Button>
                               <DynamicIcon
                                 iconName="PersonOutlined"
                                 className="Icon"
                               />
-                            )}
-                            {Context.user.name}
-                          </Button>
-                        )}
-                        {/*  */}
-
-                        {isOpenDropDown !== false && (
-                          <ul className="dropdownMenu">
-                            <li className="lists">
-                              <Button>
-                                <DynamicIcon
-                                  iconName="PersonOutlined"
-                                  className="Icon"
-                                />
-                                My Account
-                              </Button>
-                            </li>
-                            <li>
-                              <Button>
-                                <DynamicIcon
-                                  iconName="LocationOnOutlined"
-                                  className="Icon"
-                                />
-                                Order Tracking
-                              </Button>
-                            </li>
-                            <li>
-                              <Button>
-                                <DynamicIcon
-                                  iconName="ShoppingCartOutlined"
-                                  className="Icon"
-                                />
-                                My Orders
-                              </Button>
-                            </li>
-                            <li>
-                              <Button>
-                                <DynamicIcon
-                                  iconName="TuneOutlined"
-                                  className="Icon"
-                                />
-                                Setting
-                              </Button>
-                            </li>
-                            <li>
-                              <Button onClick={() => logout()}>
-                                <DynamicIcon
-                                  iconName="LogoutOutlined"
-                                  className="Icon"
-                                />
-                                Sign Out
-                              </Button>
-                            </li>
-                          </ul>
-                        )}
-                      </li>
-                    </ul>
-                  </ClickAwayListener>
+                              My Account
+                            </Button>
+                          </li>
+                          <li>
+                            <Button>
+                              <DynamicIcon
+                                iconName="LocationOnOutlined"
+                                className="Icon"
+                              />
+                              Order Tracking
+                            </Button>
+                          </li>
+                          <li>
+                            <Button>
+                              <DynamicIcon
+                                iconName="ShoppingCartOutlined"
+                                className="Icon"
+                              />
+                              My Orders
+                            </Button>
+                          </li>
+                          <li>
+                            <Button>
+                              <DynamicIcon
+                                iconName="TuneOutlined"
+                                className="Icon"
+                              />
+                              Setting
+                            </Button>
+                          </li>
+                          <li>
+                            <Button onClick={() => logout()}>
+                              <DynamicIcon
+                                iconName="LogoutOutlined"
+                                className="Icon"
+                              />
+                              Sign Out
+                            </Button>
+                          </li>
+                        </ul>
+                      )}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
