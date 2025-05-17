@@ -94,36 +94,30 @@ const Home = () => {
     <>
       <HomeSliderBanner />
       <CatSlider />
-      {/* <Banners /> */}
+
       <section className="homeProducts">
         <div className="container-fluid">
-          <div className="d-flex align-items-center">
+          <div className="d-flex flex-wrap align-items-center">
             <h2 className="hd mb-0 mt-0">Popular Products</h2>
-            <ul className="list list-inline ml-auto filterTab mb-0">
-              <li className="list list-inline-item">
-                <a className="cursor">All</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">Milks & Dairies</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">Coffes & Teas</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">Pet Foods</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">Vegetable</a>
-              </li>
-              <li className="list list-inline-item">
-                <a className="cursor">Fruits</a>
-              </li>
+            <ul className="list-inline ml-auto mb-0 flex-wrap">
+              {[
+                "All",
+                "Milks & Dairies",
+                "Coffees & Teas",
+                "Pet Foods",
+                "Vegetables",
+                "Fruits",
+              ].map((category, index) => (
+                <li className="list-inline-item" key={index}>
+                  <a className="cursor">{category}</a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div className="productRow">
+          <div className="row">
             {products.map((product, index) => (
-              <div className="item" key={index}>
+              <div className="col-sm-6 col-md-4 col-lg-3 mb-4" key={index}>
                 <Product
                   tag={product.company}
                   image={product.images[0]}
@@ -139,11 +133,12 @@ const Home = () => {
           </div>
         </div>
       </section>
+
       <section className="homeProducts homeProductRow2 pt-0">
         <div className="container-fluid">
-          <div className="d-flex align-items-center ml-auto">
+          <div className="d-flex flex-wrap align-items-center">
             <h2 className="hd mb-0 mt-0">Daily Best Sells</h2>
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%" }} className="mt-3">
               <Tabs
                 value={selection}
                 onChange={handleSelection}
@@ -158,22 +153,21 @@ const Home = () => {
               </Tabs>
             </Box>
           </div>
-          <br />
-          <br />
-          <div className="row">
-            <div className="col-md-3 pr-5 ">
-              <img src={images.banner4} className="w-100" />
+
+          <div className="row mt-4">
+            <div className="col-12 col-md-3 mb-4">
+              <img src={images.banner4} className="img-fluid" alt="Banner" />
             </div>
-            <div className="col-md-9">
+            <div className="col-12 col-md-9">
               <h4>You May Like This</h4>
               <CollaborativeRecommendations setRec_prods={setRec_prods} />
               <Slider {...settings} className="productSlider">
                 {rec_prods.length >= 5
-                  ? rec_prods?.map((product) => (
+                  ? rec_prods.map((product) => (
                       <div key={product._id} className="item">
                         <Product
                           tag={product.company}
-                          image={product.images?.[0]}
+                          image={product.images[0]}
                           name={product.name}
                           ratings={product.ratings}
                           actual_price={product.actual_price}
@@ -183,7 +177,7 @@ const Home = () => {
                         />
                       </div>
                     ))
-                  : products?.slice(0, 5).map((product, index) => (
+                  : products.slice(0, 5).map((product, index) => (
                       <div className="item" key={index}>
                         <Product
                           tag={product.company}
@@ -200,35 +194,17 @@ const Home = () => {
               </Slider>
             </div>
           </div>
-          <br /> <br />
-          <section className="newsLetterSection">
-            <div className="container-fluid ">
-              <div className="box d-flex align-items-center">
-                <div className="info">
-                  <h2>Stay Home & get your daily needs from our shop</h2>
-                  <p>Start your Daily Shopping With Nest Mart</p>
-                  <br /> <br />
-                  <Newsletter />
-                </div>
-                <div className="img">
-                  <img src={images.banner9} className="w-100" />
-                </div>
-              </div>
-            </div>
-          </section>
-          <br />
-          <br />
-          <div className="row">
-            <div className="col-md-3 pr-5 ">
-              <img src={images.banner4} className="w-100" />
-            </div>
 
-            <div className="col-md-9">
+          <div className="row mt-4">
+            <div className="col-12 col-md-3 mb-4">
+              <img src={images.banner4} className="img-fluid" alt="Banner" />
+            </div>
+            <div className="col-12 col-md-9">
               <h4>Recommended Products</h4>
               <ContentBasedRecommendations setContent={setContent} />
               <Slider {...settings} className="productSlider">
-                {content?.length >= 5
-                  ? content?.map((product) => (
+                {content.length >= 5
+                  ? content.map((product) => (
                       <div key={product._id} className="item">
                         <Product
                           tag={product.company}
@@ -242,7 +218,7 @@ const Home = () => {
                         />
                       </div>
                     ))
-                  : products?.slice(5, 10).map((product, index) => (
+                  : products.slice(5, 10).map((product, index) => (
                       <div className="item" key={index}>
                         <Product
                           tag={product.company}

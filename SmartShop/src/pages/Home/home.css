@@ -1,75 +1,79 @@
+/* Home Products Grid */
 .homeProducts {
   padding: 25px 0px;
-}
-.filterTab li {
-  margin-left: 20px;
-  position: relative;
-}
-
-.filterTab li a {
-  color: black;
-  text-decoration: none;
-  font-size: 20px;
-  transition: all 0.3s ease-in-out;
-  position: relative;
-  font-weight: 600;
-}
-
-.filterTab li:hover a {
-  color: #3bb77e !important;
-  transform: translateY(-10px);
 }
 
 .homeProducts .productRow {
   display: flex;
-  padding: 30px 0px;
-  margin: 0px -25px;
   flex-wrap: wrap;
+  margin: 0 -15px;
+  gap: 20px;
 }
 
+/* Product Item Styles */
 .homeProducts .productRow .item {
-  width: 20% !important;
-  height: auto !important;
-  padding: 15px 15px;
+  flex: 1 1 calc(20% - 30px);
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin: 10px 0px 10px 0px;
+  margin: 10px 0;
+  transition: all 0.3s ease-in-out;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
 }
 
-.homeProducts .productRow .item .prod-img img {
-  object-fit: contain !important;
-  width: 100% !important;
-  height: 100% !important;
+/* Responsive Grid */
+@media (max-width: 1200px) {
+  .homeProducts .productRow .item {
+    flex: 1 1 calc(25% - 30px);
+  }
 }
 
-.homeProductRow2 .productSlider .item {
-  padding: 15px 5px !important;
-
-  padding-right: 25px !important;
+@media (max-width: 992px) {
+  .homeProducts .productRow .item {
+    flex: 1 1 calc(33.33% - 30px);
+  }
 }
 
-.topProductsSection {
-  padding: 35px 0px;
+@media (max-width: 768px) {
+  .homeProducts .productRow .item {
+    flex: 1 1 calc(50% - 30px);
+  }
 }
 
+@media (max-width: 576px) {
+  .homeProducts .productRow .item {
+    flex: 1 1 calc(100% - 30px);
+  }
+}
+
+/* Product Image Styles */
+.homeProducts .productRow .item img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.homeProducts .productRow .item:hover img {
+  transform: scale(1.05);
+}
+
+/* Newsletter Section */
 .newsLetterSection {
   width: 100%;
   height: auto;
+  padding: 50px 20px;
 }
 
 .newsLetterSection .box {
-  background: url(../../assets/banner10.png);
-  width: 100%;
-  height: auto;
-  padding: 80px 80px;
+  background: url(../../assets/banner10.png) no-repeat center center / cover;
+  padding: 80px;
   border-radius: 30px;
   overflow: hidden;
-}
-
-.newsLetterSection .box .info {
-  width: 55%;
 }
 
 .newsLetterSection .box .info h2 {
@@ -84,16 +88,17 @@
   opacity: 0.8;
 }
 
-.newsLetterSection .box .img {
-  width: 45%;
-}
-.newsLetterSection .box .img img {
-  position: relative;
-  top: 78px;
-}
+@media (max-width: 768px) {
+  .newsLetterSection .box {
+    padding: 40px 20px;
+  }
 
-.newsLetterSection .box .newsLetterBanner {
-  position: relative !important;
-  left: 0 !important;
-  bottom: inherit;
+  .newsLetterSection .box .info h2 {
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .newsLetterSection .box .info p {
+    font-size: 18px;
+  }
 }

@@ -1,12 +1,13 @@
+/* Badge Styles */
 .badge {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 10px;
+  left: 10px;
   display: inline-block;
   z-index: 10;
   color: #fff;
-  padding: 10px 25px;
-  font-size: 16px;
+  padding: 5px 15px;
+  font-size: 12px;
   border-bottom-right-radius: 50px;
   border-top-left-radius: 5px;
   text-transform: capitalize;
@@ -24,21 +25,21 @@
   background: #f59758 !important;
 }
 
+/* Product Item Styles */
 .item {
   position: relative;
   overflow: hidden;
-}
-
-.item .info {
-  padding: 10px;
-}
-
-.item:hover {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.23) !important;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
 .item img {
-  transition: all 0.3s ease-in-out;
+  width: 100%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.item:hover img {
+  transform: scale(1.05);
 }
 
 .overlay {
@@ -47,7 +48,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 25px;
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,6 +56,7 @@
   transform: scale(0.8);
   background: rgba(0, 0, 0, 0.1);
   z-index: 20;
+  transition: all 0.3s ease-in-out;
 }
 
 .item:hover .overlay {
@@ -62,88 +64,107 @@
   transform: scale(1);
 }
 
-.item .overlay ul {
-  background: #fff;
-  width: 149px;
-  height: auto;
-  border-radius: 10px;
-  border: 1px solid #bce3c9;
+/* Info Section */
+.item .info {
+  padding: 15px;
+  text-align: center;
 }
 
-.item .overlay ul li {
-  margin-right: 0px !important;
-}
-
-.item .overlay ul li a {
-  background: #fff;
-  display: block;
-  padding: 10px;
-  border-radius: 1px solid #bce3c9;
-}
-
-.item .overlay ul li a svg {
-  color: #3bb77e !important;
-}
-
-.item .overlay ul li a:hover svg {
-  color: #000 !important;
-  opacity: 0.7;
-}
-
-.item:hover img {
-  transform: scale(1, 1);
-}
-
-.item .catName {
-  color: #000;
-  opacity: 0.8;
-  font-size: 15px;
-}
 .item .title {
-  margin: 10px 0px;
+  margin: 10px 0;
+  font-size: 18px;
 }
 
 .item .title a {
   color: #000;
   font-weight: 600;
-  font-size: 22px;
-  text-decoration: none;
-  line-height: 25px;
-}
-
-.item .brand {
-  color: rgba(0, 0, 0, 0.6);
-}
-
-.item .brand a {
+  font-size: 18px;
   text-decoration: none;
 }
+
 .item .info .price {
-  font-size: 30px !important;
-  margin-right: 20px;
+  font-size: 22px;
+  margin-right: 10px;
 }
 
-.item .brand .oldPrice {
-  font-size: 20px;
-  opacity: 0.6;
-  color: #000;
+.item .info .oldPrice {
+  font-size: 16px;
+  color: #999;
   text-decoration: line-through;
 }
 
 .item .info .btn-g {
-  font-size: 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  background-color: #3bb77e;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
 }
 
-/* .item .button {
-  font-size: 40px;
-  color: #3bb77e !important;
-  padding: 10px 20px !important;
-  background: #def9ec !important;
-  text-transform: capitalize !important;
-  background: #3bb77e !important;
+.item .info .btn-g:hover {
+  background-color: #2a9f68;
 }
 
-.item button:hover {
-  background: #3bb77e !important;
-  color: #fff !important;
-} */
+/* Overlay Icons */
+.item .overlay ul {
+  background: #fff;
+  width: 120px;
+  border-radius: 10px;
+  border: 1px solid #bce3c9;
+  padding: 5px;
+}
+
+.item .overlay ul li {
+  margin: 5px 0;
+}
+
+.item .overlay ul li a {
+  display: block;
+  padding: 10px;
+  color: #3bb77e;
+  transition: color 0.3s ease-in-out;
+}
+
+.item .overlay ul li a svg {
+  font-size: 22px;
+}
+
+.item .overlay ul li a:hover svg {
+  color: #000 !important;
+  opacity: 0.8;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .badge {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+
+  .item .title {
+    font-size: 16px;
+  }
+
+  .item .info .price {
+    font-size: 18px;
+  }
+
+  .item .info .oldPrice {
+    font-size: 14px;
+  }
+
+  .item .info .btn-g {
+    font-size: 14px;
+    padding: 5px 15px;
+  }
+
+  .overlay ul {
+    width: 100px;
+  }
+
+  .overlay ul li a svg {
+    font-size: 18px;
+  }
+}
