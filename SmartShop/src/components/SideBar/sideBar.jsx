@@ -1,11 +1,9 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import "./sideBar.css";
 
-import images from "../../constants/images";
-import Slider from "@mui/material/Slider";
-import Checkbox from "@mui/material/Checkbox";
-import Button from "@mui/material/Button";
-import DynamicIcon from "../../constants/icons.jsx";
+import { Slider, Checkbox, Button, capitalize } from "@mui/material";
+import { DynamicIcon } from "../../constants";
+import { fetchDataFromApi } from "../../utils/api.js";
 
 function valuetext(value) {
   return `$(value)°C`;
@@ -13,10 +11,20 @@ function valuetext(value) {
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const SideBar = () => {
-  const [value, setValue] = React.useState([200, 800]);
+const SideBar = ({ setSelectedCategory, selectedCategory }) => {
+  const [value, setValue] = useState([200, 800]);
+  const [catData, setCatData] = useState([]);
+  useEffect(() => {
+    fetchDataFromApi("/api/category")
+      .then((res) => {
+        setCatData(res?.categoryList);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
 
-  const handleChange = (event, newValue) => {
+  const handleSliderChange = (event, newValue) => {
     setValue(newValue);
   };
 
@@ -27,63 +35,45 @@ const SideBar = () => {
           <h3>Category</h3>
 
           <div className="catList">
-            <div className="catItem d-flex align-items-center">
+            <div
+              className={`catItem d-flex align-items-center ${
+                selectedCategory === "All" ? "active" : ""
+              }`}
+              onClick={() => setSelectedCategory("All")}
+            >
               <span className="img">
-                <img src={images.DrinksIcon} alt="Icon" width={30} />
-                <h4 className="mb-0 ml-3 mr-3">Milks & Drinks</h4>
-                <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                  30
-                </span>
+                <img
+                  src="https://cdn.pixabay.com/photo/2021/10/11/23/49/app-6702045_1280.png"
+                  alt="Icon"
+                  width={80}
+                />
+                <h4 className="mb-0 ml-3 mr-3">All Categories</h4>
               </span>
             </div>
-            <div className="catItem d-flex align-items-center">
-              <span className="img">
-                <img src={images.ClothesIcon} alt="Icon" width={30} />
-                <h4 className="mb-0 ml-3 mr-3">Clothing</h4>
-                <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                  30
+            {catData?.map((cat) => (
+              <div
+                className={`catItem d-flex align-items-center ${
+                  selectedCategory === cat.name ? "active" : ""
+                }`}
+                key={cat._id}
+                onClick={() => setSelectedCategory(cat.name)}
+              >
+                <span className="img">
+                  <img src={cat.images[0]} alt="Icon" width={80} />
+                  <h4 className="mb-0 ml-3 mr-3">{capitalize(cat.name)}</h4>
                 </span>
-              </span>
-            </div>
-            <div className="catItem d-flex align-items-center">
-              <span className="img">
-                <img src={images.snacksIcon} alt="Icon" width={30} />
-                <h4 className="mb-0 ml-3 mr-3">Snacks</h4>
-                <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                  30
-                </span>
-              </span>
-            </div>
-            <div className="catItem d-flex align-items-center">
-              <span className="img">
-                <img src={images.FruitsIcon} alt="Icon" width={30} />
-                <h4 className="mb-0 ml-3 mr-3">Fresh Fruits</h4>
-                <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                  30
-                </span>
-              </span>
-            </div>
-            <div className="catItem d-flex align-items-center">
-              <span className="img">
-                <img src={images.petFoodIcon} alt="Icon" width={30} />
-                <h4 className="mb-0 ml-3 mr-3">Pet Foods</h4>
-                <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                  30
-                </span>
-              </span>
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="card border-0 shadow">
           <h3>Fill by price</h3>
           <Slider
-            min={0}
             step={1}
-            max={1000}
             getAriaLabel={() => "Temperature range"}
             value={value}
-            onChange={handleChange}
+            onChange={handleSliderChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
             color="success"
@@ -99,35 +89,19 @@ const SideBar = () => {
           </div>
 
           <div className="filters">
-            <h5>Color</h5>
+            <h5>Company</h5>
             <ul className="mb-0">
               <li>
                 <Checkbox {...label} color="success" />
-                Red
+                Amazon
               </li>
               <li>
                 <Checkbox {...label} color="success" />
-                Red
+                Flipkart
               </li>
               <li>
                 <Checkbox {...label} color="success" />
-                Red
-              </li>
-              <li>
-                <Checkbox {...label} color="success" />
-                Red
-              </li>
-              <li>
-                <Checkbox {...label} color="success" />
-                Red
-              </li>
-              <li>
-                <Checkbox {...label} color="success" />
-                Red
-              </li>
-              <li>
-                <Checkbox {...label} color="success" />
-                Red
+                Meesho
               </li>
             </ul>
           </div>

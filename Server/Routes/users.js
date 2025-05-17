@@ -63,18 +63,16 @@ router.post(`/upload`, upload.array("images"), async (req, res) => {
 });
 
 router.post(`/signUp`, async (req, res) => {
-  const { name, phone, email, password, isAdmin } = req.body;
+  const { name, email, password, isAdmin } = req.body;
   try {
     const existingUser = await User.findOne({ email: email });
-    const existingUserByPh = await User.findOne({ phone: phone });
 
-    if (existingUser || existingUserByPh) {
+    if (existingUser) {
       res.status(400).json({ error: true, msg: "user already exist!" });
     } else {
       const hashPassword = await bcrypt.hash(password, 10);
       const result = await User.create({
         name: name,
-        phone: phone,
         email: email,
         password: hashPassword,
         isAdmin: isAdmin,
@@ -123,47 +121,8 @@ router.post(`/signIn`, async (req, res) => {
   }
 });
 
-// router.post(`/authWithGoogle`, async (req, res) => {
-//   const { name, phone, email, password, images, isAdmin } = req.body;
-//   try {
-//     const existingUser = await User.findOne({ email: email });
-//     if (existingUser) {
-//       const result = await User.create({
-//         name: name,
-//         phone: phone,
-//         email: email,
-//         password: password,
-//         images: images,
-//         isAdmin: isAdmin,
-//       }); //need to replace with vite.
-//       const token = jwt.sign(
-//         { email: result.email, id: result._id },
-//         process.env.JSON_WEB_TOKEN_SECRET_KEY
-//       );
-//       return res.status(200).send({
-//         user: result,
-//         token: token,
-//         msg: "User Login Successfully!",
-//       });
-//     } else {
-//       const existingUser = await User.findOne({ email: email });
-//       const token = jwt.sign(
-//         { email: existingUser.email, id: existingUser._id },
-//         process.env.JSON_WEB_TOKEN_SECRET_KEY
-//       );
-//       return res.status(200).send({
-//         user: existingUser,
-//         token: token,
-//         msg: "User Login Successfully!",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
 router.post(`/authWithGoogle`, async (req, res) => {
-  const { name, phone, email, images, isAdmin } = req.body; // Removed `password`
+  const { name, email, images, isAdmin } = req.body; // Removed `password`
 
   try {
     let user = await User.findOne({ email });
@@ -172,7 +131,6 @@ router.post(`/authWithGoogle`, async (req, res) => {
       // If the user does NOT exist, create a new user
       user = await User.create({
         name,
-        phone,
         email,
         images,
         isAdmin: isAdmin || false, // Ensure only intended users are admins

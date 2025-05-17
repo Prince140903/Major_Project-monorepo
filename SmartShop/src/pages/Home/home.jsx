@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./home.css";
 import HomeSliderBanner from "./Slider/slider.jsx";
-import { CatSlider, Newsletter, Product } from "../../components";
+import {
+  CatSlider,
+  Newsletter,
+  Product,
+  CollaborativeRecommendations,
+  ContentBasedRecommendations,
+} from "../../components";
 import { images } from "../../constants";
 import Slider from "react-slick";
-import { Link } from "react-router-dom";
+import { MyContext } from "../../App.jsx";
 
 import { Tab, Tabs, Box } from "@mui/material";
 import { fetchDataFromApi } from "../../utils/api.js";
@@ -21,6 +27,8 @@ const Home = () => {
   };
 
   const [products, setProducts] = useState([]);
+  const [rec_prods, setRec_prods] = useState([]);
+  const [content, setContent] = useState([]);
   const [selection, setSelection] = useState("Featured");
 
   useEffect(() => {
@@ -156,57 +164,99 @@ const Home = () => {
             <div className="col-md-3 pr-5 ">
               <img src={images.banner4} className="w-100" />
             </div>
-
             <div className="col-md-9">
+              <h4>You May Like This</h4>
+              <CollaborativeRecommendations setRec_prods={setRec_prods} />
               <Slider {...settings} className="productSlider">
-                {products.map((product, index) => (
-                  <div className="item pl-4" key={index}>
-                    <Product
-                      tag={product.company}
-                      image={product.images[0]}
-                      name={product.name}
-                      ratings={product.ratings}
-                      actual_price={product.actual_price}
-                      discount_price={product.discount_price}
-                      _id={product._id}
-                      className="prod-img"
-                    />
-                  </div>
-                ))}
+                {rec_prods.length >= 5
+                  ? rec_prods?.map((product) => (
+                      <div key={product._id} className="item">
+                        <Product
+                          tag={product.company}
+                          image={product.images?.[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))
+                  : products?.slice(0, 5).map((product, index) => (
+                      <div className="item" key={index}>
+                        <Product
+                          tag={product.company}
+                          image={product.images[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))}
               </Slider>
             </div>
           </div>
-        </div>
-      </section>
-      {/* <section className="topProductsSection">
-        <div className="container-fluid">
+          <br /> <br />
+          <section className="newsLetterSection">
+            <div className="container-fluid ">
+              <div className="box d-flex align-items-center">
+                <div className="info">
+                  <h2>Stay Home & get your daily needs from our shop</h2>
+                  <p>Start your Daily Shopping With Nest Mart</p>
+                  <br /> <br />
+                  <Newsletter />
+                </div>
+                <div className="img">
+                  <img src={images.banner9} className="w-100" />
+                </div>
+              </div>
+            </div>
+          </section>
+          <br />
+          <br />
           <div className="row">
-            <div className="col">
-              <TopProducts title="Top Selling" />
+            <div className="col-md-3 pr-5 ">
+              <img src={images.banner4} className="w-100" />
             </div>
-            <div className="col">
-              <TopProducts title="Trending Products" />
-            </div>
-            <div className="col">
-              <TopProducts title="Recently added" />
-            </div>
-            <div className="col">
-              <TopProducts title="Top Rated" />
-            </div>
-          </div>
-        </div>
-      </section> */}
-      <section className="newsLetterSection">
-        <div className="container-fluid ">
-          <div className="box d-flex align-items-center">
-            <div className="info">
-              <h2>Stay Home & get your daily needs from our shop</h2>
-              <p>Start your Daily Shopping With Nest Mart</p>
-              <br /> <br />
-              <Newsletter />
-            </div>
-            <div className="img">
-              <img src={images.banner9} className="w-100" />
+
+            <div className="col-md-9">
+              <h4>Recommended Products</h4>
+              <ContentBasedRecommendations setContent={setContent} />
+              <Slider {...settings} className="productSlider">
+                {content?.length >= 5
+                  ? content?.map((product) => (
+                      <div key={product._id} className="item">
+                        <Product
+                          tag={product.company}
+                          image={product.images[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))
+                  : products?.slice(5, 10).map((product, index) => (
+                      <div className="item" key={index}>
+                        <Product
+                          tag={product.company}
+                          image={product.images[0]}
+                          name={product.name}
+                          ratings={product.ratings}
+                          actual_price={product.actual_price}
+                          discount_price={product.discount_price}
+                          _id={product._id}
+                          className="prod-img"
+                        />
+                      </div>
+                    ))}
+              </Slider>
             </div>
           </div>
         </div>

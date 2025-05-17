@@ -17,7 +17,7 @@ import LazyLoad from "react-lazyload";
 
 const Dashboard = () => {
   const desktopOS = [
-    { id: "Windows", value: 50 },
+    { id: "hi", value: 50 },
     { id: "macOS", value: 30 },
     { id: "Linux", value: 20 },
   ];
@@ -96,21 +96,29 @@ const Dashboard = () => {
                 choice={true}
                 color={["#1da256", "#48d483"]}
                 grow={true}
+                tag={"Total Proucts"}
+                total={totalProducts}
                 icon={<DynamicIcon iconName="AccountCircleOutlined" />}
               />
               <Box
                 choice={true}
+                tag={"Total Carts"}
+                total={98}
                 color={["#c012e2", "#eb64fe"]}
                 icon={<DynamicIcon iconName="ShoppingCartOutlined" />}
               />
               <Box
                 choice={true}
+                tag={"Total Wishlists"}
+                total={56}
                 color={["#2c78e5", "#60aff5"]}
                 icon={<DynamicIcon iconName="LocalMallOutlined" />}
               />
               <Box
                 choice={true}
                 grow={true}
+                tag={"Total Users"}
+                total={120}
                 color={["#e1950e", "#f3cd29"]}
                 icon={<DynamicIcon iconName="StarsOutlined" />}
               />
@@ -174,8 +182,9 @@ const Dashboard = () => {
                   className="w-100 drop"
                 >
                   <MenuItem value="All">All</MenuItem>
-                  <MenuItem value="Amazon">Amazon</MenuItem>
-                  <MenuItem value="Flipkart">Flipkart</MenuItem>
+                  <MenuItem value="amazon">Amazon</MenuItem>
+                  <MenuItem value="flipkart">Flipkart</MenuItem>
+                  <MenuItem value="meesho">Meesho</MenuItem>
                 </Select>
               </FormControl>
             </div>

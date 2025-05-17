@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { io } from "socket.io-client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -16,10 +17,14 @@ import {
   Forget,
   WishList,
 } from "./pages";
-// import { fetchDataFromApi } from "./utils/api";
 import { Snackbar, Alert } from "@mui/material";
 
 export const MyContext = createContext();
+const socket = io(import.meta.env.VITE_BASE_URL, {
+  auth: {
+    token: localStorage.getItem("token"),
+  },
+});
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -44,8 +49,6 @@ function App() {
     }
   }, [isLogin]);
 
-  useEffect(() => {});
-
   const values = {
     isLogin,
     setIsLogin,
@@ -55,6 +58,22 @@ function App() {
     progress,
     setProgress,
   };
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+      socket.emit("register", token); // Backend now knows this socket belongs to this user
+    });
+
+    socket.on("newProductNotification", (data) => {
+      console.log("🔔 Notification received:", data);
+      // Show toast or update UI
+    });
+
+    return () => {
+      socket.disconnect(); // clean up on unmount
+    };
+  }, []);
 
   const handleClose = (reason) => {
     if (reason === "clickaway") {

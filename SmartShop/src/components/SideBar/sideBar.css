@@ -40,6 +40,16 @@
 .sidebarWrapper .catList {
   display: flex;
   flex-direction: column;
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+.sidebarWrapper .catList::-webkit-scrollbar {
+  width: 10px !important;
+}
+
+.sidebarWrapper .catList::-webkit-scrollbar-thumb {
+  background: #ccc;
 }
 
 .sidebarWrapper .catList .catItem .img {
@@ -111,4 +121,8 @@
   width: 100%;
   margin-bottom: 0px;
   list-style: none;
+}
+
+.active {
+  background: #d8f1e5;
 }

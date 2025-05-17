@@ -2,35 +2,45 @@ import React, { useEffect, useState } from "react";
 import "./compare.css";
 
 import { DynamicIcon } from "../../constants";
-import { FormControl, Select, MenuItem, Rating } from "@mui/material";
+import { Product } from "../../components";
+import { Rating, capitalize } from "@mui/material";
 import Slider from "react-slick";
 import { fetchDataFromApi } from "../../utils/api";
 import LazyLoad from "react-lazyload";
+import { Link } from "react-router-dom";
 
 const Compare = () => {
+  const [selectedProductName, setSelectedProductName] = useState("");
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [products2, setProducts2] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [company, setCompany] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("OnePlus");
-  const [selection, setSelection] = useState("Featured");
-  const [activePoduct1, setActiveProduct1] = useState(0);
-  const [activePoduct2, setActiveProduct2] = useState(0);
+  const [products3, setProducts3] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  var related = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    fade: false,
+    arrows: true,
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const Prods = await fetchDataFromApi(
-          `/api/products/filter?search=${searchQuery}&company=amazon&limit=5&selection=${selection}`
+          `/api/products/filter?search=${searchQuery}&limit=5`
         );
 
         const { products, total } = Prods;
 
         if (!products || products.length === 0) {
-          setProducts([]);
+          setAllProducts([]);
           return;
         }
-        setProducts(products);
+        setAllProducts(products);
       } catch (error) {
         if (error.response && error.response.status === 404) {
           console.warn("API returned 404: Not Found.");
@@ -41,68 +51,74 @@ const Compare = () => {
       }
     };
     fetchProducts();
-  }, [searchQuery, selection]);
+  }, [searchQuery]);
+
+  function slugify(str) {
+    return str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "") // Remove special characters
+      .replace(/\s+/g, "-"); // Replace spaces with dashes
+  }
 
   useEffect(() => {
-    const fetchProducts2 = async () => {
+    const fetchSameNameProducts = async () => {
+      if (!selectedProductName) return;
+
+      const slug = slugify(selectedProductName);
+
       try {
-        const Prods = await fetchDataFromApi(
-          `/api/products/filter?search=${searchQuery}&company=flipkart&limit=5&selection=${selection}`
+        const res = await fetchDataFromApi(`/api/products/filter?slug=${slug}`);
+        const { products } = res;
+
+        // Filter to exact match name (optional if your backend already filters properly)
+        const exactMatch = products.filter(
+          (p) => p.name === selectedProductName
         );
 
-        const { products, total } = Prods;
+        // Get one product per company
+        const amazon = exactMatch.find((p) => p.company === "amazon");
+        const flipkart = exactMatch.find((p) => p.company === "flipkart");
+        const meesho = exactMatch.find((p) => p.company === "meesho");
 
-        if (!products || products.length === 0) {
-          setProducts2([]);
-          return;
-        }
-
-        setProducts2(products);
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          console.warn("API returned 404: Not Found.");
-          setProducts2([]);
-        } else {
-          console.error("Error fetching search results:", error);
-        }
+        setProducts(amazon ? [amazon] : []);
+        setProducts2(flipkart ? [flipkart] : []);
+        setProducts3(meesho ? [meesho] : []);
+      } catch (err) {
+        console.error("Error fetching products by name:", err);
       }
     };
-    fetchProducts2();
-  }, [searchQuery, selection]);
 
-  var settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: true,
-  };
+    fetchSameNameProducts();
+  }, [selectedProductName]);
 
-  const productSlider1 = (index) => {
-    setActiveProduct1(index);
-  };
-  const productSlider2 = (index) => {
-    setActiveProduct2(index);
-  };
-
-  const handleSelection = (event) => {
-    setSelection(event.target.value);
+  const handleSelect = (product) => {
+    setSelectedProductName(product.name);
+    setSearchQuery("");
   };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
-    // setPage(1);
   };
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-    // setPage(1);
+  const calculateScore = (product) => {
+    if (!product) return 0;
+
+    // Normalize values
+    const ratingScore = product.ratings * 20; // Convert 5-star rating to 100 scale
+    const reviewScore = Math.log(product.no_of_ratings + 1) * 10; // Log scale to prevent very high values
+    const priceScore = (1 / (product.discount_price + 1)) * 10000; // Inverse so lower price is better
+
+    return ratingScore + reviewScore + priceScore; // Total weighted score
   };
-  const handleCompanyChange = (event) => {
-    setCompany(event.target.value);
-    // setPage(1);
-  };
+
+  const allProductsArray = [products[0], products2[0], products3[0]].filter(
+    Boolean
+  ); // Remove empty values
+  const sortedProducts = allProductsArray
+    .map((product) => ({ product, score: calculateScore(product) }))
+    .sort((a, b) => b.score - a.score) // Sort in descending order
+    .slice(0, 2); // Pick top 2
 
   return (
     <>
@@ -119,117 +135,31 @@ const Compare = () => {
               value={searchQuery}
               onChange={handleSearch}
             />
+            {searchQuery && (
+              <div className="search-dropdown1">
+                {allProducts.length > 0 ? (
+                  allProducts.map((product, index) => (
+                    <div
+                      key={index}
+                      className="search-item"
+                      onClick={() => handleSelect(product)}
+                    >
+                      {product.name} &nbsp;
+                      <p>{capitalize(product.company)}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-results">No results found</div>
+                )}
+              </div>
+            )}
             <label className="btn-g">
               Search Item <DynamicIcon iconName="Search" />
             </label>
           </div>
 
-          {/* <div className="filterSection">
-            <div className="container-fluid">
-              <div className="row w-100">
-                <div className="col">
-                  <h4>Sort By</h4>
-                  <FormControl size="small" className="w-100">
-                    <Select
-                      labelId="select1-label"
-                      id="select1"
-                      value={limit}
-                      onChange={handleLimitChange}
-                      className="w-100 drop"
-                    >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="col">
-                  <h4>Select Company</h4>
-                  <FormControl size="small" className="w-100">
-                    <Select
-                      labelId="select2-label"
-                      id="select2"
-                      value={company}
-                      onChange={handleCompanyChange}
-                      className="w-100 drop"
-                    >
-                      <MenuItem value="All">All</MenuItem>
-                      <MenuItem value="amazon">Amazon</MenuItem>
-                      <MenuItem value="flipkart">Flipkart</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="col">
-                  <h4>Sort by</h4>
-                  <FormControl size="small" className="w-100">
-                    <Select
-                      labelId="select3-label"
-                      id="select3"
-                      value={selection}
-                      onChange={handleSelection}
-                      className="w-100  drop"
-                    >
-                      <MenuItem value="Featured">Featured</MenuItem>
-                      <MenuItem value="Low->High">Price: Low to High</MenuItem>
-                      <MenuItem value="High->Low">Price: High to Low</MenuItem>
-                      <MenuItem value="Popular">Popular</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <div className="comparison-wrapper">
-            {/* First Comparison Section */}
-            <div className="comparison-section">
-              <h2>AMAZON PRODUCT</h2>
-              {products[activePoduct1] && (
-                <div className="column">
-                  <div className="row">
-                    <LazyLoad>
-                      <img
-                        src={products[activePoduct1].images[0]}
-                        alt="product"
-                      />
-                    </LazyLoad>
-                  </div>
-                  <div className="row space">
-                    {products[activePoduct1].name}
-                  </div>
-                  <div className="row space">
-                    <Rating
-                      name="half-rating-read"
-                      value={
-                        Math.round(
-                          parseFloat(products[activePoduct1].ratings) * 2
-                        ) / 2
-                      }
-                      precision={0.5}
-                      readOnly
-                    />
-                  </div>
-                  <div className="row space">
-                    {products[activePoduct1].no_of_ratings} reviews
-                  </div>
-                  <div className="row space">
-                    {(
-                      ((products[activePoduct1].actual_price -
-                        products[activePoduct1].discount_price) /
-                        products[activePoduct1].actual_price) *
-                      100
-                    ).toFixed(0)}
-                    %
-                  </div>
-                  <div className="row space">
-                    {products[activePoduct1].discount_price} ₹
-                  </div>
-                  <div className="row space">
-                    {products[activePoduct1].delivery} days
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* First Section */}
             <div className="comparison-section addition">
               <h2>VS</h2>
               <div className="column p-2 col-bar">
@@ -255,59 +185,187 @@ const Compare = () => {
                   <DynamicIcon iconName="LocalShipping" className="icon" />
                   DELIVERY WITHIN
                 </div>
+                <div className="row">
+                  <DynamicIcon iconName="CheckBox" className="icon" />
+                  Suggested by us
+                </div>
               </div>
             </div>
             {/* Second Comparison Section */}
             <div className="comparison-section">
-              <h2>FLIPKART PRODUCT</h2>
-              {products2[activePoduct2] && (
+              <h2>AMAZON PRODUCT</h2>
+              {products[0] ? (
                 <div className="column">
                   <div className="row">
                     <LazyLoad>
-                      <img
-                        src={products2[activePoduct2].images[0]}
-                        alt="product"
-                      />
+                      <img src={products[0].images[0]} alt="product" />
                     </LazyLoad>
                   </div>
-                  <div className="row space">
-                    {products2[activePoduct2].name}
-                  </div>
+                  <div className="row space">{products[0].name}</div>
                   <div className="row space">
                     <Rating
                       name="half-rating-read"
                       value={
-                        Math.round(
-                          parseFloat(products2[activePoduct2].ratings) * 2
-                        ) / 2
+                        Math.round(parseFloat(products[0].ratings) * 2) / 2
                       }
                       precision={0.5}
                       readOnly
                     />
                   </div>
                   <div className="row space">
-                    {products2[activePoduct2].no_of_ratings} reviews
+                    {products[0].no_of_ratings} reviews
                   </div>
                   <div className="row space">
                     {(
-                      ((products2[activePoduct2].actual_price -
-                        products2[activePoduct2].discount_price) /
-                        products2[activePoduct2].actual_price) *
+                      ((products[0].actual_price - products[0].discount_price) /
+                        products[0].actual_price) *
                       100
                     ).toFixed(0)}
                     %
                   </div>
                   <div className="row space">
-                    {products2[activePoduct2].discount_price} ₹
+                    {products[0].discount_price} ₹
+                  </div>
+                  <div className="row space">{products[0].delivery} days</div>
+                  <div className="row space">
+                    {sortedProducts.some((p) => p.product === products[0]) ? (
+                      <DynamicIcon iconName="Check" className="icon" />
+                    ) : (
+                      <DynamicIcon iconName="Close" className="icon" />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="imageBox">
+                  <img src="https://stores.blackberrys.com/VendorpageTheme/Enterprise/EThemeForBlackberrys/images/product-not-found.jpg" />
+                </div>
+              )}
+            </div>
+
+            {/* Third Comparison Section */}
+            <div className="comparison-section">
+              <h2>FLIPKART PRODUCT</h2>
+              {products2[0] ? (
+                <div className="column">
+                  <div className="row">
+                    <LazyLoad>
+                      <img src={products2[0].images[0]} alt="product" />
+                    </LazyLoad>
+                  </div>
+                  <div className="row space">{products2[0].name}</div>
+                  <div className="row space">
+                    <Rating
+                      name="half-rating-read"
+                      value={
+                        Math.round(parseFloat(products2[0].ratings) * 2) / 2
+                      }
+                      precision={0.5}
+                      readOnly
+                    />
                   </div>
                   <div className="row space">
-                    {products2[activePoduct2].delivery} days
+                    {products2[0].no_of_ratings} reviews
                   </div>
+                  <div className="row space">
+                    {(
+                      ((products2[0].actual_price -
+                        products2[0].discount_price) /
+                        products2[0].actual_price) *
+                      100
+                    ).toFixed(0)}
+                    %
+                  </div>
+                  <div className="row space">
+                    {products2[0].discount_price} ₹
+                  </div>
+                  <div className="row space">{products2[0].delivery} days</div>
+                  <div className="row space">
+                    {sortedProducts.some((p) => p.product === products2[0]) ? (
+                      <DynamicIcon iconName="Check" className="icon" />
+                    ) : (
+                      <DynamicIcon iconName="Close" className="icon" />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="imageBox">
+                  <img src="https://stores.blackberrys.com/VendorpageTheme/Enterprise/EThemeForBlackberrys/images/product-not-found.jpg" />
+                </div>
+              )}
+            </div>
+            {/* Fourth Comparison Section */}
+            <div className="comparison-section">
+              <h2>MEESHO PRODUCT</h2>
+              {products3[0] ? (
+                <div className="column">
+                  <div className="row">
+                    <LazyLoad>
+                      <img src={products3[0].images[0]} alt="product" />
+                    </LazyLoad>
+                  </div>
+                  <div className="row space">{products3[0].name}</div>
+                  <div className="row space">
+                    <Rating
+                      name="half-rating-read"
+                      value={
+                        Math.round(parseFloat(products3[0].ratings) * 2) / 2
+                      }
+                      precision={0.5}
+                      readOnly
+                    />
+                  </div>
+                  <div className="row space">
+                    {products3[0].no_of_ratings} reviews
+                  </div>
+                  <div className="row space">
+                    {(
+                      ((products3[0].actual_price -
+                        products3[0].discount_price) /
+                        products3[0].actual_price) *
+                      100
+                    ).toFixed(0)}
+                    %
+                  </div>
+                  <div className="row space">
+                    {products3[0].discount_price} ₹
+                  </div>
+                  <div className="row space">{products3[0].delivery} days</div>
+                  <div className="row space">
+                    {sortedProducts.some((p) => p.product === products3[0]) ? (
+                      <DynamicIcon iconName="Check" className="icon" />
+                    ) : (
+                      <DynamicIcon iconName="Close" className="icon" />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="imageBox">
+                  <img src="https://stores.blackberrys.com/VendorpageTheme/Enterprise/EThemeForBlackberrys/images/product-not-found.jpg" />
                 </div>
               )}
             </div>
           </div>
         </div>
+      </div>
+      <div className="relatedProducts p-5 pb-4 ">
+        <h2 className="hd mb-0 mt-0 ">Related Products</h2>
+        <br />
+        <Slider {...related} className="productSlider">
+          {allProducts?.length !== 0 &&
+            allProducts.map((prod, index) => (
+              <div className="item" key={index}>
+                <Product
+                  image={prod.images[0]}
+                  tag={prod.company}
+                  name={prod.name}
+                  ratings={prod.ratings}
+                  actual_price={prod.actual_price}
+                  discount_price={prod.discount_price}
+                  className="prod-img"
+                />
+              </div>
+            ))}
+        </Slider>
       </div>
     </>
   );

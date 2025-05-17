@@ -77,6 +77,17 @@ const Header = () => {
     fetchProducts();
   }, [searchQuery]);
 
+  useEffect(() => {
+    fetchDataFromApi("/api/category")
+      .then((res) => {
+        const cats = res?.categoryList || [];
+        setcategories(cats.map((cat) => cat.name));
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -213,7 +224,7 @@ const Header = () => {
                           </div>
                         ) : (
                           <Button
-                            onClick={() => setisOpenDropDown(!isOpenDropDown)}
+                            onClick={() => set(!isOpenDropDown)}
                           >
                             {Context.user?.image !== "" ? (
                               <img

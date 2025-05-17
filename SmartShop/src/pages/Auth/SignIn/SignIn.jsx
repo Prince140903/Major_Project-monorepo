@@ -133,7 +133,6 @@ const SignIn = () => {
           email: user.providerData[0]?.email || "",
           password: null,
           images: user.providerData[0]?.photoURL || "",
-          phone: user.providerData[0]?.phoneNumber || "",
           isAdmin: true,
         };
 
@@ -147,7 +146,8 @@ const SignIn = () => {
                 name: res.user?.name,
                 email: res.user?.email,
                 userId: res.user?._id,
-                image: res?.user?.images?.length > 0 ? res?.user?.images[0] : "",
+                image:
+                  res?.user?.images?.length > 0 ? res?.user?.images[0] : "",
                 isAdmin: res.user?.isAdmin,
               };
 

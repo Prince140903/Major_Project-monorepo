@@ -241,3 +241,42 @@
 .comparison-section .column.col-bar .row.name {
   height: 425px !important;
 }
+
+.imageBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 800px;
+}
+
+.search-dropdown1 {
+  position: absolute;
+  top: 360px !important;
+  left: 825px !important;
+  width: 39%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 10px;
+}
+
+.search-item {
+  padding: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.search-item:nth-child(even) {
+  background: #efefef;
+}
+
+.search-item:hover {
+  background-color: #f1f1f1;
+}
+
+.no-results {
+  padding: 8px;
+  color: gray;
+}

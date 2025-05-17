@@ -71,6 +71,47 @@ const ProductUpload = () => {
   const addProd = (e) => {
     e.preventDefault();
 
+    if (!formFields.name) {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill Name!!",
+      });
+      return false;
+    }
+    if (!formFields.actual_price) {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill Price!!",
+      });
+      return false;
+    }
+    if (!formFields.discount_price) {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill Discount Price!!",
+      });
+      return false;
+    }
+    if (!formFields.main_category) {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill Main category!!",
+      });
+      return false;
+    }
+    if (!formFields.sub_category) {
+      Context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Fill Sub category!!",
+      });
+      return false;
+    }
+
     const appendedArray = [...previews, ...uniqueArray];
     img_arr = [];
 
