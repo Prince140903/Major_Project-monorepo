@@ -118,6 +118,16 @@ const DetailsPage = () => {
   };
 
   const addToCart = async () => {
+
+    if (!Context.isLogin) {
+      Context.setAlertBox({
+        msg: "Please Log in first.",
+        error: true,
+        open: true,
+      })
+      return;
+    }
+
     if (user && product) {
       trackInteraction(user.userId, product._id, "cart");
     }
@@ -174,6 +184,16 @@ const DetailsPage = () => {
   };
 
   const addToWishlist = async () => {
+
+    if (!Context.isLogin) {
+      Context.setAlertBox({
+        msg: "Please Log in first.",
+        error: true,
+        open: true,
+      })
+      return;
+    }
+
     if (user && product) {
       trackInteraction(user.userId, product._id, "wishlist");
     }

@@ -151,7 +151,6 @@ const SignIn = () => {
                 isAdmin: res.user?.isAdmin,
               };
 
-              console.log("userData", userData);
               localStorage.setItem("user", JSON.stringify(userData));
 
               Context.setAlertBox({
@@ -166,7 +165,7 @@ const SignIn = () => {
                 setIsLoading(false);
 
                 // ✅ Close Popup if Opened
-              }, 2000);
+              }, 1000);
             } else {
               Context.setAlertBox({
                 open: true,
@@ -180,8 +179,6 @@ const SignIn = () => {
             setIsLoading(false);
           }
         });
-
-        console.log("User Data:", user);
       })
       .catch((error) => {
         console.error("Google Sign-In Error:", error.message);
