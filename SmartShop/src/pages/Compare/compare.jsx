@@ -7,7 +7,6 @@ import { Rating, capitalize } from "@mui/material";
 import Slider from "react-slick";
 import { fetchDataFromApi } from "../../utils/api";
 import LazyLoad from "react-lazyload";
-import { Link } from "react-router-dom";
 
 const Compare = () => {
   const [selectedProductName, setSelectedProductName] = useState("");
@@ -137,7 +136,7 @@ const Compare = () => {
             />
             {searchQuery && (
               <div className="search-dropdown1">
-                {allProducts.length > 0 ? (
+                {allProducts.length !== 0 ? (
                   allProducts.map((product, index) => (
                     <div
                       key={index}
